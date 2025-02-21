@@ -1,0 +1,12 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+renv/
+
+#Ignore private data with project_metadata.xlsx file with info on primers and DNA concentration measurments
+data/private/
+
+#Ignore technical scripts (primer checks, dna concentration measurments)
+scripts/technical/
