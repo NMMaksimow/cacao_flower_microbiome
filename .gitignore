@@ -2,6 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+.Rprofile
 
 renv/
 
@@ -10,3 +11,31 @@ data/private/
 
 #Ignore technical scripts (primer checks, dna concentration measurments)
 scripts/technical/
+
+# NGS raw data (too large for Git)
+data/raw_sequencing/
+*.fastq
+*.fastq.gz
+*.tar
+*.tar.gz
+
+# QIIME2 artifacts (large binary files)
+*.qza
+*.qzv
+*.biom
+
+# Large result files
+results/large_outputs/
+*.h5
+
+# Technical analysis results (barcode diversity checks, Qubit DNA measurments analysis figures and microscopy data analysis)
+results/figures/
+results/tables/
+results/*.png
+results/*.svg
+results/*.pdf
+
+# Temporary files
+.tmp/
+cache/
+__pycache__/
