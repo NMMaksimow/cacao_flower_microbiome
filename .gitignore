@@ -13,7 +13,7 @@ data/private/
 scripts/technical/
 
 # NGS raw data (too large for Git)
-data/raw_sequencing/
+data/raw_data/
 *.fastq
 *.fastq.gz
 *.tar
