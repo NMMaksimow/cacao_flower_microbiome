@@ -28,8 +28,11 @@ The microbial footprint of pollinators has been studied using a pollinator exclu
 
 ### 1. Data Download and Verification
 Raw data downloaded from Novogene CSS, uploaded to Hamilton cluster. Extract the tar file:
+
 tar -xvf X204SC25042477-Z01-F001.tar
+
 Verify file integrity using MD5 checksums:
+
 md5sum -c MD5.txt
 
 **Result:** X204SC25042477-Z01-F001.tar: OK
