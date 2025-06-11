@@ -40,14 +40,14 @@ md5sum -c MD5.txt
  **Status**: ✅ **COMPLETE** - Data integrity verified ---
 
 ### 2. Lane Merging
-**Combine L1 and L2 sequencing lanes for each sublibrary**
-	- **Script**: `qiime2/scripts/merge_PE_lanes.sh`
-	- **Input**: Raw .fq.gz files from 2 sequencing lanes
-	- **Output**: 96 merged files (48 sublibraries × 2 read directions)
-	- **Location**: `qiime2/import/merged_files/`
-	- **Processing time**: 29 seconds on cluster node cn032
-	- **Log file**: `logs/slurm-13004770.out`
-**Status**: ✅ **COMPLETE** - All 48 sublibrary pairs merged successfully ---
+**Combine L1 and L2 sequencing lanes for each sublibrary** \
+	- **Script**: `qiime2/scripts/merge_PE_lanes.sh` \
+	- **Input**: Raw .fq.gz files from 2 sequencing lanes \
+	- **Output**: 96 merged files (48 sublibraries × 2 read directions) \
+	- **Location**: `qiime2/import/merged_files/` \
+	- **Processing time**: 29 seconds on cluster node cn032 \
+	- **Log file**: `logs/slurm-13004770.out` \
+**Status**: ✅ **COMPLETE** - All 48 sublibrary pairs merged successfully --- \
 
 ### 3. Adapter Trimming
 **Remove Illumina sequencing adapters using cutadapt**
