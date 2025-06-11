@@ -49,7 +49,7 @@ md5sum -c MD5.txt
 	- **Log file**: `logs/slurm-13004770.out` \
 **Status**: ✅ **COMPLETE** - All 48 sublibrary pairs merged successfully ---  
 
-### 3. Adapter Trimming \
+### 3. Adapter Trimming
 **Remove Illumina sequencing adapters using cutadapt** \
 	- **Script**: `qiime2/scripts/adapter_trimming_cutadapt.sh` \
 	- **Tool**: cutadapt v4.9 \
@@ -72,13 +72,13 @@ md5sum -c MD5.txt
 	- **Tool**: Stacks process_radtags \
 	- **Strategy**: Use 8bp combinatorial internal tags to separate samples within sublibraries \
 	- **Expected output**: Individual sample files for each of 336 samples × 2 amplicons \
-	- **Challenge**: Combinatorial tags are reused across sublibraries, requiring sublibrary-specific processing \
+	- **Challenge**: Combinatorial tags are reused across sublibraries, requiring sublibrary-specific processing
 
 ### 5. Amplicon Separation (Planned)
 **Separate 16S and ITS1 amplicons** \
 	- **Tool**: cutadapt with primer-specific trimming \
 	- **Strategy**: Use locus-specific primer sequences to separate and trim amplicons \
-	- **Output**: Clean amplicon-specific files ready for QIIME2 import \
+	- **Output**: Clean amplicon-specific files ready for QIIME2 import
 
 ### 6. QIIME2 Analysis (Planned) 
 **Standard microbiome analysis pipeline** \
@@ -86,7 +86,7 @@ md5sum -c MD5.txt
 	- Quality filtering and denoising (DADA2) \
 	- Taxonomic classification \
 	- Diversity analysis \
-	- Statistical testing for pollinator effects \
+	- Statistical testing for pollinator effects
 
 ## File Organization
 ``` cacao_flower_microbiome/ ├── data/ │ ├── qiime2_cfm_metadata.txt # Sample metadata for QIIME2 │ └── raw_data/ # Original Novogene files ├── qiime2/ │ ├── import/ │ │ ├── merged_files/ # Lane-merged sublibraries │ │ 
