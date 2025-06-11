@@ -66,8 +66,8 @@ md5sum -c MD5.txt
 	- **Log file**: `logs/trim_adapters_13163307.out` \
  **Status**: ✅ **COMPLETE** - Minimal adapter contamination, ready for demultiplexing ---
 
-## Next Steps \
-	### 4. Demultiplexing (In Progress) \
+## Next Steps
+### 4. Demultiplexing (In Progress)
 **Separate individual samples using internal barcodes** \
 	- **Tool**: Stacks process_radtags \
 	- **Strategy**: Use 8bp combinatorial internal tags to separate samples within sublibraries \
