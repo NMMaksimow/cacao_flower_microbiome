@@ -1,0 +1,3498 @@
+Starting adapter trimming...
+Input directory: qiime2/import/merged_files
+Output directory: qiime2/import/trimmed_reads
+Processing 48 sublibrary pairs
+Processing: A1_13A_13_12
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/A1_13A_13_12_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/A1_13A_13_12_R2.trimmed.fq.gz A1_13A_13_12_R1.fq.gz A1_13A_13_12_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 19.482 s (21.867 µs/read; 2.74 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:            890,963
+  Read 1 with adapter:                      20 (0.0%)
+  Read 2 with adapter:                   7,133 (0.8%)
+Pairs written (passing filters):       890,963 (100.0%)
+
+Total basepairs processed:   445,481,500 bp
+  Read 1:   222,740,750 bp
+  Read 2:   222,740,750 bp
+Total written (filtered):    445,459,036 bp (100.0%)
+  Read 1:   222,740,689 bp
+  Read 2:   222,718,347 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 20 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 20.0%
+  C: 50.0%
+  G: 30.0%
+  T: 0.0%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	19	13921.3	0	19
+4	1	3480.3	0	1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 7133 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 0.1%
+  C: 0.0%
+  G: 0.1%
+  T: 99.8%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'T' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	6225	13921.3	0	6225
+4	812	3480.3	0	812
+5	96	870.1	0	96
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed A1_13A_13_12
+Processing: A2_13A_13_02
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/A2_13A_13_02_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/A2_13A_13_02_R2.trimmed.fq.gz A2_13A_13_02_R1.fq.gz A2_13A_13_02_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 28.062 s (24.124 µs/read; 2.49 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,163,257
+  Read 1 with adapter:                   3,822 (0.3%)
+  Read 2 with adapter:                   5,949 (0.5%)
+Pairs written (passing filters):     1,163,257 (100.0%)
+
+Total basepairs processed:   581,628,500 bp
+  Read 1:   290,814,250 bp
+  Read 2:   290,814,250 bp
+Total written (filtered):    581,597,280 bp (100.0%)
+  Read 1:   290,802,482 bp
+  Read 2:   290,794,798 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 3822 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 82.9%
+  C: 9.4%
+  G: 2.7%
+  T: 5.0%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3567	18175.9	0	3567
+4	223	4544.0	0	223
+5	21	1136.0	0	21
+6	9	284.0	0	9
+7	1	71.0	0	1
+9	1	4.4	0	0 1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 5949 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 68.1%
+  C: 3.7%
+  G: 2.1%
+  T: 26.1%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	5051	18175.9	0	5051
+4	199	4544.0	0	199
+5	693	1136.0	0	693
+6	4	284.0	0	4
+7	2	71.0	0	2
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed A2_13A_13_02
+Processing: A3_13A_13_03
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/A3_13A_13_03_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/A3_13A_13_03_R2.trimmed.fq.gz A3_13A_13_03_R1.fq.gz A3_13A_13_03_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 24.174 s (24.304 µs/read; 2.47 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:            994,650
+  Read 1 with adapter:                  16,584 (1.7%)
+  Read 2 with adapter:                   4,728 (0.5%)
+Pairs written (passing filters):       994,650 (100.0%)
+
+Total basepairs processed:   497,325,000 bp
+  Read 1:   248,662,500 bp
+  Read 2:   248,662,500 bp
+Total written (filtered):    497,257,785 bp (100.0%)
+  Read 1:   248,612,526 bp
+  Read 2:   248,645,259 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 16584 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 95.5%
+  C: 2.5%
+  G: 1.3%
+  T: 0.7%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	16392	15541.4	0	16392
+4	172	3885.4	0	172
+5	10	971.3	0	10
+6	10	242.8	0	10
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 4728 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 39.8%
+  C: 1.6%
+  G: 3.5%
+  T: 55.1%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3105	15541.4	0	3105
+4	255	3885.4	0	255
+5	1310	971.3	0	1310
+6	55	242.8	0	55
+7	1	60.7	0	1
+9	1	3.8	0	0 1
+10	1	0.9	1	0 1
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed A3_13A_13_03
+Processing: A4_13A_13_04
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/A4_13A_13_04_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/A4_13A_13_04_R2.trimmed.fq.gz A4_13A_13_04_R1.fq.gz A4_13A_13_04_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 23.593 s (21.044 µs/read; 2.85 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,121,157
+  Read 1 with adapter:                      30 (0.0%)
+  Read 2 with adapter:                   7,605 (0.7%)
+Pairs written (passing filters):     1,121,157 (100.0%)
+
+Total basepairs processed:   560,578,500 bp
+  Read 1:   280,289,250 bp
+  Read 2:   280,289,250 bp
+Total written (filtered):    560,554,350 bp (100.0%)
+  Read 1:   280,289,160 bp
+  Read 2:   280,265,190 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 30 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 13.3%
+  C: 56.7%
+  G: 23.3%
+  T: 6.7%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	30	17518.1	0	30
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 7605 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 0.1%
+  C: 0.0%
+  G: 0.1%
+  T: 99.8%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'T' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	6492	17518.1	0	6492
+4	981	4379.5	0	981
+5	132	1094.9	0	132
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed A4_13A_13_04
+Processing: A5_13A_19_08
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/A5_13A_19_08_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/A5_13A_19_08_R2.trimmed.fq.gz A5_13A_19_08_R1.fq.gz A5_13A_19_08_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 25.138 s (24.917 µs/read; 2.41 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,008,861
+  Read 1 with adapter:                   4,924 (0.5%)
+  Read 2 with adapter:                   4,809 (0.5%)
+Pairs written (passing filters):     1,008,861 (100.0%)
+
+Total basepairs processed:   504,430,500 bp
+  Read 1:   252,215,250 bp
+  Read 2:   252,215,250 bp
+Total written (filtered):    504,397,769 bp (100.0%)
+  Read 1:   252,199,904 bp
+  Read 2:   252,197,865 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 4924 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 58.9%
+  C: 22.6%
+  G: 2.9%
+  T: 15.6%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	4455	15763.5	0	4455
+4	409	3940.9	0	409
+5	22	985.2	0	22
+6	36	246.3	0	36
+9	1	3.8	0	0 1
+10	1	1.0	1	0 1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 4809 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 62.2%
+  C: 2.9%
+  G: 2.2%
+  T: 32.6%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3258	15763.5	0	3258
+4	159	3940.9	0	159
+5	1385	985.2	0	1385
+6	1	246.3	0	1
+7	5	61.6	0	5
+9	1	3.8	0	0 1
+  ✓ Successfully trimmed A5_13A_19_08
+Processing: A6_13A_13_06
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/A6_13A_13_06_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/A6_13A_13_06_R2.trimmed.fq.gz A6_13A_13_06_R1.fq.gz A6_13A_13_06_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 27.390 s (24.027 µs/read; 2.50 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,139,988
+  Read 1 with adapter:                   9,831 (0.9%)
+  Read 2 with adapter:                   5,344 (0.5%)
+Pairs written (passing filters):     1,139,988 (100.0%)
+
+Total basepairs processed:   569,994,000 bp
+  Read 1:   284,997,000 bp
+  Read 2:   284,997,000 bp
+Total written (filtered):    569,944,267 bp (100.0%)
+  Read 1:   284,966,969 bp
+  Read 2:   284,977,298 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 9831 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 88.2%
+  C: 6.0%
+  G: 1.6%
+  T: 4.3%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	9343	17812.3	0	9343
+4	442	4453.1	0	442
+5	43	1113.3	0	43
+6	2	278.3	0	2
+7	1	69.6	0	1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 5344 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 58.4%
+  C: 2.2%
+  G: 2.0%
+  T: 37.3%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3356	17812.3	0	3356
+4	325	4453.1	0	325
+5	1655	1113.3	0	1655
+6	1	278.3	0	1
+7	5	69.6	0	5
+8	1	17.4	0	1
+10	1	1.1	1	0 1
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed A6_13A_13_06
+Processing: B1_13B_13_12
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/B1_13B_13_12_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/B1_13B_13_12_R2.trimmed.fq.gz B1_13B_13_12_R1.fq.gz B1_13B_13_12_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 20.543 s (20.323 µs/read; 2.95 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,010,796
+  Read 1 with adapter:                      20 (0.0%)
+  Read 2 with adapter:                   6,747 (0.7%)
+Pairs written (passing filters):     1,010,796 (100.0%)
+
+Total basepairs processed:   505,398,000 bp
+  Read 1:   252,699,000 bp
+  Read 2:   252,699,000 bp
+Total written (filtered):    505,376,663 bp (100.0%)
+  Read 1:   252,698,939 bp
+  Read 2:   252,677,724 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 20 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 10.0%
+  C: 50.0%
+  G: 40.0%
+  T: 0.0%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	19	15793.7	0	19
+4	1	3948.4	0	1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 6747 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 0.1%
+  C: 0.0%
+  G: 0.0%
+  T: 99.8%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'T' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	5806	15793.7	0	5806
+4	847	3948.4	0	847
+5	94	987.1	0	94
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed B1_13B_13_12
+Processing: B2_13B_13_02
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/B2_13B_13_02_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/B2_13B_13_02_R2.trimmed.fq.gz B2_13B_13_02_R1.fq.gz B2_13B_13_02_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 27.572 s (23.302 µs/read; 2.57 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,183,249
+  Read 1 with adapter:                   5,669 (0.5%)
+  Read 2 with adapter:                   5,163 (0.4%)
+Pairs written (passing filters):     1,183,249 (100.0%)
+
+Total basepairs processed:   591,624,500 bp
+  Read 1:   295,812,250 bp
+  Read 2:   295,812,250 bp
+Total written (filtered):    591,589,334 bp (100.0%)
+  Read 1:   295,794,901 bp
+  Read 2:   295,794,433 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 5669 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 71.7%
+  C: 25.2%
+  G: 1.6%
+  T: 1.5%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	5353	18488.3	0	5353
+4	300	4622.1	0	300
+5	8	1155.5	0	8
+6	7	288.9	0	7
+8	1	18.1	0	1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 5163 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 56.1%
+  C: 2.4%
+  G: 1.2%
+  T: 40.2%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3313	18488.3	0	3313
+4	1377	4622.1	0	1377
+5	470	1155.5	0	470
+6	1	288.9	0	1
+7	2	72.2	0	2
+  ✓ Successfully trimmed B2_13B_13_02
+Processing: B3_13B_13_03
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/B3_13B_13_03_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/B3_13B_13_03_R2.trimmed.fq.gz B3_13B_13_03_R1.fq.gz B3_13B_13_03_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 26.358 s (23.826 µs/read; 2.52 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,106,280
+  Read 1 with adapter:                   8,681 (0.8%)
+  Read 2 with adapter:                  12,291 (1.1%)
+Pairs written (passing filters):     1,106,280 (100.0%)
+
+Total basepairs processed:   553,140,000 bp
+  Read 1:   276,570,000 bp
+  Read 2:   276,570,000 bp
+Total written (filtered):    553,059,363 bp (100.0%)
+  Read 1:   276,543,429 bp
+  Read 2:   276,515,934 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 8681 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 86.3%
+  C: 7.8%
+  G: 4.6%
+  T: 1.2%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	8236	17285.6	0	8236
+4	391	4321.4	0	391
+5	37	1080.4	0	37
+6	13	270.1	0	13
+7	1	67.5	0	1
+9	1	4.2	0	0 1
+10	2	1.1	1	0 2
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 12291 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 23.8%
+  C: 0.9%
+  G: 1.8%
+  T: 73.5%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3595	17285.6	0	3595
+4	229	4321.4	0	229
+5	8452	1080.4	0	8452
+7	15	67.5	0	15
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed B3_13B_13_03
+Processing: B4_13B_13_04
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/B4_13B_13_04_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/B4_13B_13_04_R2.trimmed.fq.gz B4_13B_13_04_R1.fq.gz B4_13B_13_04_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 15.408 s (23.095 µs/read; 2.60 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:            667,151
+  Read 1 with adapter:                      30 (0.0%)
+  Read 2 with adapter:                   3,154 (0.5%)
+Pairs written (passing filters):       667,151 (100.0%)
+
+Total basepairs processed:   333,575,500 bp
+  Read 1:   166,787,750 bp
+  Read 2:   166,787,750 bp
+Total written (filtered):    333,565,402 bp (100.0%)
+  Read 1:   166,787,653 bp
+  Read 2:   166,777,749 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 30 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 10.0%
+  C: 56.7%
+  G: 20.0%
+  T: 13.3%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	28	10424.2	0	28
+4	1	2606.1	0	1
+9	1	2.5	0	0 1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 3154 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 2.3%
+  C: 0.0%
+  G: 0.1%
+  T: 97.7%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'T' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	2667	10424.2	0	2667
+4	435	2606.1	0	435
+5	52	651.5	0	52
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed B4_13B_13_04
+Processing: B5_13B_19_08
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/B5_13B_19_08_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/B5_13B_19_08_R2.trimmed.fq.gz B5_13B_19_08_R1.fq.gz B5_13B_19_08_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 28.119 s (24.129 µs/read; 2.49 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,165,364
+  Read 1 with adapter:                   4,925 (0.4%)
+  Read 2 with adapter:                   6,261 (0.5%)
+Pairs written (passing filters):     1,165,364 (100.0%)
+
+Total basepairs processed:   582,682,000 bp
+  Read 1:   291,341,000 bp
+  Read 2:   291,341,000 bp
+Total written (filtered):    582,643,770 bp (100.0%)
+  Read 1:   291,325,663 bp
+  Read 2:   291,318,107 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 4925 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 81.6%
+  C: 11.4%
+  G: 2.2%
+  T: 4.9%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	4450	18208.8	0	4450
+4	419	4552.2	0	419
+5	32	1138.1	0	32
+6	23	284.5	0	23
+13	1	0.0	1	0 1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 6261 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 52.4%
+  C: 2.8%
+  G: 1.8%
+  T: 43.1%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	4112	18208.8	0	4112
+4	209	4552.2	0	209
+5	1929	1138.1	0	1929
+6	1	284.5	0	1
+7	10	71.1	0	10
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed B5_13B_19_08
+Processing: B6_13B_13_06
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/B6_13B_13_06_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/B6_13B_13_06_R2.trimmed.fq.gz B6_13B_13_06_R1.fq.gz B6_13B_13_06_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 26.839 s (25.438 µs/read; 2.36 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,055,080
+  Read 1 with adapter:                   5,991 (0.6%)
+  Read 2 with adapter:                   5,490 (0.5%)
+Pairs written (passing filters):     1,055,080 (100.0%)
+
+Total basepairs processed:   527,540,000 bp
+  Read 1:   263,770,000 bp
+  Read 2:   263,770,000 bp
+Total written (filtered):    527,504,063 bp (100.0%)
+  Read 1:   263,751,667 bp
+  Read 2:   263,752,396 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 5991 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 79.7%
+  C: 4.9%
+  G: 1.8%
+  T: 13.6%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	5699	16485.6	0	5699
+4	234	4121.4	0	234
+5	48	1030.4	0	48
+6	10	257.6	0	10
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 5490 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 75.8%
+  C: 4.8%
+  G: 7.2%
+  T: 12.1%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	4779	16485.6	0	4779
+4	294	4121.4	0	294
+5	415	1030.4	0	415
+7	1	64.4	0	1
+9	1	4.0	0	0 1
+  ✓ Successfully trimmed B6_13B_13_06
+Processing: C1_14C_13_12
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/C1_14C_13_12_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/C1_14C_13_12_R2.trimmed.fq.gz C1_14C_13_12_R1.fq.gz C1_14C_13_12_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 26.071 s (24.314 µs/read; 2.47 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,072,294
+  Read 1 with adapter:                   6,737 (0.6%)
+  Read 2 with adapter:                  19,941 (1.9%)
+Pairs written (passing filters):     1,072,294 (100.0%)
+
+Total basepairs processed:   536,147,000 bp
+  Read 1:   268,073,500 bp
+  Read 2:   268,073,500 bp
+Total written (filtered):    536,034,362 bp (100.0%)
+  Read 1:   268,052,817 bp
+  Read 2:   267,981,545 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 6737 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 84.0%
+  C: 9.0%
+  G: 6.0%
+  T: 1.0%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	6385	16754.6	0	6385
+4	243	4188.6	0	243
+5	104	1047.2	0	104
+6	1	261.8	0	1
+7	3	65.4	0	3
+9	1	4.1	0	0 1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 19941 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 15.6%
+  C: 0.7%
+  G: 0.9%
+  T: 82.8%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'T' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3753	16754.6	0	3753
+4	250	4188.6	0	250
+5	15934	1047.2	0	15934
+6	2	261.8	0	2
+7	2	65.4	0	2
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed C1_14C_13_12
+Processing: C2_14C_13_02
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/C2_14C_13_02_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/C2_14C_13_02_R2.trimmed.fq.gz C2_14C_13_02_R1.fq.gz C2_14C_13_02_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 28.069 s (23.927 µs/read; 2.51 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,173,097
+  Read 1 with adapter:                   3,699 (0.3%)
+  Read 2 with adapter:                   5,671 (0.5%)
+Pairs written (passing filters):     1,173,097 (100.0%)
+
+Total basepairs processed:   586,548,500 bp
+  Read 1:   293,274,250 bp
+  Read 2:   293,274,250 bp
+Total written (filtered):    586,517,278 bp (100.0%)
+  Read 1:   293,262,778 bp
+  Read 2:   293,254,500 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 3699 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 87.2%
+  C: 7.6%
+  G: 2.5%
+  T: 2.8%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3375	18329.6	0	3375
+4	277	4582.4	0	277
+5	43	1145.6	0	43
+6	4	286.4	0	4
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 5671 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 58.2%
+  C: 2.4%
+  G: 7.5%
+  T: 31.9%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	4211	18329.6	0	4211
+4	189	4582.4	0	189
+5	1269	1145.6	0	1269
+7	1	71.6	0	1
+9	1	4.5	0	0 1
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed C2_14C_13_02
+Processing: C3_14C_13_03
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/C3_14C_13_03_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/C3_14C_13_03_R2.trimmed.fq.gz C3_14C_13_03_R1.fq.gz C3_14C_13_03_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 25.597 s (24.271 µs/read; 2.47 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,054,626
+  Read 1 with adapter:                   4,528 (0.4%)
+  Read 2 with adapter:                   7,488 (0.7%)
+Pairs written (passing filters):     1,054,626 (100.0%)
+
+Total basepairs processed:   527,313,000 bp
+  Read 1:   263,656,500 bp
+  Read 2:   263,656,500 bp
+Total written (filtered):    527,268,429 bp (100.0%)
+  Read 1:   263,642,501 bp
+  Read 2:   263,625,928 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 4528 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 85.4%
+  C: 7.9%
+  G: 4.5%
+  T: 2.2%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	4151	16478.5	0	4151
+4	346	4119.6	0	346
+5	25	1029.9	0	25
+6	5	257.5	0	5
+7	1	64.4	0	1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 7488 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 38.6%
+  C: 1.4%
+  G: 0.8%
+  T: 59.1%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3297	16478.5	0	3297
+4	278	4119.6	0	278
+5	3911	1029.9	0	3911
+7	2	64.4	0	2
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed C3_14C_13_03
+Processing: C4_14C_13_04
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/C4_14C_13_04_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/C4_14C_13_04_R2.trimmed.fq.gz C4_14C_13_04_R1.fq.gz C4_14C_13_04_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 31.765 s (24.438 µs/read; 2.46 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,299,831
+  Read 1 with adapter:                  11,140 (0.9%)
+  Read 2 with adapter:                   5,997 (0.5%)
+Pairs written (passing filters):     1,299,831 (100.0%)
+
+Total basepairs processed:   649,915,500 bp
+  Read 1:   324,957,750 bp
+  Read 2:   324,957,750 bp
+Total written (filtered):    649,859,040 bp (100.0%)
+  Read 1:   324,923,881 bp
+  Read 2:   324,935,159 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 11140 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 67.6%
+  C: 24.5%
+  G: 4.7%
+  T: 3.2%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	10751	20309.9	0	10751
+4	331	5077.5	0	331
+5	56	1269.4	0	56
+6	2	317.3	0	2
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 5997 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 51.7%
+  C: 3.3%
+  G: 1.1%
+  T: 43.9%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3556	20309.9	0	3556
+4	312	5077.5	0	312
+5	2113	1269.4	0	2113
+6	6	317.3	0	6
+7	9	79.3	0	9
+11	1	0.3	1	0 1
+  ✓ Successfully trimmed C4_14C_13_04
+Processing: C5_14C_19_08
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/C5_14C_19_08_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/C5_14C_19_08_R2.trimmed.fq.gz C5_14C_19_08_R1.fq.gz C5_14C_19_08_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 31.939 s (24.668 µs/read; 2.43 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,294,790
+  Read 1 with adapter:                   5,346 (0.4%)
+  Read 2 with adapter:                   8,879 (0.7%)
+Pairs written (passing filters):     1,294,790 (100.0%)
+
+Total basepairs processed:   647,395,000 bp
+  Read 1:   323,697,500 bp
+  Read 2:   323,697,500 bp
+Total written (filtered):    647,339,264 bp (100.0%)
+  Read 1:   323,680,956 bp
+  Read 2:   323,658,308 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 5346 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 73.5%
+  C: 22.6%
+  G: 1.5%
+  T: 2.4%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	4851	20231.1	0	4851
+4	488	5057.8	0	488
+5	3	1264.4	0	3
+6	4	316.1	0	4
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 8879 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 25.4%
+  C: 1.6%
+  G: 1.0%
+  T: 72.0%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	2531	20231.1	0	2531
+4	183	5057.8	0	183
+5	6141	1264.4	0	6141
+6	9	316.1	0	9
+7	14	79.0	0	14
+10	1	1.2	1	0 1
+  ✓ Successfully trimmed C5_14C_19_08
+Processing: C6_14C_13_06
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/C6_14C_13_06_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/C6_14C_13_06_R2.trimmed.fq.gz C6_14C_13_06_R1.fq.gz C6_14C_13_06_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 21.627 s (22.761 µs/read; 2.64 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:            950,204
+  Read 1 with adapter:                   1,762 (0.2%)
+  Read 2 with adapter:                   5,261 (0.6%)
+Pairs written (passing filters):       950,204 (100.0%)
+
+Total basepairs processed:   475,102,000 bp
+  Read 1:   237,551,000 bp
+  Read 2:   237,551,000 bp
+Total written (filtered):    475,076,613 bp (100.0%)
+  Read 1:   237,545,550 bp
+  Read 2:   237,531,063 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 1762 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 69.8%
+  C: 24.7%
+  G: 2.0%
+  T: 3.5%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	1630	14846.9	0	1630
+4	100	3711.7	0	100
+5	32	927.9	0	32
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 5261 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 49.9%
+  C: 5.6%
+  G: 4.6%
+  T: 40.0%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3028	14846.9	0	3028
+4	319	3711.7	0	319
+5	1910	927.9	0	1910
+6	1	232.0	0	1
+7	3	58.0	0	3
+  ✓ Successfully trimmed C6_14C_13_06
+Processing: D1_14B_13_12
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/D1_14B_13_12_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/D1_14B_13_12_R2.trimmed.fq.gz D1_14B_13_12_R1.fq.gz D1_14B_13_12_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 24.883 s (22.945 µs/read; 2.61 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,084,432
+  Read 1 with adapter:                   5,698 (0.5%)
+  Read 2 with adapter:                   5,316 (0.5%)
+Pairs written (passing filters):     1,084,432 (100.0%)
+
+Total basepairs processed:   542,216,000 bp
+  Read 1:   271,108,000 bp
+  Read 2:   271,108,000 bp
+Total written (filtered):    542,181,210 bp (100.0%)
+  Read 1:   271,090,727 bp
+  Read 2:   271,090,483 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 5698 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 87.2%
+  C: 10.2%
+  G: 1.8%
+  T: 0.8%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	5564	16944.2	0	5564
+4	93	4236.1	0	93
+5	39	1059.0	0	39
+7	2	66.2	0	2
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 5316 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 71.6%
+  C: 2.1%
+  G: 3.2%
+  T: 23.2%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	4411	16944.2	0	4411
+4	265	4236.1	0	265
+5	628	1059.0	0	628
+7	12	66.2	0	12
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed D1_14B_13_12
+Processing: D2_14B_13_02
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/D2_14B_13_02_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/D2_14B_13_02_R2.trimmed.fq.gz D2_14B_13_02_R1.fq.gz D2_14B_13_02_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 25.993 s (21.989 µs/read; 2.73 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,182,108
+  Read 1 with adapter:                   6,048 (0.5%)
+  Read 2 with adapter:                   6,021 (0.5%)
+Pairs written (passing filters):     1,182,108 (100.0%)
+
+Total basepairs processed:   591,054,000 bp
+  Read 1:   295,527,000 bp
+  Read 2:   295,527,000 bp
+Total written (filtered):    591,013,386 bp (100.0%)
+  Read 1:   295,507,491 bp
+  Read 2:   295,505,895 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 6048 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 69.0%
+  C: 21.1%
+  G: 9.3%
+  T: 0.6%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	4775	18470.4	0	4775
+4	1187	4617.6	0	1187
+5	83	1154.4	0	83
+6	2	288.6	0	2
+9	1	4.5	0	0 1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 6021 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 61.3%
+  C: 1.9%
+  G: 2.6%
+  T: 34.2%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	4366	18470.4	0	4366
+4	281	4617.6	0	281
+5	1369	1154.4	0	1369
+6	3	288.6	0	3
+9	1	4.5	0	0 1
+11	1	0.3	1	0 1
+  ✓ Successfully trimmed D2_14B_13_02
+Processing: D3_14B_13_03
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/D3_14B_13_03_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/D3_14B_13_03_R2.trimmed.fq.gz D3_14B_13_03_R1.fq.gz D3_14B_13_03_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 23.700 s (20.801 µs/read; 2.88 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,139,390
+  Read 1 with adapter:                   3,320 (0.3%)
+  Read 2 with adapter:                  13,614 (1.2%)
+Pairs written (passing filters):     1,139,390 (100.0%)
+
+Total basepairs processed:   569,695,000 bp
+  Read 1:   284,847,500 bp
+  Read 2:   284,847,500 bp
+Total written (filtered):    569,625,136 bp (100.0%)
+  Read 1:   284,837,302 bp
+  Read 2:   284,787,834 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 3320 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 84.9%
+  C: 9.9%
+  G: 3.6%
+  T: 1.7%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3099	17803.0	0	3099
+4	206	4450.7	0	206
+5	13	1112.7	0	13
+6	2	278.2	0	2
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 13614 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 26.2%
+  C: 0.6%
+  G: 0.4%
+  T: 72.8%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	4081	17803.0	0	4081
+4	250	4450.7	0	250
+5	9279	1112.7	0	9279
+7	4	69.5	0	4
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed D3_14B_13_03
+Processing: D4_14B_13_04
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/D4_14B_13_04_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/D4_14B_13_04_R2.trimmed.fq.gz D4_14B_13_04_R1.fq.gz D4_14B_13_04_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 26.212 s (22.035 µs/read; 2.72 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,189,543
+  Read 1 with adapter:                   2,921 (0.2%)
+  Read 2 with adapter:                   6,541 (0.5%)
+Pairs written (passing filters):     1,189,543 (100.0%)
+
+Total basepairs processed:   594,771,500 bp
+  Read 1:   297,385,750 bp
+  Read 2:   297,385,750 bp
+Total written (filtered):    594,736,177 bp (100.0%)
+  Read 1:   297,376,683 bp
+  Read 2:   297,359,494 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 2921 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 72.7%
+  C: 17.3%
+  G: 3.9%
+  T: 6.1%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	2627	18586.6	0	2627
+4	284	4646.7	0	284
+5	10	1161.7	0	10
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 6541 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 46.0%
+  C: 1.8%
+  G: 1.0%
+  T: 51.2%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3148	18586.6	0	3148
+4	185	4646.7	0	185
+5	3193	1161.7	0	3193
+6	1	290.4	0	1
+7	13	72.6	0	13
+10	1	1.1	1	0 1
+  ✓ Successfully trimmed D4_14B_13_04
+Processing: D5_14B_19_08
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/D5_14B_19_08_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/D5_14B_19_08_R2.trimmed.fq.gz D5_14B_19_08_R1.fq.gz D5_14B_19_08_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 28.156 s (22.315 µs/read; 2.69 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,261,723
+  Read 1 with adapter:                   3,507 (0.3%)
+  Read 2 with adapter:                   4,059 (0.3%)
+Pairs written (passing filters):     1,261,723 (100.0%)
+
+Total basepairs processed:   630,861,500 bp
+  Read 1:   315,430,750 bp
+  Read 2:   315,430,750 bp
+Total written (filtered):    630,837,685 bp (100.0%)
+  Read 1:   315,420,018 bp
+  Read 2:   315,417,667 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 3507 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 77.6%
+  C: 16.8%
+  G: 1.6%
+  T: 4.0%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3311	19714.4	0	3311
+4	183	4928.6	0	183
+5	11	1232.2	0	11
+6	2	308.0	0	2
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 4059 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 81.2%
+  C: 3.7%
+  G: 2.0%
+  T: 13.1%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3525	19714.4	0	3525
+4	188	4928.6	0	188
+5	338	1232.2	0	338
+7	4	77.0	0	4
+9	3	4.8	0	0 3
+11	1	0.3	1	0 1
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed D5_14B_19_08
+Processing: D6_14B_13_06
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/D6_14B_13_06_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/D6_14B_13_06_R2.trimmed.fq.gz D6_14B_13_06_R1.fq.gz D6_14B_13_06_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 27.014 s (21.228 µs/read; 2.83 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,272,557
+  Read 1 with adapter:                   5,221 (0.4%)
+  Read 2 with adapter:                   5,602 (0.4%)
+Pairs written (passing filters):     1,272,557 (100.0%)
+
+Total basepairs processed:   636,278,500 bp
+  Read 1:   318,139,250 bp
+  Read 2:   318,139,250 bp
+Total written (filtered):    636,245,477 bp (100.0%)
+  Read 1:   318,123,448 bp
+  Read 2:   318,122,029 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 5221 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 92.8%
+  C: 3.8%
+  G: 0.8%
+  T: 2.6%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	5101	19883.7	0	5101
+4	102	4970.9	0	102
+5	17	1242.7	0	17
+6	1	310.7	0	1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 5602 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 82.5%
+  C: 3.6%
+  G: 7.4%
+  T: 6.4%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	5323	19883.7	0	5323
+4	149	4970.9	0	149
+5	127	1242.7	0	127
+7	3	77.7	0	3
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed D6_14B_13_06
+Processing: E1_13E_13_12
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/E1_13E_13_12_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/E1_13E_13_12_R2.trimmed.fq.gz E1_13E_13_12_R1.fq.gz E1_13E_13_12_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 23.784 s (22.216 µs/read; 2.70 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,070,584
+  Read 1 with adapter:                   6,085 (0.6%)
+  Read 2 with adapter:                   4,397 (0.4%)
+Pairs written (passing filters):     1,070,584 (100.0%)
+
+Total basepairs processed:   535,292,000 bp
+  Read 1:   267,646,000 bp
+  Read 2:   267,646,000 bp
+Total written (filtered):    535,259,602 bp (100.0%)
+  Read 1:   267,627,288 bp
+  Read 2:   267,632,314 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 6085 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 88.1%
+  C: 7.2%
+  G: 1.4%
+  T: 3.3%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	5661	16727.9	0	5661
+4	400	4182.0	0	400
+5	19	1045.5	0	19
+6	1	261.4	0	1
+7	4	65.3	0	4
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 4397 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 77.9%
+  C: 5.4%
+  G: 1.1%
+  T: 15.6%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	4070	16727.9	0	4070
+4	214	4182.0	0	214
+5	88	1045.5	0	88
+6	1	261.4	0	1
+7	21	65.3	0	21
+9	3	4.1	0	2 1
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed E1_13E_13_12
+Processing: E2_13E_13_02
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/E2_13E_13_02_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/E2_13E_13_02_R2.trimmed.fq.gz E2_13E_13_02_R1.fq.gz E2_13E_13_02_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 28.015 s (22.188 µs/read; 2.70 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,262,603
+  Read 1 with adapter:                  13,007 (1.0%)
+  Read 2 with adapter:                   4,470 (0.4%)
+Pairs written (passing filters):     1,262,603 (100.0%)
+
+Total basepairs processed:   631,301,500 bp
+  Read 1:   315,650,750 bp
+  Read 2:   315,650,750 bp
+Total written (filtered):    631,246,991 bp (100.0%)
+  Read 1:   315,611,414 bp
+  Read 2:   315,635,577 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 13007 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 95.1%
+  C: 2.7%
+  G: 1.5%
+  T: 0.6%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	12726	19728.2	0	12726
+4	263	4932.0	0	263
+5	11	1233.0	0	11
+6	4	308.3	0	4
+7	1	77.1	0	1
+9	1	4.8	0	0 1
+11	1	0.3	1	0 1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 4470 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 61.8%
+  C: 2.6%
+  G: 5.4%
+  T: 30.1%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3531	19728.2	0	3531
+4	126	4932.0	0	126
+5	807	1233.0	0	807
+6	3	308.3	0	3
+7	2	77.1	0	2
+9	1	4.8	0	0 1
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed E2_13E_13_02
+Processing: E3_13E_13_03
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/E3_13E_13_03_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/E3_13E_13_03_R2.trimmed.fq.gz E3_13E_13_03_R1.fq.gz E3_13E_13_03_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 27.773 s (21.154 µs/read; 2.84 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,312,891
+  Read 1 with adapter:                   2,148 (0.2%)
+  Read 2 with adapter:                  10,212 (0.8%)
+Pairs written (passing filters):     1,312,891 (100.0%)
+
+Total basepairs processed:   656,445,500 bp
+  Read 1:   328,222,750 bp
+  Read 2:   328,222,750 bp
+Total written (filtered):    656,396,649 bp (100.0%)
+  Read 1:   328,216,179 bp
+  Read 2:   328,180,470 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 2148 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 84.9%
+  C: 13.0%
+  G: 1.4%
+  T: 0.7%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	2029	20513.9	0	2029
+4	112	5128.5	0	112
+5	6	1282.1	0	6
+6	1	320.5	0	1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 10212 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 38.0%
+  C: 1.1%
+  G: 0.6%
+  T: 60.3%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	4319	20513.9	0	4319
+4	158	5128.5	0	158
+5	5725	1282.1	0	5725
+6	4	320.5	0	4
+7	6	80.1	0	6
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed E3_13E_13_03
+Processing: E4_13E_13_04
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/E4_13E_13_04_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/E4_13E_13_04_R2.trimmed.fq.gz E4_13E_13_04_R1.fq.gz E4_13E_13_04_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 27.858 s (23.008 µs/read; 2.61 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,210,789
+  Read 1 with adapter:                   6,317 (0.5%)
+  Read 2 with adapter:                   6,828 (0.6%)
+Pairs written (passing filters):     1,210,789 (100.0%)
+
+Total basepairs processed:   605,394,500 bp
+  Read 1:   302,697,250 bp
+  Read 2:   302,697,250 bp
+Total written (filtered):    605,350,611 bp (100.0%)
+  Read 1:   302,678,084 bp
+  Read 2:   302,672,527 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 6317 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 89.5%
+  C: 5.9%
+  G: 1.8%
+  T: 2.8%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	6116	18918.6	0	6116
+4	190	4729.6	0	190
+5	8	1182.4	0	8
+6	3	295.6	0	3
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 6828 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 48.9%
+  C: 2.2%
+  G: 5.8%
+  T: 43.1%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	4568	18918.6	0	4568
+4	316	4729.6	0	316
+5	1927	1182.4	0	1927
+6	1	295.6	0	1
+7	15	73.9	0	15
+9	1	4.6	0	0 1
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed E4_13E_13_04
+Processing: E5_13E_19_08
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/E5_13E_19_08_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/E5_13E_19_08_R2.trimmed.fq.gz E5_13E_19_08_R1.fq.gz E5_13E_19_08_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 26.581 s (23.260 µs/read; 2.58 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,142,783
+  Read 1 with adapter:                   4,992 (0.4%)
+  Read 2 with adapter:                   5,926 (0.5%)
+Pairs written (passing filters):     1,142,783 (100.0%)
+
+Total basepairs processed:   571,391,500 bp
+  Read 1:   285,695,750 bp
+  Read 2:   285,695,750 bp
+Total written (filtered):    571,351,477 bp (100.0%)
+  Read 1:   285,680,494 bp
+  Read 2:   285,670,983 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 4992 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 74.8%
+  C: 21.8%
+  G: 1.1%
+  T: 2.3%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	4745	17856.0	0	4745
+4	225	4464.0	0	225
+5	17	1116.0	0	17
+6	2	279.0	0	2
+7	2	69.7	0	2
+10	1	1.1	1	0 1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 5926 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 36.4%
+  C: 2.4%
+  G: 1.5%
+  T: 59.7%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	2340	17856.0	0	2340
+4	207	4464.0	0	207
+5	3370	1116.0	0	3370
+6	2	279.0	0	2
+7	5	69.7	0	5
+11	2	0.3	1	0 2
+  ✓ Successfully trimmed E5_13E_19_08
+Processing: E6_13E_13_06
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/E6_13E_13_06_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/E6_13E_13_06_R2.trimmed.fq.gz E6_13E_13_06_R1.fq.gz E6_13E_13_06_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 26.294 s (22.233 µs/read; 2.70 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,182,667
+  Read 1 with adapter:                  11,191 (0.9%)
+  Read 2 with adapter:                  20,743 (1.8%)
+Pairs written (passing filters):     1,182,667 (100.0%)
+
+Total basepairs processed:   591,333,500 bp
+  Read 1:   295,666,750 bp
+  Read 2:   295,666,750 bp
+Total written (filtered):    591,203,662 bp (100.0%)
+  Read 1:   295,632,722 bp
+  Read 2:   295,570,940 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 11191 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 84.0%
+  C: 14.3%
+  G: 0.8%
+  T: 1.0%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	10768	18479.2	0	10768
+4	397	4619.8	0	397
+5	24	1154.9	0	24
+6	1	288.7	0	1
+10	1	1.1	1	0 1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 20743 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 14.4%
+  C: 0.6%
+  G: 1.8%
+  T: 83.2%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'T' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3832	18479.2	0	3832
+4	266	4619.8	0	266
+5	16631	1154.9	0	16631
+6	3	288.7	0	3
+7	11	72.2	0	11
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed E6_13E_13_06
+Processing: F1_13F_13_12
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/F1_13F_13_12_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/F1_13F_13_12_R2.trimmed.fq.gz F1_13F_13_12_R1.fq.gz F1_13F_13_12_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 21.859 s (21.605 µs/read; 2.78 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,011,765
+  Read 1 with adapter:                   2,392 (0.2%)
+  Read 2 with adapter:                  17,792 (1.8%)
+Pairs written (passing filters):     1,011,765 (100.0%)
+
+Total basepairs processed:   505,882,500 bp
+  Read 1:   252,941,250 bp
+  Read 2:   252,941,250 bp
+Total written (filtered):    505,793,118 bp (100.0%)
+  Read 1:   252,933,864 bp
+  Read 2:   252,859,254 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 2392 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 74.2%
+  C: 20.6%
+  G: 3.5%
+  T: 1.8%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	2214	15808.8	0	2214
+4	150	3952.2	0	150
+5	25	988.1	0	25
+6	2	247.0	0	2
+7	1	61.8	0	1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 17792 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 16.1%
+  C: 0.4%
+  G: 1.6%
+  T: 81.8%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'T' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3399	15808.8	0	3399
+4	179	3952.2	0	179
+5	14206	988.1	0	14206
+6	3	247.0	0	3
+7	5	61.8	0	5
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed F1_13F_13_12
+Processing: F2_13F_13_02
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/F2_13F_13_02_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/F2_13F_13_02_R2.trimmed.fq.gz F2_13F_13_02_R1.fq.gz F2_13F_13_02_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 22.059 s (21.094 µs/read; 2.84 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,045,756
+  Read 1 with adapter:                   3,112 (0.3%)
+  Read 2 with adapter:                   4,602 (0.4%)
+Pairs written (passing filters):     1,045,756 (100.0%)
+
+Total basepairs processed:   522,878,000 bp
+  Read 1:   261,439,000 bp
+  Read 2:   261,439,000 bp
+Total written (filtered):    522,853,479 bp (100.0%)
+  Read 1:   261,429,254 bp
+  Read 2:   261,424,225 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 3112 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 76.9%
+  C: 11.4%
+  G: 10.3%
+  T: 1.5%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	2812	16339.9	0	2812
+4	190	4085.0	0	190
+5	110	1021.2	0	110
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 4602 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 73.7%
+  C: 2.3%
+  G: 1.6%
+  T: 22.4%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3986	16339.9	0	3986
+4	270	4085.0	0	270
+5	344	1021.2	0	344
+7	1	63.8	0	1
+10	1	1.0	1	0 1
+  ✓ Successfully trimmed F2_13F_13_02
+Processing: F3_13F_13_03
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/F3_13F_13_03_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/F3_13F_13_03_R2.trimmed.fq.gz F3_13F_13_03_R1.fq.gz F3_13F_13_03_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 23.134 s (22.041 µs/read; 2.72 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,049,614
+  Read 1 with adapter:                   2,864 (0.3%)
+  Read 2 with adapter:                   4,282 (0.4%)
+Pairs written (passing filters):     1,049,614 (100.0%)
+
+Total basepairs processed:   524,807,000 bp
+  Read 1:   262,403,500 bp
+  Read 2:   262,403,500 bp
+Total written (filtered):    524,783,568 bp (100.0%)
+  Read 1:   262,394,690 bp
+  Read 2:   262,388,878 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 2864 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 81.0%
+  C: 14.7%
+  G: 1.9%
+  T: 2.4%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	2656	16400.2	0	2656
+4	202	4100.1	0	202
+5	5	1025.0	0	5
+9	1	4.0	0	0 1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 4282 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 67.6%
+  C: 3.0%
+  G: 2.0%
+  T: 27.4%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3349	16400.2	0	3349
+4	116	4100.1	0	116
+5	804	1025.0	0	804
+6	9	256.3	0	9
+7	2	64.1	0	2
+10	1	1.0	1	0 1
+13	1	0.0	1	0 1
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed F3_13F_13_03
+Processing: F4_13F_13_04
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/F4_13F_13_04_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/F4_13F_13_04_R2.trimmed.fq.gz F4_13F_13_04_R1.fq.gz F4_13F_13_04_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 25.067 s (22.540 µs/read; 2.66 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,112,119
+  Read 1 with adapter:                   4,821 (0.4%)
+  Read 2 with adapter:                   8,114 (0.7%)
+Pairs written (passing filters):     1,112,119 (100.0%)
+
+Total basepairs processed:   556,059,500 bp
+  Read 1:   278,029,750 bp
+  Read 2:   278,029,750 bp
+Total written (filtered):    556,009,918 bp (100.0%)
+  Read 1:   278,014,569 bp
+  Read 2:   277,995,349 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 4821 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 80.9%
+  C: 14.3%
+  G: 2.7%
+  T: 2.1%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	4149	17376.9	0	4149
+4	626	4344.2	0	626
+5	46	1086.1	0	46
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 8114 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 33.3%
+  C: 1.2%
+  G: 0.9%
+  T: 64.6%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	2948	17376.9	0	2948
+4	290	4344.2	0	290
+5	4863	1086.1	0	4863
+6	9	271.5	0	9
+7	4	67.9	0	4
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed F4_13F_13_04
+Processing: F5_13F_19_08
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/F5_13F_19_08_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/F5_13F_19_08_R2.trimmed.fq.gz F5_13F_19_08_R1.fq.gz F5_13F_19_08_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 27.130 s (22.443 µs/read; 2.67 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,208,829
+  Read 1 with adapter:                   8,952 (0.7%)
+  Read 2 with adapter:                   4,905 (0.4%)
+Pairs written (passing filters):     1,208,829 (100.0%)
+
+Total basepairs processed:   604,414,500 bp
+  Read 1:   302,207,250 bp
+  Read 2:   302,207,250 bp
+Total written (filtered):    604,370,365 bp (100.0%)
+  Read 1:   302,179,772 bp
+  Read 2:   302,190,593 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 8952 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 86.7%
+  C: 10.0%
+  G: 1.6%
+  T: 1.8%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	8367	18888.0	0	8367
+4	548	4722.0	0	548
+5	37	1180.5	0	37
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 4905 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 68.9%
+  C: 2.7%
+  G: 5.0%
+  T: 23.4%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3846	18888.0	0	3846
+4	197	4722.0	0	197
+5	855	1180.5	0	855
+7	5	73.8	0	5
+10	1	1.2	1	0 1
+11	1	0.3	1	0 1
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed F5_13F_19_08
+Processing: F6_13F_13_06
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/F6_13F_13_06_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/F6_13F_13_06_R2.trimmed.fq.gz F6_13F_13_06_R1.fq.gz F6_13F_13_06_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 24.323 s (22.059 µs/read; 2.72 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,102,630
+  Read 1 with adapter:                   3,278 (0.3%)
+  Read 2 with adapter:                   4,838 (0.4%)
+Pairs written (passing filters):     1,102,630 (100.0%)
+
+Total basepairs processed:   551,315,000 bp
+  Read 1:   275,657,500 bp
+  Read 2:   275,657,500 bp
+Total written (filtered):    551,287,561 bp (100.0%)
+  Read 1:   275,647,379 bp
+  Read 2:   275,640,182 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 3278 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 85.6%
+  C: 4.6%
+  G: 1.7%
+  T: 8.1%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3009	17228.6	0	3009
+4	252	4307.1	0	252
+5	16	1076.8	0	16
+6	1	269.2	0	1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 4838 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 66.7%
+  C: 2.7%
+  G: 1.6%
+  T: 29.0%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3187	17228.6	0	3187
+4	505	4307.1	0	505
+5	1143	1076.8	0	1143
+6	2	269.2	0	2
+10	1	1.1	1	0 1
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed F6_13F_13_06
+Processing: G1_13G_13_12
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/G1_13G_13_12_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/G1_13G_13_12_R2.trimmed.fq.gz G1_13G_13_12_R1.fq.gz G1_13G_13_12_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 23.304 s (22.517 µs/read; 2.66 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,034,982
+  Read 1 with adapter:                   5,108 (0.5%)
+  Read 2 with adapter:                   4,475 (0.4%)
+Pairs written (passing filters):     1,034,982 (100.0%)
+
+Total basepairs processed:   517,491,000 bp
+  Read 1:   258,745,500 bp
+  Read 2:   258,745,500 bp
+Total written (filtered):    517,458,850 bp (100.0%)
+  Read 1:   258,729,801 bp
+  Read 2:   258,729,049 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 5108 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 84.3%
+  C: 10.2%
+  G: 4.0%
+  T: 1.5%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	4792	16171.6	0	4792
+4	261	4042.9	0	261
+5	52	1010.7	0	52
+6	2	252.7	0	2
+7	1	63.2	0	1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 4475 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 53.3%
+  C: 1.9%
+  G: 3.1%
+  T: 41.8%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	2885	16171.6	0	2885
+4	163	4042.9	0	163
+5	1422	1010.7	0	1422
+6	1	252.7	0	1
+7	4	63.2	0	4
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed G1_13G_13_12
+Processing: G2_13G_13_02
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/G2_13G_13_02_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/G2_13G_13_02_R2.trimmed.fq.gz G2_13G_13_02_R1.fq.gz G2_13G_13_02_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 27.566 s (21.385 µs/read; 2.81 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,289,062
+  Read 1 with adapter:                   4,084 (0.3%)
+  Read 2 with adapter:                   7,445 (0.6%)
+Pairs written (passing filters):     1,289,062 (100.0%)
+
+Total basepairs processed:   644,531,000 bp
+  Read 1:   322,265,500 bp
+  Read 2:   322,265,500 bp
+Total written (filtered):    644,490,981 bp (100.0%)
+  Read 1:   322,252,784 bp
+  Read 2:   322,238,197 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 4084 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 75.6%
+  C: 9.6%
+  G: 12.5%
+  T: 2.2%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3730	20141.6	0	3730
+4	263	5035.4	0	263
+5	86	1258.8	0	86
+6	1	314.7	0	1
+9	2	4.9	0	0 2
+10	2	1.2	1	0 2
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 7445 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 55.0%
+  C: 1.4%
+  G: 1.6%
+  T: 42.0%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	4734	20141.6	0	4734
+4	465	5035.4	0	465
+5	2241	1258.8	0	2241
+6	1	314.7	0	1
+7	3	78.7	0	3
+9	1	4.9	0	0 1
+  ✓ Successfully trimmed G2_13G_13_02
+Processing: G3_13G_13_03
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/G3_13G_13_03_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/G3_13G_13_03_R2.trimmed.fq.gz G3_13G_13_03_R1.fq.gz G3_13G_13_03_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 23.762 s (21.722 µs/read; 2.76 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,093,929
+  Read 1 with adapter:                   3,952 (0.4%)
+  Read 2 with adapter:                   4,085 (0.4%)
+Pairs written (passing filters):     1,093,929 (100.0%)
+
+Total basepairs processed:   546,964,500 bp
+  Read 1:   273,482,250 bp
+  Read 2:   273,482,250 bp
+Total written (filtered):    546,938,201 bp (100.0%)
+  Read 1:   273,470,129 bp
+  Read 2:   273,468,072 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 3952 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 71.6%
+  C: 26.8%
+  G: 0.7%
+  T: 0.8%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3695	17092.6	0	3695
+4	254	4273.2	0	254
+5	1	1068.3	0	1
+6	1	267.1	0	1
+9	1	4.2	0	0 1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 4085 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 66.1%
+  C: 2.2%
+  G: 1.1%
+  T: 30.6%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3079	17092.6	0	3079
+4	123	4273.2	0	123
+5	869	1068.3	0	869
+6	1	267.1	0	1
+7	10	66.8	0	10
+9	2	4.2	0	0 2
+10	1	1.0	1	0 1
+  ✓ Successfully trimmed G3_13G_13_03
+Processing: G4_13G_13_04
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/G4_13G_13_04_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/G4_13G_13_04_R2.trimmed.fq.gz G4_13G_13_04_R1.fq.gz G4_13G_13_04_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 22.473 s (22.891 µs/read; 2.62 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:            981,739
+  Read 1 with adapter:                   4,406 (0.4%)
+  Read 2 with adapter:                   9,532 (1.0%)
+Pairs written (passing filters):       981,739 (100.0%)
+
+Total basepairs processed:   490,869,500 bp
+  Read 1:   245,434,750 bp
+  Read 2:   245,434,750 bp
+Total written (filtered):    490,814,513 bp (100.0%)
+  Read 1:   245,420,687 bp
+  Read 2:   245,393,826 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 4406 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 79.8%
+  C: 8.4%
+  G: 7.9%
+  T: 3.9%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3706	15339.7	0	3706
+4	555	3834.9	0	555
+5	145	958.7	0	145
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 9532 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 29.3%
+  C: 1.4%
+  G: 0.9%
+  T: 68.5%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3243	15339.7	0	3243
+4	273	3834.9	0	273
+5	6006	958.7	0	6006
+6	1	239.7	0	1
+7	8	59.9	0	8
+11	1	0.2	1	0 1
+  ✓ Successfully trimmed G4_13G_13_04
+Processing: G5_13G_19_08
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/G5_13G_19_08_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/G5_13G_19_08_R2.trimmed.fq.gz G5_13G_19_08_R1.fq.gz G5_13G_19_08_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 27.783 s (22.504 µs/read; 2.67 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,234,620
+  Read 1 with adapter:                  16,307 (1.3%)
+  Read 2 with adapter:                   5,650 (0.5%)
+Pairs written (passing filters):     1,234,620 (100.0%)
+
+Total basepairs processed:   617,310,000 bp
+  Read 1:   308,655,000 bp
+  Read 2:   308,655,000 bp
+Total written (filtered):    617,241,683 bp (100.0%)
+  Read 1:   308,605,737 bp
+  Read 2:   308,635,946 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 16307 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 95.6%
+  C: 2.1%
+  G: 0.8%
+  T: 1.5%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	15988	19290.9	0	15988
+4	297	4822.7	0	297
+5	21	1205.7	0	21
+6	1	301.4	0	1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 5650 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 71.5%
+  C: 2.7%
+  G: 3.6%
+  T: 22.1%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	4538	19290.9	0	4538
+4	134	4822.7	0	134
+5	973	1205.7	0	973
+7	4	75.4	0	4
+11	1	0.3	1	0 1
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed G5_13G_19_08
+Processing: G6_13G_13_06
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/G6_13G_13_06_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/G6_13G_13_06_R2.trimmed.fq.gz G6_13G_13_06_R1.fq.gz G6_13G_13_06_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 26.090 s (21.476 µs/read; 2.79 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,214,856
+  Read 1 with adapter:                   3,098 (0.3%)
+  Read 2 with adapter:                   7,341 (0.6%)
+Pairs written (passing filters):     1,214,856 (100.0%)
+
+Total basepairs processed:   607,428,000 bp
+  Read 1:   303,714,000 bp
+  Read 2:   303,714,000 bp
+Total written (filtered):    607,392,731 bp (100.0%)
+  Read 1:   303,704,499 bp
+  Read 2:   303,688,232 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 3098 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 71.8%
+  C: 19.0%
+  G: 4.4%
+  T: 4.8%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	2933	18982.1	0	2933
+4	139	4745.5	0	139
+5	11	1186.4	0	11
+6	14	296.6	0	14
+7	1	74.1	0	1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 7341 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 65.5%
+  C: 2.2%
+  G: 2.2%
+  T: 30.2%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	5283	18982.1	0	5283
+4	379	4745.5	0	379
+5	1675	1186.4	0	1675
+7	4	74.1	0	4
+  ✓ Successfully trimmed G6_13G_13_06
+Processing: H1_20H_13_12
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/H1_20H_13_12_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/H1_20H_13_12_R2.trimmed.fq.gz H1_20H_13_12_R1.fq.gz H1_20H_13_12_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 25.259 s (22.624 µs/read; 2.65 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,116,467
+  Read 1 with adapter:                   4,665 (0.4%)
+  Read 2 with adapter:                   3,986 (0.4%)
+Pairs written (passing filters):     1,116,467 (100.0%)
+
+Total basepairs processed:   558,233,500 bp
+  Read 1:   279,116,750 bp
+  Read 2:   279,116,750 bp
+Total written (filtered):    558,205,815 bp (100.0%)
+  Read 1:   279,102,397 bp
+  Read 2:   279,103,418 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 4665 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 80.9%
+  C: 13.5%
+  G: 4.0%
+  T: 1.6%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	4419	17444.8	0	4419
+4	140	4361.2	0	140
+5	101	1090.3	0	101
+6	4	272.6	0	4
+7	1	68.1	0	1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 3986 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 58.6%
+  C: 2.0%
+  G: 12.3%
+  T: 27.0%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3219	17444.8	0	3219
+4	177	4361.2	0	177
+5	585	1090.3	0	585
+6	1	272.6	0	1
+7	1	68.1	0	1
+9	2	4.3	0	0 2
+11	1	0.3	1	0 1
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed H1_20H_13_12
+Processing: H2_20H_13_02
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/H2_20H_13_02_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/H2_20H_13_02_R2.trimmed.fq.gz H2_20H_13_02_R1.fq.gz H2_20H_13_02_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 24.938 s (21.424 µs/read; 2.80 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,164,014
+  Read 1 with adapter:                   5,836 (0.5%)
+  Read 2 with adapter:                   7,165 (0.6%)
+Pairs written (passing filters):     1,164,014 (100.0%)
+
+Total basepairs processed:   582,007,000 bp
+  Read 1:   291,003,500 bp
+  Read 2:   291,003,500 bp
+Total written (filtered):    581,963,790 bp (100.0%)
+  Read 1:   290,985,791 bp
+  Read 2:   290,977,999 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 5836 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 88.5%
+  C: 8.6%
+  G: 0.8%
+  T: 2.1%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	5653	18187.7	0	5653
+4	167	4546.9	0	167
+5	15	1136.7	0	15
+7	1	71.0	0	1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 7165 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 53.9%
+  C: 2.0%
+  G: 2.5%
+  T: 41.6%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	4948	18187.7	0	4948
+4	452	4546.9	0	452
+5	1743	1136.7	0	1743
+6	20	284.2	0	20
+7	2	71.0	0	2
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed H2_20H_13_02
+Processing: H3_20H_13_03
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/H3_20H_13_03_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/H3_20H_13_03_R2.trimmed.fq.gz H3_20H_13_03_R1.fq.gz H3_20H_13_03_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 22.585 s (20.771 µs/read; 2.89 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,087,324
+  Read 1 with adapter:                      85 (0.0%)
+  Read 2 with adapter:                     380 (0.0%)
+Pairs written (passing filters):     1,087,324 (100.0%)
+
+Total basepairs processed:   543,662,000 bp
+  Read 1:   271,831,000 bp
+  Read 2:   271,831,000 bp
+Total written (filtered):    543,660,541 bp (100.0%)
+  Read 1:   271,830,730 bp
+  Read 2:   271,829,811 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 85 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 23.5%
+  C: 41.2%
+  G: 24.7%
+  T: 10.6%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	73	16989.4	0	73
+4	10	4247.4	0	10
+5	1	1061.8	0	1
+6	1	265.5	0	1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 380 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 76.6%
+  C: 1.3%
+  G: 13.4%
+  T: 8.7%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	339	16989.4	0	339
+4	33	4247.4	0	33
+5	8	1061.8	0	8
+  ✓ Successfully trimmed H3_20H_13_03
+Processing: H4_20H_13_04
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/H4_20H_13_04_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/H4_20H_13_04_R2.trimmed.fq.gz H4_20H_13_04_R1.fq.gz H4_20H_13_04_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 23.605 s (22.221 µs/read; 2.70 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,062,263
+  Read 1 with adapter:                   4,660 (0.4%)
+  Read 2 with adapter:                   4,769 (0.4%)
+Pairs written (passing filters):     1,062,263 (100.0%)
+
+Total basepairs processed:   531,131,500 bp
+  Read 1:   265,565,750 bp
+  Read 2:   265,565,750 bp
+Total written (filtered):    531,100,474 bp (100.0%)
+  Read 1:   265,551,366 bp
+  Read 2:   265,549,108 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 4660 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 87.0%
+  C: 8.9%
+  G: 2.6%
+  T: 1.6%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	4353	16597.9	0	4353
+4	213	4149.5	0	213
+5	92	1037.4	0	92
+6	1	259.3	0	1
+7	1	64.8	0	1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 4769 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 61.7%
+  C: 2.5%
+  G: 3.4%
+  T: 32.4%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	3489	16597.9	0	3489
+4	227	4149.5	0	227
+5	1052	1037.4	0	1052
+7	1	64.8	0	1
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed H4_20H_13_04
+Processing: H5_20H_19_08
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/H5_20H_19_08_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/H5_20H_19_08_R2.trimmed.fq.gz H5_20H_19_08_R1.fq.gz H5_20H_19_08_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 33.440 s (22.768 µs/read; 2.64 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,468,719
+  Read 1 with adapter:                  13,543 (0.9%)
+  Read 2 with adapter:                   5,705 (0.4%)
+Pairs written (passing filters):     1,468,719 (100.0%)
+
+Total basepairs processed:   734,359,500 bp
+  Read 1:   367,179,750 bp
+  Read 2:   367,179,750 bp
+Total written (filtered):    734,299,987 bp (100.0%)
+  Read 1:   367,138,604 bp
+  Read 2:   367,161,383 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 13543 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 91.9%
+  C: 4.5%
+  G: 1.4%
+  T: 2.2%
+  none/other: 0.0%
+WARNING:
+    The adapter is preceded by 'A' extremely often.
+    The provided adapter sequence could be incomplete at its 5' end.
+    Ignore this warning when trimming primers.
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	13143	22948.7	0	13143
+4	291	5737.2	0	291
+5	104	1434.3	0	104
+6	4	358.6	0	4
+9	1	5.6	0	0 1
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 5705 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 76.3%
+  C: 4.0%
+  G: 3.3%
+  T: 16.4%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	4975	22948.7	0	4975
+4	220	5737.2	0	220
+5	505	1434.3	0	505
+6	2	358.6	0	2
+7	2	89.6	0	2
+11	1	0.4	1	0 1
+
+
+WARNING:
+    One or more of your adapter sequences may be incomplete.
+    Please see the detailed output above.
+  ✓ Successfully trimmed H5_20H_19_08
+Processing: H6_20H_13_06
+This is cutadapt 4.9 with Python 3.12.5
+Command line parameters: -a TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG -A GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG -o /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/H6_20H_13_06_R1.trimmed.fq.gz -p /nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/trimmed_reads/H6_20H_13_06_R2.trimmed.fq.gz H6_20H_13_06_R1.fq.gz H6_20H_13_06_R2.fq.gz
+Processing paired-end reads on 1 core ...
+Finished in 22.205 s (19.669 µs/read; 3.05 M reads/minute).
+
+=== Summary ===
+
+Total read pairs processed:          1,128,946
+  Read 1 with adapter:                      67 (0.0%)
+  Read 2 with adapter:                     120 (0.0%)
+Pairs written (passing filters):     1,128,946 (100.0%)
+
+Total basepairs processed:   564,473,000 bp
+  Read 1:   282,236,500 bp
+  Read 2:   282,236,500 bp
+Total written (filtered):    564,472,398 bp (100.0%)
+  Read 1:   282,236,293 bp
+  Read 2:   282,236,105 bp
+
+=== First read: Adapter 1 ===
+
+Sequence: TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 33; Trimmed: 67 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-33 bp: 3
+
+Bases preceding removed adapters:
+  A: 34.3%
+  C: 49.3%
+  G: 11.9%
+  T: 4.5%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	61	17639.8	0	61
+4	6	4409.9	0	6
+
+
+=== Second read: Adapter 2 ===
+
+Sequence: GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG; Type: regular 3'; Length: 34; Trimmed: 120 times
+
+Minimum overlap: 3
+No. of allowed errors:
+1-9 bp: 0; 10-19 bp: 1; 20-29 bp: 2; 30-34 bp: 3
+
+Bases preceding removed adapters:
+  A: 17.5%
+  C: 2.5%
+  G: 57.5%
+  T: 22.5%
+  none/other: 0.0%
+
+Overview of removed sequences
+length	count	expect	max.err	error counts
+3	103	17639.8	0	103
+4	4	4409.9	0	4
+5	12	1102.5	0	12
+10	1	1.1	1	0 1
+  ✓ Successfully trimmed H6_20H_13_06
+Adapter trimming complete!
+Trimmed files saved in: qiime2/import/trimmed_reads
+
+Summary:
+Input files: 48 sublibrary pairs
+Output files: 48 trimmed pairs
