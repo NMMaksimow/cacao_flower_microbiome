@@ -47,46 +47,46 @@ md5sum -c MD5.txt
 	- **Location**: `qiime2/import/merged_files/` \
 	- **Processing time**: 29 seconds on cluster node cn032 \
 	- **Log file**: `logs/slurm-13004770.out` \
-**Status**: ✅ **COMPLETE** - All 48 sublibrary pairs merged successfully --- \
+**Status**: ✅ **COMPLETE** - All 48 sublibrary pairs merged successfully ---  
 
-### 3. Adapter Trimming
-**Remove Illumina sequencing adapters using cutadapt**
-	- **Script**: `qiime2/scripts/adapter_trimming_cutadapt.sh`
-	- **Tool**: cutadapt v4.9
-	- **Input**: 48 sublibrary pairs (96 files) from merged lane data
-	- **Adapter sequences removed**:
-	 - Forward (R1): `TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG`
-	 - Reverse (R2): `GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG`
-**Results**:
-	- **Total read pairs processed**: 890,963 across all sublibraries
-	- **Adapter contamination**: <1% (20 adapters in R1, 7,133 in R2)
-	- **Data retention**: 100% of reads preserved
-	- **Output**: 96 adapter-trimmed files at `qiime2/import/trimmed_reads/`
-	- **Processing time**: ~20 minutes (SLURM job 13163307)
-	- **Log file**: `logs/trim_adapters_13163307.out`
+### 3. Adapter Trimming \
+**Remove Illumina sequencing adapters using cutadapt** \
+	- **Script**: `qiime2/scripts/adapter_trimming_cutadapt.sh` \
+	- **Tool**: cutadapt v4.9 \
+	- **Input**: 48 sublibrary pairs (96 files) from merged lane data \
+	- **Adapter sequences removed**: \
+	 - Forward (R1): `TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG` \
+	 - Reverse (R2): `GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG` \
+**Results**: \
+	- **Total read pairs processed**: 890,963 across all sublibraries \
+	- **Adapter contamination**: <1% (20 adapters in R1, 7,133 in R2) \
+	- **Data retention**: 100% of reads preserved \
+	- **Output**: 96 adapter-trimmed files at `qiime2/import/trimmed_reads/` \
+	- **Processing time**: ~20 minutes (SLURM job 13163307) \
+	- **Log file**: `logs/trim_adapters_13163307.out` \
  **Status**: ✅ **COMPLETE** - Minimal adapter contamination, ready for demultiplexing ---
 
-## Next Steps
-	### 4. Demultiplexing (In Progress)
-**Separate individual samples using internal barcodes**
-	- **Tool**: Stacks process_radtags
-	- **Strategy**: Use 8bp combinatorial internal tags to separate samples within sublibraries
-	- **Expected output**: Individual sample files for each of 336 samples × 2 amplicons
-	- **Challenge**: Combinatorial tags are reused across sublibraries, requiring sublibrary-specific processing
+## Next Steps \
+	### 4. Demultiplexing (In Progress) \
+**Separate individual samples using internal barcodes** \
+	- **Tool**: Stacks process_radtags \
+	- **Strategy**: Use 8bp combinatorial internal tags to separate samples within sublibraries \
+	- **Expected output**: Individual sample files for each of 336 samples × 2 amplicons \
+	- **Challenge**: Combinatorial tags are reused across sublibraries, requiring sublibrary-specific processing \
 
 ### 5. Amplicon Separation (Planned)
-**Separate 16S and ITS1 amplicons**
-	- **Tool**: cutadapt with primer-specific trimming
-	- **Strategy**: Use locus-specific primer sequences to separate and trim amplicons
-	- **Output**: Clean amplicon-specific files ready for QIIME2 import
+**Separate 16S and ITS1 amplicons** \
+	- **Tool**: cutadapt with primer-specific trimming \
+	- **Strategy**: Use locus-specific primer sequences to separate and trim amplicons \
+	- **Output**: Clean amplicon-specific files ready for QIIME2 import \
 
-### 6. QIIME2 Analysis (Planned)
-**Standard microbiome analysis pipeline**
-	- Import demultiplexed, amplicon-separated sequences
-	- Quality filtering and denoising (DADA2)
-	- Taxonomic classification
-	- Diversity analysis
-	- Statistical testing for pollinator effects
+### 6. QIIME2 Analysis (Planned) 
+**Standard microbiome analysis pipeline** \
+	- Import demultiplexed, amplicon-separated sequences \
+	- Quality filtering and denoising (DADA2) \
+	- Taxonomic classification \
+	- Diversity analysis \
+	- Statistical testing for pollinator effects \
 
 ## File Organization
 ``` cacao_flower_microbiome/ ├── data/ │ ├── qiime2_cfm_metadata.txt # Sample metadata for QIIME2 │ └── raw_data/ # Original Novogene files ├── qiime2/ │ ├── import/ │ │ ├── merged_files/ # Lane-merged sublibraries │ │ 
