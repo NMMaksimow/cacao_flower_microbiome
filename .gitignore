@@ -16,6 +16,7 @@ scripts/technical/
 data/raw_data/
 *.fastq
 *.fastq.gz
+*.fq.gz
 *.tar
 *.tar.gz
 
