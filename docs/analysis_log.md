@@ -51,7 +51,7 @@ md5sum -c MD5.txt
 
 ### 3. Adapter Trimming
 **Remove Illumina sequencing adapters using cutadapt** \
-	- **Script**: `qiime2/scripts/adapter_trimming_cutadapt.sh` \
+	- **Script**: `qiime2/scripts/02_adapter_trimming_cutadapt.sh` \
 	- **Tool**: cutadapt v4.9 \
 	- **Input**: 48 sublibrary pairs (96 files) from merged lane data \
 	- **Adapter sequences removed**: \
