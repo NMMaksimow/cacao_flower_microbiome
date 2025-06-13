@@ -1,0 +1,442 @@
+ Reading file: qiime2/import/demux/stacks_sample_mapping_all_sublibraries.txt
+ Read 337 lines from file
+ Header columns: ['sample-id', 'sublibrary_id', '16s_forward_primer', '16s_forward_primer_tag', '16s_reverse_primer', '16s_reverse_primer_tag', 'its1_forward_primer', 'its1_forward_primer_tag', 'its1_reverse_primer', 'its1_reverse_primer_tag']
+ Data rows: 336
+ Output directory: qiime2/import/demux/internal_tag_mappings
+ Found 48 unique sublibraries
+
+ Processing sublibrary: A1_13A_13_12
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/A1_13A_13_12_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cibNC_16S
+      CATGTCCT	GATCTGGT	cibNC_ITS1
+      GTCAACTG	TCACTCTG	cviNC_16S
+      CATGTCCT	CTACGTAG	cviNC_ITS1
+
+ Processing sublibrary: A2_13A_13_02
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/A2_13A_13_02_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cib31_16S
+      CATGTCCT	GATCTGGT	cib31_ITS1
+      GTCAACTG	TCACTCTG	cvi31_16S
+      CATGTCCT	CTACGTAG	cvi31_ITS1
+
+ Processing sublibrary: A3_13A_13_03
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/A3_13A_13_03_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cib53_16S
+      CATGTCCT	GATCTGGT	cib53_ITS1
+      GTCAACTG	TCACTCTG	cvi53_16S
+      CATGTCCT	CTACGTAG	cvi53_ITS1
+
+ Processing sublibrary: A4_13A_13_04
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/A4_13A_13_04_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pibNC_16S
+      CATGTCCT	ACAGGAGT	pibNC_ITS1
+      GTCAACTG	ATCCATGG	pviNC_16S
+      TCTCACTG	CAGTACTG	pviNC_ITS1
+
+ Processing sublibrary: A5_13A_19_08
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/A5_13A_19_08_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pib31_16S
+      CATGTCCT	ACAGGAGT	pib31_ITS1
+      GTCAACTG	ATCCATGG	pvi31_16S
+      TCTCACTG	CAGTACTG	pvi31_ITS1
+
+ Processing sublibrary: A6_13A_13_06
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/A6_13A_13_06_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pib53_16S
+      CATGTCCT	ACAGGAGT	pib53_ITS1
+      GTCAACTG	ATCCATGG	pvi53_16S
+      TCTCACTG	CAGTACTG	pvi53_ITS1
+
+ Processing sublibrary: B1_13B_13_12
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/B1_13B_13_12_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cibEC_16S
+      CATGTCCT	GATCTGGT	cibEC_ITS1
+      GTCAACTG	TCACTCTG	cviEC_16S
+      CATGTCCT	CTACGTAG	cviEC_ITS1
+
+ Processing sublibrary: B2_13B_13_02
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/B2_13B_13_02_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cib32_16S
+      CATGTCCT	GATCTGGT	cib32_ITS1
+      GTCAACTG	TCACTCTG	cvi32_16S
+      CATGTCCT	CTACGTAG	cvi32_ITS1
+
+ Processing sublibrary: B3_13B_13_03
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/B3_13B_13_03_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cib61_16S
+      CATGTCCT	GATCTGGT	cib61_ITS1
+      GTCAACTG	TCACTCTG	cvi61_16S
+      CATGTCCT	CTACGTAG	cvi61_ITS1
+
+ Processing sublibrary: B4_13B_13_04
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/B4_13B_13_04_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pibEC_16S
+      CATGTCCT	ACAGGAGT	pibEC_ITS1
+      GTCAACTG	ATCCATGG	pviEC_16S
+      TCTCACTG	CAGTACTG	pviEC_ITS1
+
+ Processing sublibrary: B5_13B_19_08
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/B5_13B_19_08_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pib32_16S
+      CATGTCCT	ACAGGAGT	pib32_ITS1
+      GTCAACTG	ATCCATGG	pvi32_16S
+      TCTCACTG	CAGTACTG	pvi32_ITS1
+
+ Processing sublibrary: B6_13B_13_06
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/B6_13B_13_06_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pib61_16S
+      CATGTCCT	ACAGGAGT	pib61_ITS1
+      GTCAACTG	ATCCATGG	pvi61_16S
+      TCTCACTG	CAGTACTG	pvi61_ITS1
+
+ Processing sublibrary: C1_14C_13_12
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/C1_14C_13_12_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cib11_16S
+      CATGTCCT	GATCTGGT	cib11_ITS1
+      GTCAACTG	TCACTCTG	cvi11_16S
+      CATGTCCT	CTACGTAG	cvi11_ITS1
+
+ Processing sublibrary: C2_14C_13_02
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/C2_14C_13_02_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cib33_16S
+      CATGTCCT	GATCTGGT	cib33_ITS1
+      GTCAACTG	TCACTCTG	cvi33_16S
+      CATGTCCT	CTACGTAG	cvi33_ITS1
+
+ Processing sublibrary: C3_14C_13_03
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/C3_14C_13_03_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cib62_16S
+      CATGTCCT	GATCTGGT	cib62_ITS1
+      GTCAACTG	TCACTCTG	cvi62_16S
+      CATGTCCT	CTACGTAG	cvi62_ITS1
+
+ Processing sublibrary: C4_14C_13_04
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/C4_14C_13_04_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pib11_16S
+      CATGTCCT	ACAGGAGT	pib11_ITS1
+      GTCAACTG	ATCCATGG	pvi11_16S
+      TCTCACTG	CAGTACTG	pvi11_ITS1
+
+ Processing sublibrary: C5_14C_19_08
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/C5_14C_19_08_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pib33_16S
+      CATGTCCT	ACAGGAGT	pib33_ITS1
+      GTCAACTG	ATCCATGG	pvi33_16S
+      TCTCACTG	CAGTACTG	pvi33_ITS1
+
+ Processing sublibrary: C6_14C_13_06
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/C6_14C_13_06_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pib62_16S
+      CATGTCCT	ACAGGAGT	pib62_ITS1
+      GTCAACTG	ATCCATGG	pvi62_16S
+      TCTCACTG	CAGTACTG	pvi62_ITS1
+
+ Processing sublibrary: D1_14B_13_12
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/D1_14B_13_12_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cib12_16S
+      CATGTCCT	GATCTGGT	cib12_ITS1
+      GTCAACTG	TCACTCTG	cvi12_16S
+      CATGTCCT	CTACGTAG	cvi12_ITS1
+
+ Processing sublibrary: D2_14B_13_02
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/D2_14B_13_02_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cib41_16S
+      CATGTCCT	GATCTGGT	cib41_ITS1
+      GTCAACTG	TCACTCTG	cvi41_16S
+      CATGTCCT	CTACGTAG	cvi41_ITS1
+
+ Processing sublibrary: D3_14B_13_03
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/D3_14B_13_03_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cib63_16S
+      CATGTCCT	GATCTGGT	cib63_ITS1
+      GTCAACTG	TCACTCTG	cvi63_16S
+      CATGTCCT	CTACGTAG	cvi63_ITS1
+
+ Processing sublibrary: D4_14B_13_04
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/D4_14B_13_04_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pib12_16S
+      CATGTCCT	ACAGGAGT	pib12_ITS1
+      GTCAACTG	ATCCATGG	pvi12_16S
+      TCTCACTG	CAGTACTG	pvi12_ITS1
+
+ Processing sublibrary: D5_14B_19_08
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/D5_14B_19_08_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pib41_16S
+      CATGTCCT	ACAGGAGT	pib41_ITS1
+      GTCAACTG	ATCCATGG	pvi41_16S
+      TCTCACTG	CAGTACTG	pvi41_ITS1
+
+ Processing sublibrary: D6_14B_13_06
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/D6_14B_13_06_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pib63_16S
+      CATGTCCT	ACAGGAGT	pib63_ITS1
+      GTCAACTG	ATCCATGG	pvi63_16S
+      TCTCACTG	CAGTACTG	pvi63_ITS1
+
+ Processing sublibrary: E1_13E_13_12
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/E1_13E_13_12_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cib13_16S
+      CATGTCCT	GATCTGGT	cib13_ITS1
+      GTCAACTG	TCACTCTG	cvi13_16S
+      CATGTCCT	CTACGTAG	cvi13_ITS1
+
+ Processing sublibrary: E2_13E_13_02
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/E2_13E_13_02_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cib42_16S
+      CATGTCCT	GATCTGGT	cib42_ITS1
+      GTCAACTG	TCACTCTG	cvi42_16S
+      CATGTCCT	CTACGTAG	cvi42_ITS1
+
+ Processing sublibrary: E3_13E_13_03
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/E3_13E_13_03_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cib71_16S
+      CATGTCCT	GATCTGGT	cib71_ITS1
+      GTCAACTG	TCACTCTG	cvi71_16S
+      CATGTCCT	CTACGTAG	cvi71_ITS1
+
+ Processing sublibrary: E4_13E_13_04
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/E4_13E_13_04_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pib13_16S
+      CATGTCCT	ACAGGAGT	pib13_ITS1
+      GTCAACTG	ATCCATGG	pvi13_16S
+      TCTCACTG	CAGTACTG	pvi13_ITS1
+
+ Processing sublibrary: E5_13E_19_08
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/E5_13E_19_08_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pib42_16S
+      CATGTCCT	ACAGGAGT	pib42_ITS1
+      GTCAACTG	ATCCATGG	pvi42_16S
+      TCTCACTG	CAGTACTG	pvi42_ITS1
+
+ Processing sublibrary: E6_13E_13_06
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/E6_13E_13_06_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pib71_16S
+      CATGTCCT	ACAGGAGT	pib71_ITS1
+      GTCAACTG	ATCCATGG	pvi71_16S
+      TCTCACTG	CAGTACTG	pvi71_ITS1
+
+ Processing sublibrary: F1_13F_13_12
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/F1_13F_13_12_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cib21_16S
+      CATGTCCT	GATCTGGT	cib21_ITS1
+      GTCAACTG	TCACTCTG	cvi21_16S
+      CATGTCCT	CTACGTAG	cvi21_ITS1
+
+ Processing sublibrary: F2_13F_13_02
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/F2_13F_13_02_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cib43_16S
+      CATGTCCT	GATCTGGT	cib43_ITS1
+      GTCAACTG	TCACTCTG	cvi43_16S
+      CATGTCCT	CTACGTAG	cvi43_ITS1
+
+ Processing sublibrary: F3_13F_13_03
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/F3_13F_13_03_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cib72_16S
+      CATGTCCT	GATCTGGT	cib72_ITS1
+      GTCAACTG	TCACTCTG	cvi72_16S
+      CATGTCCT	CTACGTAG	cvi72_ITS1
+
+ Processing sublibrary: F4_13F_13_04
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/F4_13F_13_04_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pib21_16S
+      CATGTCCT	ACAGGAGT	pib21_ITS1
+      GTCAACTG	ATCCATGG	pvi21_16S
+      TCTCACTG	CAGTACTG	pvi21_ITS1
+
+ Processing sublibrary: F5_13F_19_08
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/F5_13F_19_08_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pib43_16S
+      CATGTCCT	ACAGGAGT	pib43_ITS1
+      GTCAACTG	ATCCATGG	pvi43_16S
+      TCTCACTG	CAGTACTG	pvi43_ITS1
+
+ Processing sublibrary: F6_13F_13_06
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/F6_13F_13_06_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pib72_16S
+      CATGTCCT	ACAGGAGT	pib72_ITS1
+      GTCAACTG	ATCCATGG	pvi72_16S
+      TCTCACTG	CAGTACTG	pvi72_ITS1
+
+ Processing sublibrary: G1_13G_13_12
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/G1_13G_13_12_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cib22_16S
+      CATGTCCT	GATCTGGT	cib22_ITS1
+      GTCAACTG	TCACTCTG	cvi22_16S
+      CATGTCCT	CTACGTAG	cvi22_ITS1
+
+ Processing sublibrary: G2_13G_13_02
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/G2_13G_13_02_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cib51_16S
+      CATGTCCT	GATCTGGT	cib51_ITS1
+      GTCAACTG	TCACTCTG	cvi51_16S
+      CATGTCCT	CTACGTAG	cvi51_ITS1
+
+ Processing sublibrary: G3_13G_13_03
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/G3_13G_13_03_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cib73_16S
+      CATGTCCT	GATCTGGT	cib73_ITS1
+      GTCAACTG	TCACTCTG	cvi73_16S
+      CATGTCCT	CTACGTAG	cvi73_ITS1
+
+ Processing sublibrary: G4_13G_13_04
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/G4_13G_13_04_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pib22_16S
+      CATGTCCT	ACAGGAGT	pib22_ITS1
+      GTCAACTG	ATCCATGG	pvi22_16S
+      TCTCACTG	CAGTACTG	pvi22_ITS1
+
+ Processing sublibrary: G5_13G_19_08
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/G5_13G_19_08_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pib51_16S
+      CATGTCCT	ACAGGAGT	pib51_ITS1
+      GTCAACTG	ATCCATGG	pvi51_16S
+      TCTCACTG	CAGTACTG	pvi51_ITS1
+
+ Processing sublibrary: G6_13G_13_06
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/G6_13G_13_06_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pib73_16S
+      CATGTCCT	ACAGGAGT	pib73_ITS1
+      GTCAACTG	ATCCATGG	pvi73_16S
+      TCTCACTG	CAGTACTG	pvi73_ITS1
+
+ Processing sublibrary: H1_20H_13_12
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/H1_20H_13_12_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cib23_16S
+      CATGTCCT	GATCTGGT	cib23_ITS1
+      GTCAACTG	TCACTCTG	cvi23_16S
+      CATGTCCT	CTACGTAG	cvi23_ITS1
+
+ Processing sublibrary: H2_20H_13_02
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/H2_20H_13_02_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cib52_16S
+      CATGTCCT	GATCTGGT	cib52_ITS1
+      GTCAACTG	TCACTCTG	cvi52_16S
+      CATGTCCT	CTACGTAG	cvi52_ITS1
+
+ Processing sublibrary: H3_20H_13_03
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/H3_20H_13_03_tags.tsv
+ Example entries:
+      GTCAACTG	CGTAGGAA	cibPC_16S
+      CATGTCCT	GATCTGGT	cibPC_ITS1
+      GTCAACTG	TCACTCTG	cviPC_16S
+      CATGTCCT	CTACGTAG	cviPC_ITS1
+
+ Processing sublibrary: H4_20H_13_04
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/H4_20H_13_04_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pib23_16S
+      CATGTCCT	ACAGGAGT	pib23_ITS1
+      GTCAACTG	ATCCATGG	pvi23_16S
+      TCTCACTG	CAGTACTG	pvi23_ITS1
+
+ Processing sublibrary: H5_20H_19_08
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/H5_20H_19_08_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pib52_16S
+      CATGTCCT	ACAGGAGT	pib52_ITS1
+      GTCAACTG	ATCCATGG	pvi52_16S
+      TCTCACTG	CAGTACTG	pvi52_ITS1
+
+ Processing sublibrary: H6_20H_13_06
+   Samples: 7 (14 tag combinations)
+ Created: qiime2/import/demux/internal_tag_mappings/H6_20H_13_06_tags.tsv
+ Example entries:
+      GTCAACTG	CTCTGACT	pibPC_16S
+      CATGTCCT	ACAGGAGT	pibPC_ITS1
+      GTCAACTG	ATCCATGG	pviPC_16S
+      TCTCACTG	CAGTACTG	pviPC_ITS1
+
+ Process complete!
+ Created 48 mapping files
+ Ready for Stacks process_radtags!
