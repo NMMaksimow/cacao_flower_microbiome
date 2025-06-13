@@ -1,0 +1,1200 @@
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [A1_13A_13_12_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/A1_13A_13_12_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/A1_13A_13_12_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...
+  1781926 total reads; -19754 ambiguous barcodes; -0 ambiguous RAD-Tags; +125422 recovered; -1692 low quality reads; 1760480 retained reads.
+Closing files, flushing buffers...done.
+
+1781926 total sequences
+  19754 barcode not found drops (1.1%)
+   1692 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+1760480 retained reads (98.8%)
+
+Details logged: 'temp_A1_13A_13_12/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_A1_13A_13_12/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_A1_13A_13_12/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [A2_13A_13_02_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/A2_13A_13_02_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/A2_13A_13_02_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2326514 total reads; -18452 ambiguous barcodes; -0 ambiguous RAD-Tags; +69914 recovered; -2598 low quality reads; 2305464 retained reads.
+Closing files, flushing buffers...done.
+
+2326514 total sequences
+  18452 barcode not found drops (0.8%)
+   2598 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2305464 retained reads (99.1%)
+
+Details logged: 'temp_A2_13A_13_02/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_A2_13A_13_02/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_A2_13A_13_02/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [A3_13A_13_03_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/A3_13A_13_03_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/A3_13A_13_03_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...
+  1989300 total reads; -15442 ambiguous barcodes; -0 ambiguous RAD-Tags; +41358 recovered; -2196 low quality reads; 1971662 retained reads.
+Closing files, flushing buffers...done.
+
+1989300 total sequences
+  15442 barcode not found drops (0.8%)
+   2196 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+1971662 retained reads (99.1%)
+
+Details logged: 'temp_A3_13A_13_03/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_A3_13A_13_03/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_A3_13A_13_03/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [A4_13A_13_04_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/A4_13A_13_04_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/A4_13A_13_04_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2242314 total reads; -19058 ambiguous barcodes; -0 ambiguous RAD-Tags; +87762 recovered; -2332 low quality reads; 2220924 retained reads.
+Closing files, flushing buffers...done.
+
+2242314 total sequences
+  19058 barcode not found drops (0.8%)
+   2332 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2220924 retained reads (99.0%)
+
+Details logged: 'temp_A4_13A_13_04/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_A4_13A_13_04/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_A4_13A_13_04/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [A5_13A_19_08_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/A5_13A_19_08_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/A5_13A_19_08_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2017722 total reads; -17650 ambiguous barcodes; -0 ambiguous RAD-Tags; +84144 recovered; -2110 low quality reads; 1997962 retained reads.
+Closing files, flushing buffers...done.
+
+2017722 total sequences
+  17650 barcode not found drops (0.9%)
+   2110 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+1997962 retained reads (99.0%)
+
+Details logged: 'temp_A5_13A_19_08/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_A5_13A_19_08/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_A5_13A_19_08/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [A6_13A_13_06_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/A6_13A_13_06_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/A6_13A_13_06_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2279976 total reads; -23644 ambiguous barcodes; -0 ambiguous RAD-Tags; +35344 recovered; -2630 low quality reads; 2253702 retained reads.
+Closing files, flushing buffers...done.
+
+2279976 total sequences
+  23644 barcode not found drops (1.0%)
+   2630 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2253702 retained reads (98.8%)
+
+Details logged: 'temp_A6_13A_13_06/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_A6_13A_13_06/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_A6_13A_13_06/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [B1_13B_13_12_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/B1_13B_13_12_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/B1_13B_13_12_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2021592 total reads; -15966 ambiguous barcodes; -0 ambiguous RAD-Tags; +56594 recovered; -2240 low quality reads; 2003386 retained reads.
+Closing files, flushing buffers...done.
+
+2021592 total sequences
+  15966 barcode not found drops (0.8%)
+   2240 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2003386 retained reads (99.1%)
+
+Details logged: 'temp_B1_13B_13_12/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_B1_13B_13_12/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_B1_13B_13_12/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [B2_13B_13_02_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/B2_13B_13_02_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/B2_13B_13_02_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2366498 total reads; -17808 ambiguous barcodes; -0 ambiguous RAD-Tags; +38002 recovered; -2698 low quality reads; 2345992 retained reads.
+Closing files, flushing buffers...done.
+
+2366498 total sequences
+  17808 barcode not found drops (0.8%)
+   2698 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2345992 retained reads (99.1%)
+
+Details logged: 'temp_B2_13B_13_02/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_B2_13B_13_02/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_B2_13B_13_02/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [B3_13B_13_03_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/B3_13B_13_03_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/B3_13B_13_03_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2212560 total reads; -15898 ambiguous barcodes; -0 ambiguous RAD-Tags; +39922 recovered; -2512 low quality reads; 2194150 retained reads.
+Closing files, flushing buffers...done.
+
+2212560 total sequences
+  15898 barcode not found drops (0.7%)
+   2512 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2194150 retained reads (99.2%)
+
+Details logged: 'temp_B3_13B_13_03/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_B3_13B_13_03/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_B3_13B_13_03/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [B4_13B_13_04_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/B4_13B_13_04_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/B4_13B_13_04_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...
+  1334302 total reads; -24988 ambiguous barcodes; -0 ambiguous RAD-Tags; +139252 recovered; -1052 low quality reads; 1308262 retained reads.
+Closing files, flushing buffers...done.
+
+1334302 total sequences
+  24988 barcode not found drops (1.9%)
+   1052 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+1308262 retained reads (98.0%)
+
+Details logged: 'temp_B4_13B_13_04/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_B4_13B_13_04/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_B4_13B_13_04/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [B5_13B_19_08_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/B5_13B_19_08_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/B5_13B_19_08_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2330728 total reads; -17514 ambiguous barcodes; -0 ambiguous RAD-Tags; +48422 recovered; -2529 low quality reads; 2310685 retained reads.
+Closing files, flushing buffers...done.
+
+2330728 total sequences
+  17514 barcode not found drops (0.8%)
+   2529 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2310685 retained reads (99.1%)
+
+Details logged: 'temp_B5_13B_19_08/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_B5_13B_19_08/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_B5_13B_19_08/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [B6_13B_13_06_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/B6_13B_13_06_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/B6_13B_13_06_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2110160 total reads; -24126 ambiguous barcodes; -0 ambiguous RAD-Tags; +81692 recovered; -2255 low quality reads; 2083779 retained reads.
+Closing files, flushing buffers...done.
+
+2110160 total sequences
+  24126 barcode not found drops (1.1%)
+   2255 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2083779 retained reads (98.7%)
+
+Details logged: 'temp_B6_13B_13_06/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_B6_13B_13_06/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_B6_13B_13_06/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [C1_14C_13_12_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/C1_14C_13_12_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/C1_14C_13_12_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2144588 total reads; -17610 ambiguous barcodes; -0 ambiguous RAD-Tags; +29026 recovered; -2478 low quality reads; 2124500 retained reads.
+Closing files, flushing buffers...done.
+
+2144588 total sequences
+  17610 barcode not found drops (0.8%)
+   2478 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2124500 retained reads (99.1%)
+
+Details logged: 'temp_C1_14C_13_12/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_C1_14C_13_12/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_C1_14C_13_12/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [C2_14C_13_02_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/C2_14C_13_02_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/C2_14C_13_02_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2346194 total reads; -18508 ambiguous barcodes; -0 ambiguous RAD-Tags; +31538 recovered; -2642 low quality reads; 2325044 retained reads.
+Closing files, flushing buffers...done.
+
+2346194 total sequences
+  18508 barcode not found drops (0.8%)
+   2642 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2325044 retained reads (99.1%)
+
+Details logged: 'temp_C2_14C_13_02/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_C2_14C_13_02/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_C2_14C_13_02/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [C3_14C_13_03_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/C3_14C_13_03_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/C3_14C_13_03_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2109252 total reads; -15864 ambiguous barcodes; -0 ambiguous RAD-Tags; +29596 recovered; -2390 low quality reads; 2090998 retained reads.
+Closing files, flushing buffers...done.
+
+2109252 total sequences
+  15864 barcode not found drops (0.8%)
+   2390 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2090998 retained reads (99.1%)
+
+Details logged: 'temp_C3_14C_13_03/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_C3_14C_13_03/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_C3_14C_13_03/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [C4_14C_13_04_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/C4_14C_13_04_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/C4_14C_13_04_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2599662 total reads; -19702 ambiguous barcodes; -0 ambiguous RAD-Tags; +33604 recovered; -3040 low quality reads; 2576920 retained reads.
+Closing files, flushing buffers...done.
+
+2599662 total sequences
+  19702 barcode not found drops (0.8%)
+   3040 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2576920 retained reads (99.1%)
+
+Details logged: 'temp_C4_14C_13_04/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_C4_14C_13_04/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_C4_14C_13_04/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [C5_14C_19_08_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/C5_14C_19_08_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/C5_14C_19_08_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2589580 total reads; -19514 ambiguous barcodes; -0 ambiguous RAD-Tags; +33410 recovered; -3060 low quality reads; 2567006 retained reads.
+Closing files, flushing buffers...done.
+
+2589580 total sequences
+  19514 barcode not found drops (0.8%)
+   3060 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2567006 retained reads (99.1%)
+
+Details logged: 'temp_C5_14C_19_08/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_C5_14C_19_08/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_C5_14C_19_08/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [C6_14C_13_06_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/C6_14C_13_06_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/C6_14C_13_06_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...
+  1900408 total reads; -22190 ambiguous barcodes; -0 ambiguous RAD-Tags; +22834 recovered; -2245 low quality reads; 1875973 retained reads.
+Closing files, flushing buffers...done.
+
+1900408 total sequences
+  22190 barcode not found drops (1.2%)
+   2245 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+1875973 retained reads (98.7%)
+
+Details logged: 'temp_C6_14C_13_06/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_C6_14C_13_06/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_C6_14C_13_06/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [D1_14B_13_12_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/D1_14B_13_12_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/D1_14B_13_12_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2168864 total reads; -17866 ambiguous barcodes; -0 ambiguous RAD-Tags; +28052 recovered; -2590 low quality reads; 2148408 retained reads.
+Closing files, flushing buffers...done.
+
+2168864 total sequences
+  17866 barcode not found drops (0.8%)
+   2590 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2148408 retained reads (99.1%)
+
+Details logged: 'temp_D1_14B_13_12/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_D1_14B_13_12/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_D1_14B_13_12/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [D2_14B_13_02_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/D2_14B_13_02_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/D2_14B_13_02_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2364216 total reads; -18674 ambiguous barcodes; -0 ambiguous RAD-Tags; +30082 recovered; -2765 low quality reads; 2342777 retained reads.
+Closing files, flushing buffers...done.
+
+2364216 total sequences
+  18674 barcode not found drops (0.8%)
+   2765 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2342777 retained reads (99.1%)
+
+Details logged: 'temp_D2_14B_13_02/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_D2_14B_13_02/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_D2_14B_13_02/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [D3_14B_13_03_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/D3_14B_13_03_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/D3_14B_13_03_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2278780 total reads; -17554 ambiguous barcodes; -0 ambiguous RAD-Tags; +28562 recovered; -2768 low quality reads; 2258458 retained reads.
+Closing files, flushing buffers...done.
+
+2278780 total sequences
+  17554 barcode not found drops (0.8%)
+   2768 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2258458 retained reads (99.1%)
+
+Details logged: 'temp_D3_14B_13_03/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_D3_14B_13_03/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_D3_14B_13_03/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [D4_14B_13_04_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/D4_14B_13_04_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/D4_14B_13_04_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2379086 total reads; -18568 ambiguous barcodes; -0 ambiguous RAD-Tags; +29622 recovered; -2872 low quality reads; 2357646 retained reads.
+Closing files, flushing buffers...done.
+
+2379086 total sequences
+  18568 barcode not found drops (0.8%)
+   2872 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2357646 retained reads (99.1%)
+
+Details logged: 'temp_D4_14B_13_04/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_D4_14B_13_04/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_D4_14B_13_04/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [D5_14B_19_08_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/D5_14B_19_08_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/D5_14B_19_08_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2523446 total reads; -19648 ambiguous barcodes; -0 ambiguous RAD-Tags; +30332 recovered; -2943 low quality reads; 2500855 retained reads.
+Closing files, flushing buffers...done.
+
+2523446 total sequences
+  19648 barcode not found drops (0.8%)
+   2943 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2500855 retained reads (99.1%)
+
+Details logged: 'temp_D5_14B_19_08/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_D5_14B_19_08/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_D5_14B_19_08/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [D6_14B_13_06_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/D6_14B_13_06_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/D6_14B_13_06_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2545114 total reads; -26690 ambiguous barcodes; -0 ambiguous RAD-Tags; +29858 recovered; -2993 low quality reads; 2515431 retained reads.
+Closing files, flushing buffers...done.
+
+2545114 total sequences
+  26690 barcode not found drops (1.0%)
+   2993 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2515431 retained reads (98.8%)
+
+Details logged: 'temp_D6_14B_13_06/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_D6_14B_13_06/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_D6_14B_13_06/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [E1_13E_13_12_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/E1_13E_13_12_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/E1_13E_13_12_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2141168 total reads; -17954 ambiguous barcodes; -0 ambiguous RAD-Tags; +28036 recovered; -2488 low quality reads; 2120726 retained reads.
+Closing files, flushing buffers...done.
+
+2141168 total sequences
+  17954 barcode not found drops (0.8%)
+   2488 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2120726 retained reads (99.0%)
+
+Details logged: 'temp_E1_13E_13_12/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_E1_13E_13_12/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_E1_13E_13_12/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [E2_13E_13_02_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/E2_13E_13_02_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/E2_13E_13_02_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2525206 total reads; -20340 ambiguous barcodes; -0 ambiguous RAD-Tags; +32772 recovered; -2786 low quality reads; 2502080 retained reads.
+Closing files, flushing buffers...done.
+
+2525206 total sequences
+  20340 barcode not found drops (0.8%)
+   2786 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2502080 retained reads (99.1%)
+
+Details logged: 'temp_E2_13E_13_02/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_E2_13E_13_02/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_E2_13E_13_02/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [E3_13E_13_03_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/E3_13E_13_03_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/E3_13E_13_03_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2625782 total reads; -20670 ambiguous barcodes; -0 ambiguous RAD-Tags; +33738 recovered; -3079 low quality reads; 2602033 retained reads.
+Closing files, flushing buffers...done.
+
+2625782 total sequences
+  20670 barcode not found drops (0.8%)
+   3079 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2602033 retained reads (99.1%)
+
+Details logged: 'temp_E3_13E_13_03/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_E3_13E_13_03/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_E3_13E_13_03/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [E4_13E_13_04_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/E4_13E_13_04_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/E4_13E_13_04_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2421578 total reads; -19578 ambiguous barcodes; -0 ambiguous RAD-Tags; +30664 recovered; -2833 low quality reads; 2399167 retained reads.
+Closing files, flushing buffers...done.
+
+2421578 total sequences
+  19578 barcode not found drops (0.8%)
+   2833 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2399167 retained reads (99.1%)
+
+Details logged: 'temp_E4_13E_13_04/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_E4_13E_13_04/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_E4_13E_13_04/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [E5_13E_19_08_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/E5_13E_19_08_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/E5_13E_19_08_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2285566 total reads; -17838 ambiguous barcodes; -0 ambiguous RAD-Tags; +30238 recovered; -2659 low quality reads; 2265069 retained reads.
+Closing files, flushing buffers...done.
+
+2285566 total sequences
+  17838 barcode not found drops (0.8%)
+   2659 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2265069 retained reads (99.1%)
+
+Details logged: 'temp_E5_13E_19_08/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_E5_13E_19_08/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_E5_13E_19_08/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [E6_13E_13_06_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/E6_13E_13_06_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/E6_13E_13_06_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2365334 total reads; -26052 ambiguous barcodes; -0 ambiguous RAD-Tags; +28046 recovered; -2835 low quality reads; 2336447 retained reads.
+Closing files, flushing buffers...done.
+
+2365334 total sequences
+  26052 barcode not found drops (1.1%)
+   2835 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2336447 retained reads (98.8%)
+
+Details logged: 'temp_E6_13E_13_06/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_E6_13E_13_06/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_E6_13E_13_06/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [F1_13F_13_12_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/F1_13F_13_12_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/F1_13F_13_12_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2023530 total reads; -17136 ambiguous barcodes; -0 ambiguous RAD-Tags; +26630 recovered; -2369 low quality reads; 2004025 retained reads.
+Closing files, flushing buffers...done.
+
+2023530 total sequences
+  17136 barcode not found drops (0.8%)
+   2369 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2004025 retained reads (99.0%)
+
+Details logged: 'temp_F1_13F_13_12/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_F1_13F_13_12/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_F1_13F_13_12/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [F2_13F_13_02_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/F2_13F_13_02_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/F2_13F_13_02_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2091512 total reads; -16792 ambiguous barcodes; -0 ambiguous RAD-Tags; +26440 recovered; -2415 low quality reads; 2072305 retained reads.
+Closing files, flushing buffers...done.
+
+2091512 total sequences
+  16792 barcode not found drops (0.8%)
+   2415 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2072305 retained reads (99.1%)
+
+Details logged: 'temp_F2_13F_13_02/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_F2_13F_13_02/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_F2_13F_13_02/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [F3_13F_13_03_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/F3_13F_13_03_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/F3_13F_13_03_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2099228 total reads; -17134 ambiguous barcodes; -0 ambiguous RAD-Tags; +25964 recovered; -2511 low quality reads; 2079583 retained reads.
+Closing files, flushing buffers...done.
+
+2099228 total sequences
+  17134 barcode not found drops (0.8%)
+   2511 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2079583 retained reads (99.1%)
+
+Details logged: 'temp_F3_13F_13_03/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_F3_13F_13_03/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_F3_13F_13_03/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [F4_13F_13_04_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/F4_13F_13_04_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/F4_13F_13_04_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2224238 total reads; -17348 ambiguous barcodes; -0 ambiguous RAD-Tags; +27984 recovered; -2646 low quality reads; 2204244 retained reads.
+Closing files, flushing buffers...done.
+
+2224238 total sequences
+  17348 barcode not found drops (0.8%)
+   2646 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2204244 retained reads (99.1%)
+
+Details logged: 'temp_F4_13F_13_04/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_F4_13F_13_04/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_F4_13F_13_04/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [F5_13F_19_08_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/F5_13F_19_08_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/F5_13F_19_08_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2417658 total reads; -18454 ambiguous barcodes; -0 ambiguous RAD-Tags; +29870 recovered; -2867 low quality reads; 2396337 retained reads.
+Closing files, flushing buffers...done.
+
+2417658 total sequences
+  18454 barcode not found drops (0.8%)
+   2867 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2396337 retained reads (99.1%)
+
+Details logged: 'temp_F5_13F_19_08/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_F5_13F_19_08/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_F5_13F_19_08/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [F6_13F_13_06_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/F6_13F_13_06_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/F6_13F_13_06_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2205260 total reads; -23362 ambiguous barcodes; -0 ambiguous RAD-Tags; +26636 recovered; -2676 low quality reads; 2179222 retained reads.
+Closing files, flushing buffers...done.
+
+2205260 total sequences
+  23362 barcode not found drops (1.1%)
+   2676 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2179222 retained reads (98.8%)
+
+Details logged: 'temp_F6_13F_13_06/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_F6_13F_13_06/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_F6_13F_13_06/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [G1_13G_13_12_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/G1_13G_13_12_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/G1_13G_13_12_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2069964 total reads; -17440 ambiguous barcodes; -0 ambiguous RAD-Tags; +28700 recovered; -2414 low quality reads; 2050110 retained reads.
+Closing files, flushing buffers...done.
+
+2069964 total sequences
+  17440 barcode not found drops (0.8%)
+   2414 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2050110 retained reads (99.0%)
+
+Details logged: 'temp_G1_13G_13_12/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_G1_13G_13_12/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_G1_13G_13_12/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [G2_13G_13_02_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/G2_13G_13_02_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/G2_13G_13_02_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2578124 total reads; -21188 ambiguous barcodes; -0 ambiguous RAD-Tags; +32522 recovered; -2891 low quality reads; 2554045 retained reads.
+Closing files, flushing buffers...done.
+
+2578124 total sequences
+  21188 barcode not found drops (0.8%)
+   2891 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2554045 retained reads (99.1%)
+
+Details logged: 'temp_G2_13G_13_02/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_G2_13G_13_02/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_G2_13G_13_02/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [G3_13G_13_03_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/G3_13G_13_03_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/G3_13G_13_03_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2187858 total reads; -17662 ambiguous barcodes; -0 ambiguous RAD-Tags; +27224 recovered; -2725 low quality reads; 2167471 retained reads.
+Closing files, flushing buffers...done.
+
+2187858 total sequences
+  17662 barcode not found drops (0.8%)
+   2725 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2167471 retained reads (99.1%)
+
+Details logged: 'temp_G3_13G_13_03/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_G3_13G_13_03/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_G3_13G_13_03/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [G4_13G_13_04_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/G4_13G_13_04_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/G4_13G_13_04_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...
+  1963478 total reads; -16112 ambiguous barcodes; -0 ambiguous RAD-Tags; +24506 recovered; -2208 low quality reads; 1945158 retained reads.
+Closing files, flushing buffers...done.
+
+1963478 total sequences
+  16112 barcode not found drops (0.8%)
+   2208 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+1945158 retained reads (99.1%)
+
+Details logged: 'temp_G4_13G_13_04/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_G4_13G_13_04/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_G4_13G_13_04/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [G5_13G_19_08_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/G5_13G_19_08_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/G5_13G_19_08_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2469240 total reads; -18786 ambiguous barcodes; -0 ambiguous RAD-Tags; +30990 recovered; -2897 low quality reads; 2447557 retained reads.
+Closing files, flushing buffers...done.
+
+2469240 total sequences
+  18786 barcode not found drops (0.8%)
+   2897 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2447557 retained reads (99.1%)
+
+Details logged: 'temp_G5_13G_19_08/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_G5_13G_19_08/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_G5_13G_19_08/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [G6_13G_13_06_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/G6_13G_13_06_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/G6_13G_13_06_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2429712 total reads; -26632 ambiguous barcodes; -0 ambiguous RAD-Tags; +28970 recovered; -2885 low quality reads; 2400195 retained reads.
+Closing files, flushing buffers...done.
+
+2429712 total sequences
+  26632 barcode not found drops (1.1%)
+   2885 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2400195 retained reads (98.8%)
+
+Details logged: 'temp_G6_13G_13_06/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_G6_13G_13_06/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_G6_13G_13_06/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [H1_20H_13_12_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/H1_20H_13_12_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/H1_20H_13_12_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2232934 total reads; -18114 ambiguous barcodes; -0 ambiguous RAD-Tags; +30638 recovered; -2708 low quality reads; 2212112 retained reads.
+Closing files, flushing buffers...done.
+
+2232934 total sequences
+  18114 barcode not found drops (0.8%)
+   2708 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2212112 retained reads (99.1%)
+
+Details logged: 'temp_H1_20H_13_12/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_H1_20H_13_12/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_H1_20H_13_12/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [H2_20H_13_02_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/H2_20H_13_02_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/H2_20H_13_02_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2328028 total reads; -17780 ambiguous barcodes; -0 ambiguous RAD-Tags; +28620 recovered; -2710 low quality reads; 2307538 retained reads.
+Closing files, flushing buffers...done.
+
+2328028 total sequences
+  17780 barcode not found drops (0.8%)
+   2710 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2307538 retained reads (99.1%)
+
+Details logged: 'temp_H2_20H_13_02/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_H2_20H_13_02/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_H2_20H_13_02/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [H3_20H_13_03_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/H3_20H_13_03_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/H3_20H_13_03_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2174648 total reads; -215576 ambiguous barcodes; -0 ambiguous RAD-Tags; +26472 recovered; -2294 low quality reads; 1956778 retained reads.
+Closing files, flushing buffers...done.
+
+2174648 total sequences
+ 215576 barcode not found drops (9.9%)
+   2294 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+1956778 retained reads (90.0%)
+
+Details logged: 'temp_H3_20H_13_03/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_H3_20H_13_03/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_H3_20H_13_03/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [H4_20H_13_04_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/H4_20H_13_04_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/H4_20H_13_04_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2124526 total reads; -36396 ambiguous barcodes; -0 ambiguous RAD-Tags; +26372 recovered; -2498 low quality reads; 2085632 retained reads.
+Closing files, flushing buffers...done.
+
+2124526 total sequences
+  36396 barcode not found drops (1.7%)
+   2498 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2085632 retained reads (98.2%)
+
+Details logged: 'temp_H4_20H_13_04/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_H4_20H_13_04/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_H4_20H_13_04/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [H5_20H_19_08_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/H5_20H_19_08_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/H5_20H_19_08_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2937438 total reads; -22464 ambiguous barcodes; -0 ambiguous RAD-Tags; +37538 recovered; -3494 low quality reads; 2911480 retained reads.
+Closing files, flushing buffers...done.
+
+2937438 total sequences
+  22464 barcode not found drops (0.8%)
+   3494 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2911480 retained reads (99.1%)
+
+Details logged: 'temp_H5_20H_19_08/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_H5_20H_19_08/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_H5_20H_19_08/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.
+Processing paired-end data.
+Using Phred+33 encoding for quality scores.
+Found 1 paired input file(s).
+Searching for single and paired-end, inlined barcodes.
+Loaded 14 barcodes (8bp / 8bp).
+Will attempt to recover barcodes with at most 1 / 1 mismatches.
+Processing file 1 of 1 [H6_20H_13_06_R1.trimmed.fq.gz]
+  Reading data from:
+  qiime2/import/trimmed_reads/H6_20H_13_06_R1.trimmed.fq.gz and
+  qiime2/import/trimmed_reads/H6_20H_13_06_R2.trimmed.fq.gz
+  Processing pairs of RAD-Tags...1M...
+  2257892 total reads; -25472 ambiguous barcodes; -0 ambiguous RAD-Tags; +27742 recovered; -2667 low quality reads; 2229753 retained reads.
+Closing files, flushing buffers...done.
+
+2257892 total sequences
+  25472 barcode not found drops (1.1%)
+   2667 low quality read drops (0.1%)
+      0 RAD cutsite not found drops (0.0%)
+2229753 retained reads (98.8%)
+
+Details logged: 'temp_H6_20H_13_06/process_radtags.trimmed_reads.log'
+For a summary, execute one or more:
+  stacks-dist-extract temp_H6_20H_13_06/process_radtags.trimmed_reads.log total_raw_read_counts
+  stacks-dist-extract --pretty temp_H6_20H_13_06/process_radtags.trimmed_reads.log per_barcode_raw_read_counts
+process_radtags is done.

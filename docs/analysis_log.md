@@ -66,15 +66,32 @@ md5sum -c MD5.txt
 	- **Log file**: `logs/trim_adapters_13163307.out` \
  **Status**: ✅ **COMPLETE** - Minimal adapter contamination, ready for demultiplexing ---
 
-## Next Steps
-### 4. Demultiplexing (In Progress)
-**Separate individual samples using internal barcodes** \
-	- **Tool**: Stacks process_radtags \
-	- **Strategy**: Use 8bp combinatorial internal tags to separate samples within sublibraries \
-	- **Expected output**: Individual sample files for each of 336 samples × 2 amplicons \
-	- **Challenge**: Combinatorial tags are reused across sublibraries, requiring sublibrary-specific processing
+### 4. Demultiplexing with Stacks
+**Generating 48 TSV mapping files for each sublibrary**
+	- **Script**: `qiime2/scripts/03_creating_separate_stacks_mapping_files.py` \
+	- **Tool**: python/3.12.6 \
+	- **Input**: `qiime2/import/demux/stacks_sample_mapping_all_sublibraries.txt` is a TSV file generated in Excel from `qiime2/import/demux/stacks_sample_all_sublibraries.xlsx` \
+	- **Output**: 48 TSV mapping files in directory `qiime2/import/demux/internal_tag_mappings/`  with names corresponding to sublibraries names with addition suffix: _tags.tsv \
+	- **Logs**: the job has been performed on the login node, stdout saved at `logs/03_creating_mapping_files_stacks.out` \
+	- **Resulting file** have three columns (first col = forward 8 bp tag, 2nd col = reverse 8 bp tag, 3rd col = sample-id with _16S or _ITS1 suffix at the end resulting in 14 rows (7 biological samples in each sublibrary for 2 genetic markers each)
 
-### 5. Amplicon Separation (Planned)
+**Separate individual samples using internal combinatorial tags and removing tags**
+	- **Script**: `qiime2/scripts/04_demultiplex_sublib_to_samples_stacks.sh` \
+	- **Tool**: Stacks process_radtags v2.64 \
+	- **Input**: 48 adapter-trimmed sublibrary pairs + 48 mapping files generated previously using Python script from subset of metadata \
+	- **Strategy**: Combinatorial internal tags (8bp forward + reverse) \
+	- **NB!** I used different set of 8 bp internal tags for 16S and ITS1 primers. It allows me to separate reads by amplicons at this stage
+
+**Processing Results**:
+	- **Success rate**: 100% (48/48 sublibraries processed successfully) \
+	- **Individual samples extracted**: 672 samples (336 × 2 amplicons) \
+	- **Total files created**: 2,688 (1,344 per amplicon directory) \
+	- **Read depth per sample**: 46,000-125,000 reads (excellent coverage) \
+	- **File organization**: Separated by amplicon (16S and ITS1 directories) \
+	- **Processing time**: ~3 hours on cluster node cn057 \
+	- **SLURM job**: 13187722
+
+### 5. 
 **Separate 16S and ITS1 amplicons** \
 	- **Tool**: cutadapt with primer-specific trimming \
 	- **Strategy**: Use locus-specific primer sequences to separate and trim amplicons \
