@@ -1,0 +1,21 @@
+=== DEMULTIPLEXING COMPARISON ===
+Comparing original (-c -q -r) vs new (no quality filters)
+
+=== 16S COMPARISON ===
+Processing Original 16S...
+Original 16S - Files: 1344, Total reads: 68248991
+Original 16S - Average reads per file: 50780
+
+Processing New 16S...
+New 16S - Files: 1344, Total reads: 67060524
+New 16S - Average reads per file: 49896
+
+=== ITS1 COMPARISON ===
+Processing Original ITS1...
+Original ITS1 - Files: 1344, Total reads: 38620540
+Original ITS1 - Average reads per file: 28735
+
+Processing New ITS1...
+New ITS1 - Files: 1344, Total reads: 38031536
+New ITS1 - Average reads per file: 28297
+

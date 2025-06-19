@@ -1,0 +1,9 @@
+=== DEMULTIPLEXING COMPARISON ===
+Comparing original (-c -q -r) vs new (no quality filters)
+
+=== 16S COMPARISON ===
+Processing Original 16S...
+Original 16S - Files: 1344, Total reads: 68248991
+Original 16S - Average reads per file: 50780
+
+Processing New 16S...

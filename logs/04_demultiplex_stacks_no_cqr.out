@@ -1,0 +1,694 @@
+Starting Stacks demultiplexing...
+Date: Tue 17 Jun 18:11:30 BST 2025
+Host: cn026.ham8.dur.ac.uk
+Input directory: qiime2/import/trimmed_reads
+Mapping directory: qiime2/import/demux/internal_tag_mappings
+Output 16S: qiime2/import/demux/demultiplexed_sample_files_no_cqr/16S
+Output ITS1: qiime2/import/demux/demultiplexed_sample_files_no_cqr/ITS1
+Total sublibraries to process: 48
+
+=== Processing sublibrary 1/48: A1_13A_13_12 ===
+R1 file: qiime2/import/trimmed_reads/A1_13A_13_12_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/A1_13A_13_12_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/A1_13A_13_12_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for A1_13A_13_12
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 1/48 processed (1 successful, 0 failed)
+
+=== Processing sublibrary 2/48: A2_13A_13_02 ===
+R1 file: qiime2/import/trimmed_reads/A2_13A_13_02_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/A2_13A_13_02_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/A2_13A_13_02_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for A2_13A_13_02
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 2/48 processed (2 successful, 0 failed)
+
+=== Processing sublibrary 3/48: A3_13A_13_03 ===
+R1 file: qiime2/import/trimmed_reads/A3_13A_13_03_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/A3_13A_13_03_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/A3_13A_13_03_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for A3_13A_13_03
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 3/48 processed (3 successful, 0 failed)
+
+=== Processing sublibrary 4/48: A4_13A_13_04 ===
+R1 file: qiime2/import/trimmed_reads/A4_13A_13_04_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/A4_13A_13_04_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/A4_13A_13_04_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for A4_13A_13_04
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 4/48 processed (4 successful, 0 failed)
+
+=== Processing sublibrary 5/48: A5_13A_19_08 ===
+R1 file: qiime2/import/trimmed_reads/A5_13A_19_08_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/A5_13A_19_08_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/A5_13A_19_08_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for A5_13A_19_08
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 5/48 processed (5 successful, 0 failed)
+
+=== Processing sublibrary 6/48: A6_13A_13_06 ===
+R1 file: qiime2/import/trimmed_reads/A6_13A_13_06_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/A6_13A_13_06_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/A6_13A_13_06_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for A6_13A_13_06
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 6/48 processed (6 successful, 0 failed)
+
+=== Processing sublibrary 7/48: B1_13B_13_12 ===
+R1 file: qiime2/import/trimmed_reads/B1_13B_13_12_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/B1_13B_13_12_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/B1_13B_13_12_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for B1_13B_13_12
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 7/48 processed (7 successful, 0 failed)
+
+=== Processing sublibrary 8/48: B2_13B_13_02 ===
+R1 file: qiime2/import/trimmed_reads/B2_13B_13_02_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/B2_13B_13_02_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/B2_13B_13_02_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for B2_13B_13_02
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 8/48 processed (8 successful, 0 failed)
+
+=== Processing sublibrary 9/48: B3_13B_13_03 ===
+R1 file: qiime2/import/trimmed_reads/B3_13B_13_03_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/B3_13B_13_03_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/B3_13B_13_03_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for B3_13B_13_03
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 9/48 processed (9 successful, 0 failed)
+
+=== Processing sublibrary 10/48: B4_13B_13_04 ===
+R1 file: qiime2/import/trimmed_reads/B4_13B_13_04_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/B4_13B_13_04_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/B4_13B_13_04_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for B4_13B_13_04
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 10/48 processed (10 successful, 0 failed)
+
+=== Processing sublibrary 11/48: B5_13B_19_08 ===
+R1 file: qiime2/import/trimmed_reads/B5_13B_19_08_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/B5_13B_19_08_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/B5_13B_19_08_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for B5_13B_19_08
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 11/48 processed (11 successful, 0 failed)
+
+=== Processing sublibrary 12/48: B6_13B_13_06 ===
+R1 file: qiime2/import/trimmed_reads/B6_13B_13_06_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/B6_13B_13_06_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/B6_13B_13_06_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for B6_13B_13_06
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 12/48 processed (12 successful, 0 failed)
+
+=== Processing sublibrary 13/48: C1_14C_13_12 ===
+R1 file: qiime2/import/trimmed_reads/C1_14C_13_12_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/C1_14C_13_12_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/C1_14C_13_12_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for C1_14C_13_12
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 13/48 processed (13 successful, 0 failed)
+
+=== Processing sublibrary 14/48: C2_14C_13_02 ===
+R1 file: qiime2/import/trimmed_reads/C2_14C_13_02_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/C2_14C_13_02_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/C2_14C_13_02_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for C2_14C_13_02
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 14/48 processed (14 successful, 0 failed)
+
+=== Processing sublibrary 15/48: C3_14C_13_03 ===
+R1 file: qiime2/import/trimmed_reads/C3_14C_13_03_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/C3_14C_13_03_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/C3_14C_13_03_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for C3_14C_13_03
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 15/48 processed (15 successful, 0 failed)
+
+=== Processing sublibrary 16/48: C4_14C_13_04 ===
+R1 file: qiime2/import/trimmed_reads/C4_14C_13_04_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/C4_14C_13_04_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/C4_14C_13_04_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for C4_14C_13_04
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 16/48 processed (16 successful, 0 failed)
+
+=== Processing sublibrary 17/48: C5_14C_19_08 ===
+R1 file: qiime2/import/trimmed_reads/C5_14C_19_08_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/C5_14C_19_08_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/C5_14C_19_08_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for C5_14C_19_08
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 17/48 processed (17 successful, 0 failed)
+
+=== Processing sublibrary 18/48: C6_14C_13_06 ===
+R1 file: qiime2/import/trimmed_reads/C6_14C_13_06_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/C6_14C_13_06_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/C6_14C_13_06_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for C6_14C_13_06
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 18/48 processed (18 successful, 0 failed)
+
+=== Processing sublibrary 19/48: D1_14B_13_12 ===
+R1 file: qiime2/import/trimmed_reads/D1_14B_13_12_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/D1_14B_13_12_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/D1_14B_13_12_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for D1_14B_13_12
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 19/48 processed (19 successful, 0 failed)
+
+=== Processing sublibrary 20/48: D2_14B_13_02 ===
+R1 file: qiime2/import/trimmed_reads/D2_14B_13_02_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/D2_14B_13_02_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/D2_14B_13_02_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for D2_14B_13_02
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 20/48 processed (20 successful, 0 failed)
+
+=== Processing sublibrary 21/48: D3_14B_13_03 ===
+R1 file: qiime2/import/trimmed_reads/D3_14B_13_03_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/D3_14B_13_03_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/D3_14B_13_03_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for D3_14B_13_03
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 21/48 processed (21 successful, 0 failed)
+
+=== Processing sublibrary 22/48: D4_14B_13_04 ===
+R1 file: qiime2/import/trimmed_reads/D4_14B_13_04_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/D4_14B_13_04_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/D4_14B_13_04_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for D4_14B_13_04
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 22/48 processed (22 successful, 0 failed)
+
+=== Processing sublibrary 23/48: D5_14B_19_08 ===
+R1 file: qiime2/import/trimmed_reads/D5_14B_19_08_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/D5_14B_19_08_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/D5_14B_19_08_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for D5_14B_19_08
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 23/48 processed (23 successful, 0 failed)
+
+=== Processing sublibrary 24/48: D6_14B_13_06 ===
+R1 file: qiime2/import/trimmed_reads/D6_14B_13_06_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/D6_14B_13_06_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/D6_14B_13_06_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for D6_14B_13_06
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 24/48 processed (24 successful, 0 failed)
+
+=== Processing sublibrary 25/48: E1_13E_13_12 ===
+R1 file: qiime2/import/trimmed_reads/E1_13E_13_12_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/E1_13E_13_12_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/E1_13E_13_12_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for E1_13E_13_12
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 25/48 processed (25 successful, 0 failed)
+
+=== Processing sublibrary 26/48: E2_13E_13_02 ===
+R1 file: qiime2/import/trimmed_reads/E2_13E_13_02_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/E2_13E_13_02_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/E2_13E_13_02_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for E2_13E_13_02
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 26/48 processed (26 successful, 0 failed)
+
+=== Processing sublibrary 27/48: E3_13E_13_03 ===
+R1 file: qiime2/import/trimmed_reads/E3_13E_13_03_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/E3_13E_13_03_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/E3_13E_13_03_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for E3_13E_13_03
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 27/48 processed (27 successful, 0 failed)
+
+=== Processing sublibrary 28/48: E4_13E_13_04 ===
+R1 file: qiime2/import/trimmed_reads/E4_13E_13_04_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/E4_13E_13_04_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/E4_13E_13_04_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for E4_13E_13_04
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 28/48 processed (28 successful, 0 failed)
+
+=== Processing sublibrary 29/48: E5_13E_19_08 ===
+R1 file: qiime2/import/trimmed_reads/E5_13E_19_08_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/E5_13E_19_08_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/E5_13E_19_08_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for E5_13E_19_08
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 29/48 processed (29 successful, 0 failed)
+
+=== Processing sublibrary 30/48: E6_13E_13_06 ===
+R1 file: qiime2/import/trimmed_reads/E6_13E_13_06_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/E6_13E_13_06_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/E6_13E_13_06_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for E6_13E_13_06
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 30/48 processed (30 successful, 0 failed)
+
+=== Processing sublibrary 31/48: F1_13F_13_12 ===
+R1 file: qiime2/import/trimmed_reads/F1_13F_13_12_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/F1_13F_13_12_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/F1_13F_13_12_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for F1_13F_13_12
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 31/48 processed (31 successful, 0 failed)
+
+=== Processing sublibrary 32/48: F2_13F_13_02 ===
+R1 file: qiime2/import/trimmed_reads/F2_13F_13_02_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/F2_13F_13_02_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/F2_13F_13_02_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for F2_13F_13_02
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 32/48 processed (32 successful, 0 failed)
+
+=== Processing sublibrary 33/48: F3_13F_13_03 ===
+R1 file: qiime2/import/trimmed_reads/F3_13F_13_03_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/F3_13F_13_03_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/F3_13F_13_03_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for F3_13F_13_03
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 33/48 processed (33 successful, 0 failed)
+
+=== Processing sublibrary 34/48: F4_13F_13_04 ===
+R1 file: qiime2/import/trimmed_reads/F4_13F_13_04_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/F4_13F_13_04_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/F4_13F_13_04_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for F4_13F_13_04
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 34/48 processed (34 successful, 0 failed)
+
+=== Processing sublibrary 35/48: F5_13F_19_08 ===
+R1 file: qiime2/import/trimmed_reads/F5_13F_19_08_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/F5_13F_19_08_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/F5_13F_19_08_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for F5_13F_19_08
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 35/48 processed (35 successful, 0 failed)
+
+=== Processing sublibrary 36/48: F6_13F_13_06 ===
+R1 file: qiime2/import/trimmed_reads/F6_13F_13_06_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/F6_13F_13_06_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/F6_13F_13_06_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for F6_13F_13_06
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 36/48 processed (36 successful, 0 failed)
+
+=== Processing sublibrary 37/48: G1_13G_13_12 ===
+R1 file: qiime2/import/trimmed_reads/G1_13G_13_12_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/G1_13G_13_12_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/G1_13G_13_12_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for G1_13G_13_12
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 37/48 processed (37 successful, 0 failed)
+
+=== Processing sublibrary 38/48: G2_13G_13_02 ===
+R1 file: qiime2/import/trimmed_reads/G2_13G_13_02_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/G2_13G_13_02_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/G2_13G_13_02_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for G2_13G_13_02
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 38/48 processed (38 successful, 0 failed)
+
+=== Processing sublibrary 39/48: G3_13G_13_03 ===
+R1 file: qiime2/import/trimmed_reads/G3_13G_13_03_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/G3_13G_13_03_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/G3_13G_13_03_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for G3_13G_13_03
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 39/48 processed (39 successful, 0 failed)
+
+=== Processing sublibrary 40/48: G4_13G_13_04 ===
+R1 file: qiime2/import/trimmed_reads/G4_13G_13_04_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/G4_13G_13_04_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/G4_13G_13_04_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for G4_13G_13_04
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 40/48 processed (40 successful, 0 failed)
+
+=== Processing sublibrary 41/48: G5_13G_19_08 ===
+R1 file: qiime2/import/trimmed_reads/G5_13G_19_08_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/G5_13G_19_08_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/G5_13G_19_08_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for G5_13G_19_08
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 41/48 processed (41 successful, 0 failed)
+
+=== Processing sublibrary 42/48: G6_13G_13_06 ===
+R1 file: qiime2/import/trimmed_reads/G6_13G_13_06_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/G6_13G_13_06_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/G6_13G_13_06_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for G6_13G_13_06
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 42/48 processed (42 successful, 0 failed)
+
+=== Processing sublibrary 43/48: H1_20H_13_12 ===
+R1 file: qiime2/import/trimmed_reads/H1_20H_13_12_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/H1_20H_13_12_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/H1_20H_13_12_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for H1_20H_13_12
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 43/48 processed (43 successful, 0 failed)
+
+=== Processing sublibrary 44/48: H2_20H_13_02 ===
+R1 file: qiime2/import/trimmed_reads/H2_20H_13_02_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/H2_20H_13_02_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/H2_20H_13_02_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for H2_20H_13_02
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 44/48 processed (44 successful, 0 failed)
+
+=== Processing sublibrary 45/48: H3_20H_13_03 ===
+R1 file: qiime2/import/trimmed_reads/H3_20H_13_03_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/H3_20H_13_03_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/H3_20H_13_03_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for H3_20H_13_03
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 45/48 processed (45 successful, 0 failed)
+
+=== Processing sublibrary 46/48: H4_20H_13_04 ===
+R1 file: qiime2/import/trimmed_reads/H4_20H_13_04_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/H4_20H_13_04_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/H4_20H_13_04_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for H4_20H_13_04
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 46/48 processed (46 successful, 0 failed)
+
+=== Processing sublibrary 47/48: H5_20H_19_08 ===
+R1 file: qiime2/import/trimmed_reads/H5_20H_19_08_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/H5_20H_19_08_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/H5_20H_19_08_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for H5_20H_19_08
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 47/48 processed (47 successful, 0 failed)
+
+=== Processing sublibrary 48/48: H6_20H_13_06 ===
+R1 file: qiime2/import/trimmed_reads/H6_20H_13_06_R1.trimmed.fq.gz
+R2 file: qiime2/import/trimmed_reads/H6_20H_13_06_R2.trimmed.fq.gz
+Mapping: qiime2/import/demux/internal_tag_mappings/H6_20H_13_06_tags.tsv
+Mapping entries: 14
+Expected samples: 7 (16S + ITS1 per sample)
+Running process_radtags...
+SUCCESS: process_radtags completed successfully for H6_20H_13_06
+Output files created: 56
+Organizing files by amplicon...
+Moved to 16S directory: 28 files
+Moved to ITS1 directory: 28 files
+Progress: 48/48 processed (48 successful, 0 failed)
+
+=== DEMULTIPLEXING COMPLETE ===
+Total sublibraries processed: 48
+Successful: 48
+Failed: 0
+
+=== FINAL OUTPUT SUMMARY ===
+16S files created: 1344
+ITS1 files created: 1344
+Total sample files: 2688
+Expected total files: ~1344
+SUCCESS: Demultiplexing appears successful!
+Ready for QIIME2 import!
+Demultiplexing completed at: Tue 17 Jun 18:51:22 BST 2025
