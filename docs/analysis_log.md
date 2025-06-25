@@ -78,21 +78,21 @@ md5sum -c MD5.txt
 **Separate individual samples using internal combinatorial tags and removing tags** \
 	- **Script**: `qiime2/scripts/04_demultiplex_sublib_to_samples_stacks.sh` \
  	- **Tool**: Stacks process_radtags v2.64 \
-	- **Input**: 48 adapter-trimmed sublibrary pairs + 48 mapping files generated in previous step, using a Python script parsing metadata \
+	- **Input**: 48 adapter-trimmed sublibrary pairs + 48 mapping files generated in the previous step, using a Python script parsing metadata \
 	- **Strategy**: Combinatorial internal tags (8bp forward + reverse) \
 	- **NB!** I used a different set of 8 bp internal tags for 16S and ITS1 primers. It allows me to separate reads by amplicons at this stage, omitting sorting by primer step \
   	- **Key commands**: \
 ```bat
-	process_radtags \
-        	-P \
-	        -1 "$r1_file" \
-        	-2 "$r2_file" \
-	        -b "$mapping_file" \
-        	-o "$temp_output" \
-	        --inline_inline \
-        	--disable-rad-check \
-	        --retain-header \
-        	-c -q -r
+process_radtags \
+    	-P \
+        -1 "$r1_file" \
+       	-2 "$r2_file" \
+        -b "$mapping_file" \
+       	-o "$temp_output" \
+        --inline_inline \
+       	--disable-rad-check \
+        --retain-header \
+	-c -q -r
 ```
 
    
