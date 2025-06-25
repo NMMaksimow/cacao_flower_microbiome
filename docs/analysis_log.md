@@ -1,12 +1,12 @@
-# Cacao Flower Microbiome Analysis Log
-This document tracks the progress of NGS data analysis for the cacao flower microbiome project, examining the effects of pollinators on flower-associated microbial communities in West Africa. 
+# Cacao Flower Microbiome Analysis
+This document tracks the progress of NGS data analysis for the cacao flower microbiome project, examining the effects of pollinators on flower-associated microbial communities in 7 cocoa farms in Ghana. 
 The microbial footprint of pollinators has been studied using a pollinator exclusion experimental design. Half of the flowers have been bagged before full anthesis, and the second half have been left to be openly pollinated. This experiment has been conducted across four management types: full sun, agroforest, near forest, and inside tropical forest.
 
 ## Background Information
 
 ### Sampling Design
 - **Study system**: Cacao flowers (*Theobroma cacao*) across different farm management types
-- **Locations**: 7 farms representing 4 management types: - Full sun (2 farms) - Agroforest (2 farms) - Near forest (2 farms) - Inside forest (1 farm)
+- **Locations**: 7 farms representing 4 management types across deforestation gradient: - Full sun (2 farms) - Agroforest (2 farms) - Near forest (2 farms) - Inside forest (1 farm)
 - **Sampling strategy**: 7 trees per farm, 6 flowers per tree (3 bagged at bud stage + 3 openly pollinated) 
 - **Total biological samples**: 294 flowers
 - **Controls**: 14 extraction controls, 14 negative PCR controls, 14 mock communities
