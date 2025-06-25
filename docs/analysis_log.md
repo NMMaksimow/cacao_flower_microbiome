@@ -19,9 +19,9 @@ The microbial footprint of pollinators has been studied using a pollinator exclu
 - ITS1 region (fungal communities; ITS1f/ITS2)
 - **Primer design**: Combinatorial dual-indexing approach
 - **External barcodes**: Sublibrary-level identification (48 sublibraries total)
-- **Internal tags**: 8bp combinatorial tags for sample-level identification within sublibraries
+- **Internal tags**: 8 bp combinatorial tags for sample-level identification within sublibraries; all bagged/openly pollinated flowers from one farm and corresponding controls have the same tag combination; different sets of internal tags were used for ITS1 and 16S
 - **Structure**: 5'-[Illumina overhang]-[8bp tag]-[locus-specific primer]-3'
-- **Sequencing**: Illumina NovaSeq paired-end sequencing, 2×250 bp reads
+- **Sequencing**: Illumina NovaSeq paired-end sequencing, 2×250 bp reads; sequencing was performed in two lanes (L1 & L2)
 - **Multiplexing**: Two-level approach enabling ~672 libraries (336 samples × 2 amplicons)
 
 ## Data Processing Workflow
@@ -73,15 +73,29 @@ md5sum -c MD5.txt
 	- **Input**: `qiime2/import/demux/stacks_sample_mapping_all_sublibraries.txt` is a TSV file generated in Excel from `qiime2/import/demux/stacks_sample_all_sublibraries.xlsx` \
 	- **Output**: 48 TSV mapping files in directory `qiime2/import/demux/internal_tag_mappings/`  with names corresponding to sublibraries names with addition suffix: _tags.tsv \
 	- **Logs**: the job has been performed on the login node, stdout saved at `logs/03_creating_mapping_files_stacks.out` \
-	- **Resulting file** have three columns (first col = forward 8 bp tag, 2nd col = reverse 8 bp tag, 3rd col = sample-id with _16S or _ITS1 suffix at the end resulting in 14 rows (7 biological samples in each sublibrary for 2 genetic markers each)
+	- **Resulting file** has three columns (first col = forward 8 bp tag, 2nd col = reverse 8 bp tag, 3rd col = sample-id with _16S or _ITS1 suffix at the end, resulting in 14 rows (7 biological samples in each sublibrary for 2 genetic markers each)
 
 **Separate individual samples using internal combinatorial tags and removing tags** \
 	- **Script**: `qiime2/scripts/04_demultiplex_sublib_to_samples_stacks.sh` \
-	- **Tool**: Stacks process_radtags v2.64 \
-	- **Input**: 48 adapter-trimmed sublibrary pairs + 48 mapping files generated previously using Python script from subset of metadata \
+ 	- **Tool**: Stacks process_radtags v2.64 \
+	- **Input**: 48 adapter-trimmed sublibrary pairs + 48 mapping files generated in previous step, using a Python script parsing metadata \
 	- **Strategy**: Combinatorial internal tags (8bp forward + reverse) \
-	- **NB!** I used different set of 8 bp internal tags for 16S and ITS1 primers. It allows me to separate reads by amplicons at this stage
+	- **NB!** I used a different set of 8 bp internal tags for 16S and ITS1 primers. It allows me to separate reads by amplicons at this stage, omitting sorting by primer step \
+  	- **Key commands**:
+       	```bat
+     	process_radtags \
+        -P \
+        -1 "$r1_file" \
+        -2 "$r2_file" \
+        -b "$mapping_file" \
+        -o "$temp_output" \
+        --inline_inline \
+        --disable-rad-check \
+        --retain-header \
+        -c -q -r
+	```
 
+   
 **Processing Results**: \
 	- **Success rate**: 100% (48/48 sublibraries processed successfully) \
 	- **Individual samples extracted**: 672 samples (336 × 2 amplicons) \
