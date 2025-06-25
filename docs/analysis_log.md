@@ -84,15 +84,15 @@ md5sum -c MD5.txt
   	- **Key commands**: \
 ```bat
 	process_radtags \
-        -P \
-        -1 "$r1_file" \
-        -2 "$r2_file" \
-        -b "$mapping_file" \
-        -o "$temp_output" \
-        --inline_inline \
-        --disable-rad-check \
-        --retain-header \
-        -c -q -r
+        	-P \
+	        -1 "$r1_file" \
+        	-2 "$r2_file" \
+	        -b "$mapping_file" \
+        	-o "$temp_output" \
+	        --inline_inline \
+        	--disable-rad-check \
+	        --retain-header \
+        	-c -q -r
 ```
 
    
