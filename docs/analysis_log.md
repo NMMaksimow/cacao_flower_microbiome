@@ -81,9 +81,9 @@ md5sum -c MD5.txt
 	- **Input**: 48 adapter-trimmed sublibrary pairs + 48 mapping files generated in previous step, using a Python script parsing metadata \
 	- **Strategy**: Combinatorial internal tags (8bp forward + reverse) \
 	- **NB!** I used a different set of 8 bp internal tags for 16S and ITS1 primers. It allows me to separate reads by amplicons at this stage, omitting sorting by primer step \
-  	- **Key commands**:
-       	```bat
-     	process_radtags \
+  	- **Key commands**: \
+```bat
+	process_radtags \
         -P \
         -1 "$r1_file" \
         -2 "$r2_file" \
@@ -93,7 +93,7 @@ md5sum -c MD5.txt
         --disable-rad-check \
         --retain-header \
         -c -q -r
-	```
+```
 
    
 **Processing Results**: \
