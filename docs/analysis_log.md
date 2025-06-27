@@ -55,8 +55,8 @@ md5sum -c MD5.txt
 - **Tool**: cutadapt v4.9  
 - **Input**: 48 sublibrary pairs (96 files) from merged lane data  
 - **Adapter sequences removed**:  
- - Forward (R1): `TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG`  
- - Reverse (R2): `GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG`  
+  - Forward (R1): `TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG`  
+  - Reverse (R2): `GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG`  
 **Results**:  
 - **Total read pairs processed**: 890,963 across all sublibraries  
 - **Adapter contamination**: <1% (20 adapters in R1, 7,133 in R2)  
