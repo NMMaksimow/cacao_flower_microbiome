@@ -97,13 +97,13 @@ process_radtags \
 
    
 **Processing Results**: \
-	- **Success rate**: 100% (48/48 sublibraries processed successfully)  
-	- **Individual samples extracted**: 672 samples (336 × 2 amplicons)  
-	- **Total files created**: 2,688 (1,344 per amplicon directory)  
-	- **Read depth per sample**: 46,000-125,000 reads (excellent coverage)  
-	- **File organization**: Separated by amplicon (16S and ITS1 directories)  
-	- **Processing time**: ~35 minutes on cluster node cn057  
-	- **SLURM job**: 13187722
+- **Success rate**: 100% (48/48 sublibraries processed successfully)  
+- **Individual samples extracted**: 672 samples (336 × 2 amplicons)  
+- **Total files created**: 2,688 (1,344 per amplicon directory)  
+- **Read depth per sample**: 46,000-125,000 reads (excellent coverage)  
+- **File organization**: Separated by amplicon (16S and ITS1 directories)  
+- **Processing time**: ~35 minutes on cluster node cn057  
+- **SLURM job**: 13187722
 
 ### 5. Locus-Specific Primer Trimming
 **Remove primer sequences using cutadapt**
@@ -207,15 +207,15 @@ process_radtags \
 - Integration with microscopy data (pollination intensity, pollen germination)
 
 ## Project Directory Structure
-cacao_flower_microbiome/
-├── cacao_flower_microbiome.Rproj
-├── renv.lock
-├── .gitignore
-├── .git/
-├── data/
-│   └── raw_data/
-├── docs/
-│   └── analysis_log.md
+cacao_flower_microbiome/  
+├── cacao_flower_microbiome.Rproj  
+├── renv.lock  
+├── .gitignore  
+├── .git/  
+├── data/  
+│   └── raw_data/  
+├── docs/  
+│   └── analysis_log.md  
 ├── logs/
 │   ├── 01_lane_merging.out
 │   ├── 02_adapter_trimming.err
