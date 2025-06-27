@@ -167,17 +167,15 @@ process_radtags \
 - **Databases used**:
   - **16S**: SILVA 138 diverse-weighted classifier (plant microbiome optimised)
   - **ITS1**: Custom-trained UNITE eukaryotes classifier (February 2025 release)
-
-**UNITE Classifier Training**:
-- **Training script**: `qiime2/scripts/08a_train_unite_classifier.sh`
-- **Source data**: UNITE eukaryotes database v10.0 (February 19, 2025)
-- **Clustering approach**: Dynamic clustering with expert-curated species boundaries
-- **Database scope**: Comprehensive eukaryotes including fungi, Phytophthora, and other oomycetes
-- **Sequence count**: 266,589 reference sequences with corresponding taxonomy
-- **Training parameters**: 240GB memory, 48-hour time limit on shared queue
-- **Output classifier**: 545MB trained classifier optimised for pathogen detection
-- **Training time**: ~8 hours
-- **Pathogen coverage**: Includes 266+ Phytophthora entries and related plant pathogens
+   - **Training script**: `qiime2/scripts/08a_train_unite_classifier.sh`
+   - **Source data**: UNITE eukaryotes database v10.0 (February 19, 2025)
+   - **Clustering approach**: Dynamic clustering with expert-curated species boundaries
+   - **Database scope**: Comprehensive eukaryotes including fungi, Phytophthora, and other oomycetes
+   - **Sequence count**: 266,589 reference sequences with corresponding taxonomy
+   - **Training parameters**: 240GB memory, 48-hour time limit on shared queue
+   - **Output classifier**: 545MB trained classifier optimised for pathogen detection
+   - **Training time**: ~8 hours
+   - **Pathogen coverage**: Includes 266+ Phytophthora entries and related plant pathogens
 
 - **Memory requirements**: 500GB on bigmem queue due to large classifier size
 
