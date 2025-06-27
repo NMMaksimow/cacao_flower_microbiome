@@ -105,22 +105,204 @@ process_radtags \
 	- **Processing time**: ~35 minutes on cluster node cn057 \
 	- **SLURM job**: 13187722
 
-### 5. Trimming of locus-specific part of primers (Planned)
-**Separate 16S and ITS1 amplicons** \
-	- **Tool**: cutadapt with primer-specific trimming \
-	- **Strategy**: Use locus-specific primer sequences to separate and trim amplicons \
-	- **Output**: Clean amplicon-specific files ready for QIIME2 import
+### 5. Locus-Specific Primer Trimming
+**Remove primer sequences using cutadapt**
+- **Script**: `qiime2/scripts/05_primer_trimming_cutadapt.sh`
+- **Tool**: cutadapt v4.9 with IUPAC wildcard support
+- **Input**: 672 demultiplexed sample files (336 samples × 2 amplicons)
+- **Primer sequences trimmed**:
+  - 16S V4: 515f_modified (`GTGYCAGCMGCCGCGGTAA`) / 806r_modified (`GGACTACNVGGGTWTCTAAT`)
+  - ITS1: ITS1f (`CTTGGTCATTTAGAGGAAGTAA`) / ITS2 (`GCTGCGTTCTTCATCGATGC`)
+- **Parameters**: `--match-read-wildcards`, `--minimum-length 50`, `--maximum-length 300`
 
-### 6. QIIME2 Analysis (Planned) 
-**Standard microbiome analysis pipeline** \
-	- Import demultiplexed, amplicon-separated sequences \
-	- Quality filtering and denoising (DADA2) \
-	- Taxonomic classification \
-	- Diversity analysis \
-	- Statistical testing for pollinator effects
+**Processing Results**:
+- **Success rate**: 100% (336/336 samples processed successfully for both amplicons)
+- **Total files created**: 1,344 primer-trimmed files
+- **Read retention**: High retention rates with clean primer removal
+- **Output location**: `qiime2/import/primer_trimmed/16S/` and `qiime2/import/primer_trimmed/ITS1/`
+- **Processing time**: ~25 minutes
+- **SLURM job**: Job completed successfully with no failures
 
-## File Organization
-``` cacao_flower_microbiome/ ├── data/ │ ├── qiime2_cfm_metadata.txt # Sample metadata for QIIME2 │ └── raw_data/ # Original Novogene files ├── qiime2/ │ ├── import/ │ │ ├── merged_files/ # Lane-merged sublibraries │ │ 
-└── trimmed_reads/ # Adapter-trimmed sublibraries │ └── scripts/ # Processing scripts ├── logs/ # SLURM job logs └── docs/ # Documentation ``` ---
+**Status**: **COMPLETE** - Primer sequences successfully removed, sequences ready for QIIME2 import
 
-*Last updated: June 11, 2025*
+### 6. QIIME2 Data Import
+**Import primer-trimmed sequences into QIIME2 format**
+- **Script**: `qiime2/scripts/06_qiime2_import.sh`
+- **Input**: Primer-trimmed paired-end FASTQ files
+- **Sample ID strategy**: Removed amplicon suffixes for compatibility with single metadata file
+- **Manifest creation**: Tab-separated format with absolute file paths
+
+**Import Results**:
+- **16S import**: Successfully created `CFM_16S_PE_import.qza` (2.6GB)
+- **ITS1 import**: Successfully created `CFM_ITS1_PE_import.qza` (1.6GB)
+- **Quality visualizations**: Generated QC reports for both amplicons
+- **Sample count**: 336 samples per amplicon successfully imported
+- **Processing time**: ~13 minutes total
+- **SLURM job**: Completed without errors
+
+**Status**: **COMPLETE** - Sequences successfully imported into QIIME2 format
+
+### 7. DADA2 Denoising and ASV Calling
+**Quality filtering, denoising, and feature table generation**
+- **Script**: `qiime2/scripts/07_qiime2_dada2_denoising.sh`
+- **Tool**: DADA2 within QIIME2 2024.10amplicon
+- **Truncation parameters**: Based on quality plot analysis
+  - 16S: Forward 242bp (no truncation), Reverse 240bp
+  - ITS1: Forward 230bp, Reverse 225bp
+- **Algorithm**: Paired-end denoising with chimera removal
+
+**DADA2 Results**:
+- **16S processing**: Successfully generated ASV table and representative sequences
+- **ITS1 processing**: Successfully generated ASV table and representative sequences  
+- **Chimera removal**: Consensus method applied to both datasets
+- **Output files**: Feature tables, representative sequences, and denoising statistics for both amplicons
+- **Memory usage**: 64GB, 16 cores
+- **Processing time**: Several hours for both amplicons
+
+**Status**: **COMPLETE** - ASV tables and representative sequences generated for downstream analysis
+
+### 8. Taxonomic Classification
+**Assign taxonomy using reference databases**
+- **Script**: `qiime2/scripts/08_qiime2_taxonomy_classification.sh`
+- **Databases used**:
+  - **16S**: SILVA 138 diverse-weighted classifier (plant microbiome optimized)
+  - **ITS1**: Custom-trained UNITE eukaryotes classifier (February 2025 release)
+
+**UNITE Classifier Training**:
+- **Training script**: `qiime2/scripts/08a_train_unite_classifier.sh`
+- **Source data**: UNITE eukaryotes database v10.0 (February 19, 2025)
+- **Clustering approach**: Dynamic clustering with expert-curated species boundaries
+- **Database scope**: Comprehensive eukaryotes including fungi, Phytophthora, and other oomycetes
+- **Sequence count**: 266,589 reference sequences with corresponding taxonomy
+- **Training parameters**: 240GB memory, 48-hour time limit on shared queue
+- **Output classifier**: 545MB trained classifier optimized for pathogen detection
+- **Training time**: ~8 hours
+- **Pathogen coverage**: Includes 266+ Phytophthora entries and related plant pathogens
+
+- **Memory requirements**: 500GB on bigmem queue due to large classifier size
+
+**Classification Results**:
+- **16S taxonomy**: 1.6MB taxonomy file, 24MB interactive barplot
+- **ITS1 taxonomy**: 559KB taxonomy file, 33MB interactive barplot  
+- **Processing time**: 16S (51 minutes), ITS1 (2h 9m)
+- **Output visualizations**: Taxonomy tables and interactive barplots for both amplicons
+- **Pathogen detection**: UNITE classifier includes Phytophthora and other cacao pathogens
+- **Total runtime**: ~3 hours on high-memory nodes
+
+**Status**: **COMPLETE** - Taxonomic assignments completed for bacterial and fungal communities
+
+## Current Dataset Summary
+- **Total samples**: 336 biological samples (294 flowers + 42 controls)
+- **Amplicons**: 16S rRNA V4 (bacteria/archaea) and ITS1 (fungi/eukaryotes)
+- **ASV calling**: Completed using DADA2 with quality-based parameters
+- **Taxonomy**: Assigned using state-of-the-art reference databases
+- **Pathogen detection**: Custom eukaryotes classifier includes known cacao pathogens
+- **Data quality**: High-quality reads with successful processing through full pipeline
+
+## Next Steps
+- Alpha rarefaction analysis to determine sampling depth
+- Diversity analysis (alpha and beta diversity)
+- Statistical testing for pollinator effects
+- Pathogen identification in ITS1 data
+- Integration with microscopy data (pollination intensity, pollen germination)
+
+## Project Directory Structure
+cacao_flower_microbiome/
+├── cacao_flower_microbiome.Rproj
+├── renv.lock
+├── .gitignore
+├── .git/
+├── data/
+│   └── raw_data/
+├── docs/
+│   └── analysis_log.md
+├── logs/
+│   ├── 01_lane_merging.out
+│   ├── 02_adapter_trimming.err
+│   ├── 02_adapter_trimming.out
+│   ├── 03_creating_mapping_files_stacks.out
+│   ├── 04b_demux_comparison_20250618_1315.log
+│   ├── 04b_demux_comparison_20250618_1330.log
+│   ├── 04_demultiplex_stacks.err
+│   ├── 04_demultiplex_stacks.out
+│   ├── 04_demultiplex_stacks_no_cqr.err
+│   ├── 04_demultiplex_stacks_no_cqr.out
+│   ├── 05_primer_trimming.err
+│   ├── 05_primer_trimming.out
+│   ├── 06_qiime2_import.err
+│   ├── 06_qiime2_import.out
+│   ├── 07_dada2_denoising.err
+│   ├── 07_dada2_denoising.out
+│   ├── 08a_train_unite_classifier.err
+│   ├── 08a_train_unite_classifier.out
+│   ├── 08_taxonomy_classification.err
+│   └── 08_taxonomy_classification.out
+├── qiime2/
+│   ├── databases/
+│   │   ├── SILVA/
+│   │   │   └── silva-138-99-nb-diverse-weighted-classifier.qza (508M)
+│   │   └── UNITE/
+│   │       ├── QIIME_ITS_readme_19.02.2025.pdf
+│   │       ├── sh_qiime_release_s_all_19.02.2025.tgz (189M)
+│   │       ├── sh_refs_qiime_ver10_dynamic_s_all_19.02.2025.fasta (156M)
+│   │       ├── sh_taxonomy_qiime_ver10_dynamic_s_all_19.02.2025.txt (47M)
+│   │       ├── unite_eukaryotes_dynamic_classifier.qza (545M)
+│   │       ├── unite_eukaryotes_dynamic_sequences.qza (26M)
+│   │       └── unite_eukaryotes_dynamic_taxonomy.qza (5.4M)
+│   ├── denoise/
+│   │   ├── CFM_16S_PE_import.qza (2.6G)
+│   │   ├── CFM_16S_PE_import_QC.qzv
+│   │   ├── CFM_16S_dada2_table.qza
+│   │   ├── CFM_16S_dada2_table_summary.qzv
+│   │   ├── CFM_16S_dada2_repseqs.qza
+│   │   ├── CFM_16S_dada2_repseqs_summary.qzv
+│   │   ├── CFM_16S_dada2_stats.qza
+│   │   ├── CFM_16S_dada2_stats_summary.qzv
+│   │   ├── CFM_ITS1_PE_import.qza (1.6G)
+│   │   ├── CFM_ITS1_PE_import_QC.qzv
+│   │   ├── CFM_ITS1_dada2_table.qza
+│   │   ├── CFM_ITS1_dada2_table_summary.qzv
+│   │   ├── CFM_ITS1_dada2_repseqs.qza
+│   │   ├── CFM_ITS1_dada2_repseqs_summary.qzv
+│   │   ├── CFM_ITS1_dada2_stats.qza
+│   │   └── CFM_ITS1_dada2_stats_summary.qzv
+│   ├── import/
+│   │   ├── manifest_16S.tsv
+│   │   ├── manifest_ITS1.tsv
+│   │   ├── merged_files/ (48 sublibrary pairs)
+│   │   ├── trimmed_reads/ (48 adapter-trimmed sublibrary pairs)
+│   │   ├── primer_trimmed/
+│   │   │   ├── 16S/ (672 primer-trimmed sample files)
+│   │   │   └── ITS1/ (672 primer-trimmed sample files)
+│   │   └── demux/
+│   │       ├── stacks_sample_mapping_all_sublibraries.txt
+│   │       ├── internal_tag_mappings/ (48 mapping files)
+│   │       ├── demultiplexed_sample_files/
+│   │       │   ├── 16S/ (672 demultiplexed files + .rem files)
+│   │       │   └── ITS1/ (672 demultiplexed files + .rem files)
+│   │       └── demultiplexed_sample_files_no_cqr/
+│   │           ├── 16S/ (672 demultiplexed files)
+│   │           └── ITS1/ (672 demultiplexed files)
+│   ├── scripts/
+│   │   ├── 01_lane_merging_PE.sh
+│   │   ├── 02_adapter_trimming_cutadapt.sh
+│   │   ├── 03_creating_separate_stacks_mapping_files.py
+│   │   ├── 04_demultiplex_sublib_to_samples_stacks.sh
+│   │   ├── 04a_demultiplex_sublib_to_samples_stacks_no_cqr.sh
+│   │   ├── 04b_compare_demux_results.sh
+│   │   ├── 05_primer_trimming_cutadapt.sh
+│   │   ├── 06_qiime2_import.sh
+│   │   ├── 07_qiime2_dada2_denoising.sh
+│   │   ├── 08a_train_unite_classifier.sh
+│   │   └── 08_qiime2_taxonomy_classification.sh
+│   └── taxonomy/
+│       ├── CFM_16S_taxonomy.qza
+│       ├── CFM_16S_taxonomy_viz.qzv
+│       ├── CFM_16S_taxonomy_barplot.qzv (24M)
+│       ├── CFM_ITS1_taxonomy.qza
+│       ├── CFM_ITS1_taxonomy_viz.qzv
+│       └── CFM_ITS1_taxonomy_barplot.qzv (33M)
+├── reports/ (empty)
+├── results/ (empty)
+└── scripts/ (empty)
+
