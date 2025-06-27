@@ -97,12 +97,12 @@ process_radtags \
 
    
 **Processing Results**: \
-	- **Success rate**: 100% (48/48 sublibraries processed successfully) \
-	- **Individual samples extracted**: 672 samples (336 × 2 amplicons) \
-	- **Total files created**: 2,688 (1,344 per amplicon directory) \
-	- **Read depth per sample**: 46,000-125,000 reads (excellent coverage) \
-	- **File organization**: Separated by amplicon (16S and ITS1 directories) \
-	- **Processing time**: ~35 minutes on cluster node cn057 \
+	- **Success rate**: 100% (48/48 sublibraries processed successfully)  
+	- **Individual samples extracted**: 672 samples (336 × 2 amplicons)  
+	- **Total files created**: 2,688 (1,344 per amplicon directory)  
+	- **Read depth per sample**: 46,000-125,000 reads (excellent coverage)  
+	- **File organization**: Separated by amplicon (16S and ITS1 directories)  
+	- **Processing time**: ~35 minutes on cluster node cn057  
 	- **SLURM job**: 13187722
 
 ### 5. Locus-Specific Primer Trimming
