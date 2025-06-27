@@ -272,9 +272,9 @@ cacao_flower_microbiome/
 │   │   ├── merged_files/ (48 sublibrary pairs)  
 │   │   ├── trimmed_reads/ (48 adapter-trimmed sublibrary pairs)  
 │   │   ├── primer_trimmed/  
-│   │   │   ├── 16S/ (672 primer-trimmed sample files)  
-│   │   │   └── ITS1/ (672 primer-trimmed sample files)  
-│   │   └── demux/
+│   │   │   ├── 16S/ (672 1 & 2 files after trimming locus-specific part of primers)  
+│   │   │   └── ITS1/ (672 1 & 2 files after trimming locus-specific part of primers)  
+│   │   └── demux/  
 │   │       ├── stacks_sample_mapping_all_sublibraries.txt  
 │   │       ├── internal_tag_mappings/ (48 mapping files)  
 │   │       ├── demultiplexed_sample_files/  
