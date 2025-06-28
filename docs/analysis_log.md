@@ -94,7 +94,7 @@ process_radtags \
         --retain-header \
 	-c -q -r
 ```
-
+The alternative demultiplexing command without the `-c -q -r` options was run. A comparison of outputs showed that the rescue option (-r) helped save more sequences. So the output from the original command, including `-c -q -r`, was used further.
    
 **Processing Results**: \
 - **Success rate**: 100% (48/48 sublibraries processed successfully)  
@@ -146,9 +146,11 @@ process_radtags \
 **Quality filtering, denoising, and feature table generation**
 - **Script**: `qiime2/scripts/07_qiime2_dada2_denoising.sh`
 - **Tool**: DADA2 within QIIME2 2024.10amplicon
-- **Truncation parameters**: Based on quality plot analysis
-  - 16S: Forward 242bp (no truncation), Reverse 240bp
-  - ITS1: Forward 230bp, Reverse 225bp
+- **Truncation parameters**: Based on quality plot analysis (5th percentile QS < 25) in first run and no truncation were applied in the second successful run:
+  - 16S: Forward 242 bp (no truncation), Reverse 240 bp;  
+  - ITS1: Forward 230 bp, Reverse 225 bp;  
+  - 16S: Forward 0 (no truncation), Reverse 0 (no truncation);  
+  - ITS1: Forward 0 (no truncation), Reverse 0 (no truncation).  
 - **Algorithm**: Paired-end denoising with chimaera removal
 
 **DADA2 Results**:
