@@ -37,7 +37,7 @@ Verify file integrity using MD5 checksums:
 md5sum -c MD5.txt
 ```
 **Result:** X204SC25042477-Z01-F001.tar: OK
- **Status**: ✅ **COMPLETE** - Data integrity verified ---
+ **Status**: **COMPLETE** - Data integrity verified ---
 
 ### 2. Lane Merging
 **Combine L1 and L2 sequencing lanes for each sublibrary**  
