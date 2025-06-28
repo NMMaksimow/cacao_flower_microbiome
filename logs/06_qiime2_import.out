@@ -1,0 +1,76 @@
+Starting QIIME2 import...
+Date: Thu 19 Jun 13:16:27 BST 2025
+Host: cn015.ham8.dur.ac.uk
+CPUs: 8
+Input 16S: qiime2/import/primer_trimmed/16S
+Input ITS1: qiime2/import/primer_trimmed/ITS1
+Output directory: qiime2/denoise
+Manifest directory: qiime2/import
+=== CREATING MANIFEST FILES ===
+Creating manifest for 16S amplicon...
+Manifest created with 336 samples for 16S
+First 5 entries:
+sample-id	forward-absolute-filepath	reverse-absolute-filepath
+cib11	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cib11_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cib11_16S.2.trimmed.fq.gz
+cib12	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cib12_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cib12_16S.2.trimmed.fq.gz
+cib13	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cib13_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cib13_16S.2.trimmed.fq.gz
+cib21	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cib21_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cib21_16S.2.trimmed.fq.gz
+cib22	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cib22_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cib22_16S.2.trimmed.fq.gz
+
+Creating manifest for ITS1 amplicon...
+Manifest created with 336 samples for ITS1
+First 5 entries:
+sample-id	forward-absolute-filepath	reverse-absolute-filepath
+cib11	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/ITS1/cib11_ITS1.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/ITS1/cib11_ITS1.2.trimmed.fq.gz
+cib12	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/ITS1/cib12_ITS1.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/ITS1/cib12_ITS1.2.trimmed.fq.gz
+cib13	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/ITS1/cib13_ITS1.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/ITS1/cib13_ITS1.2.trimmed.fq.gz
+cib21	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/ITS1/cib21_ITS1.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/ITS1/cib21_ITS1.2.trimmed.fq.gz
+cib22	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/ITS1/cib22_ITS1.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/ITS1/cib22_ITS1.2.trimmed.fq.gz
+
+Verifying manifest format:
+16S manifest header:
+sample-id	forward-absolute-filepath	reverse-absolute-filepath
+ITS1 manifest header:
+sample-id	forward-absolute-filepath	reverse-absolute-filepath
+=== IMPORTING 16S SEQUENCES ===
+Starting 16S import at: Thu 19 Jun 13:16:31 BST 2025
+Imported qiime2/import/manifest_16S.tsv as PairedEndFastqManifestPhred33V2 to qiime2/denoise/CFM_16S_PE_import.qza
+SUCCESS: 16S sequences imported successfully
+UUID:        5e98d1b6-3dc9-4829-8140-69da27d5c13b
+Type:        SampleData[PairedEndSequencesWithQuality]
+Data format: SingleLanePerSamplePairedEndFastqDirFmt
+Creating 16S visualization...
+Saved Visualization to: qiime2/denoise/CFM_16S_PE_import_QC.qzv
+16S import completed successfully at: Thu 19 Jun 13:24:18 BST 2025
+
+=== IMPORTING ITS1 SEQUENCES ===
+Starting ITS1 import at: Thu 19 Jun 13:24:18 BST 2025
+Imported qiime2/import/manifest_ITS1.tsv as PairedEndFastqManifestPhred33V2 to qiime2/denoise/CFM_ITS1_PE_import.qza
+SUCCESS: ITS1 sequences imported successfully
+UUID:        9ab74153-63da-4299-a1a8-560018a985f3
+Type:        SampleData[PairedEndSequencesWithQuality]
+Data format: SingleLanePerSamplePairedEndFastqDirFmt
+Creating ITS1 visualization...
+Saved Visualization to: qiime2/denoise/CFM_ITS1_PE_import_QC.qzv
+ITS1 import completed successfully at: Thu 19 Jun 13:29:17 BST 2025
+
+=== IMPORT SUMMARY ===
+16S artifact created: 2.6G
+ITS1 artifact created: 1.6G
+
+Files created in qiime2/denoise:
+total 4.2G
+drwxr-xr-x 2 jcnx71 URP_dbl 4.0K Jun 19 13:29 .
+drwxr-xr-x 5 jcnx71 URP_dbl 4.0K Jun 13 08:52 ..
+-rw-r--r-- 1 jcnx71 URP_dbl 317K Jun 19 13:24 CFM_16S_PE_import_QC.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 2.6G Jun 19 13:18 CFM_16S_PE_import.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 318K Jun 19 13:29 CFM_ITS1_PE_import_QC.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 1.6G Jun 19 13:25 CFM_ITS1_PE_import.qza
+
+Next steps:
+1. Download and examine .qzv files at https://view.qiime2.org
+2. Determine DADA2 trimming parameters from quality plots
+3. Run DADA2 denoising
+
+QIIME2 import completed at: Thu 19 Jun 13:29:17 BST 2025
+Ready for DADA2 denoising!

@@ -1,0 +1,57 @@
+Starting UNITE classifier training...
+Date: Wed 25 Jun 11:19:05 BST 2025
+Host: cn098.ham8.dur.ac.uk
+CPUs: 16
+Memory: 240G
+Database directory: qiime2/databases/UNITE
+Output directory: qiime2/databases/UNITE
+Using clustering approach: dynamic
+FASTA file: qiime2/databases/UNITE/sh_refs_qiime_ver10_dynamic_s_all_19.02.2025.fasta
+Taxonomy file: qiime2/databases/UNITE/sh_taxonomy_qiime_ver10_dynamic_s_all_19.02.2025.txt
+Input files verified successfully
+
+=== INPUT FILE STATISTICS ===
+Number of sequences: 266589
+Number of taxonomy entries: 266590
+
+=== STEP 1: IMPORT REFERENCE SEQUENCES ===
+Starting sequence import at: Wed 25 Jun 11:19:08 BST 2025
+Imported qiime2/databases/UNITE/sh_refs_qiime_ver10_dynamic_s_all_19.02.2025.fasta as DNASequencesDirectoryFormat to qiime2/databases/UNITE/unite_eukaryotes_dynamic_sequences.qza
+SUCCESS: Reference sequences imported
+
+=== STEP 2: IMPORT TAXONOMY ===
+Starting taxonomy import at: Wed 25 Jun 11:21:19 BST 2025
+Imported qiime2/databases/UNITE/sh_taxonomy_qiime_ver10_dynamic_s_all_19.02.2025.txt as HeaderlessTSVTaxonomyFormat to qiime2/databases/UNITE/unite_eukaryotes_dynamic_taxonomy.qza
+SUCCESS: Taxonomy imported
+
+=== STEP 3: TRAIN NAIVE BAYES CLASSIFIER ===
+Starting classifier training at: Wed 25 Jun 11:21:31 BST 2025
+This may take several hours...
+Saved TaxonomicClassifier to: qiime2/databases/UNITE/unite_eukaryotes_dynamic_classifier.qza
+SUCCESS: Classifier training completed at: Wed 25 Jun 19:33:12 BST 2025
+
+=== TRAINING COMPLETE ===
+Generated files:
+-rw-r--r-- 1 jcnx71 URP_dbl 545M Jun 25 19:32 qiime2/databases/UNITE/unite_eukaryotes_dynamic_classifier.qza
+-rw-r--r-- 1 jcnx71 URP_dbl  26M Jun 25 11:21 qiime2/databases/UNITE/unite_eukaryotes_dynamic_sequences.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 5.4M Jun 25 11:21 qiime2/databases/UNITE/unite_eukaryotes_dynamic_taxonomy.qza
+
+=== OUTPUT SUMMARY ===
+Classifier: 545M
+Sequences: 26M
+Taxonomy: 5.4M
+
+Classifier file: unite_eukaryotes_dynamic_classifier.qza
+This classifier includes:
+- All fungi from UNITE
+- Phytophthora and other oomycetes
+- Other eukaryotic microorganisms
+- Expert-curated species boundaries (dynamic clustering)
+
+Next steps:
+1. Update taxonomy classification script to use this classifier
+2. Run taxonomic classification on your ITS1 data
+3. Look for Phytophthora and other cacao pathogens!
+
+UNITE classifier training completed at: Wed 25 Jun 19:33:12 BST 2025
+Ready for pathogen detection in cacao flowers!

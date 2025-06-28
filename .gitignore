@@ -40,3 +40,11 @@ results/*.pdf
 .tmp/
 cache/
 __pycache__/
+
+# Large UNITE database files
+qiime2/databases/UNITE/*.tgz
+qiime2/databases/UNITE/*.fasta
+qiime2/databases/UNITE/*.txt
+qiime2/databases/UNITE/._*
+qiime2/databases/SILVA/*.qza
+*.qza

@@ -1,0 +1,74 @@
+Starting taxonomic classification...
+Date: Thu 26 Jun 20:50:20 BST 2025
+Host: mn2.ham8.dur.ac.uk
+CPUs: 16
+Memory: 500G
+Input directory: qiime2/denoise
+Output directory: qiime2/taxonomy
+Database directory: qiime2/databases
+Input files verified successfully
+
+=== TAXONOMIC CLASSIFICATION: 16S rRNA V4 ===
+Database: SILVA
+Starting 16S classification at: Thu 26 Jun 20:50:21 BST 2025
+SILVA classifier found: qiime2/databases/SILVA/silva-138-99-nb-diverse-weighted-classifier.qza
+Classifying 16S sequences...
+Saved FeatureData[Taxonomy] to: qiime2/taxonomy/CFM_16S_taxonomy.qza
+SUCCESS: 16S taxonomic classification completed at: Thu 26 Jun 21:41:37 BST 2025
+Creating 16S taxonomy visualization...
+Saved Visualization to: qiime2/taxonomy/CFM_16S_taxonomy_viz.qzv
+Creating 16S taxonomy barplot...
+Saved Visualization to: qiime2/taxonomy/CFM_16S_taxonomy_barplot.qzv
+16S taxonomy visualizations created successfully
+
+=== TAXONOMIC CLASSIFICATION: ITS1 Fungal ===
+Database: UNITE
+Starting ITS1 classification at: Thu 26 Jun 21:43:24 BST 2025
+UNITE classifier found: qiime2/databases/UNITE/unite_eukaryotes_dynamic_classifier.qza
+Classifying ITS1 sequences...
+Saved FeatureData[Taxonomy] to: qiime2/taxonomy/CFM_ITS1_taxonomy.qza
+SUCCESS: ITS1 taxonomic classification completed at: Thu 26 Jun 23:52:15 BST 2025
+Creating ITS1 taxonomy visualization...
+Saved Visualization to: qiime2/taxonomy/CFM_ITS1_taxonomy_viz.qzv
+Creating ITS1 taxonomy barplot...
+Saved Visualization to: qiime2/taxonomy/CFM_ITS1_taxonomy_barplot.qzv
+ITS1 taxonomy visualizations created successfully
+
+=== TAXONOMIC CLASSIFICATION COMPLETE ===
+Checking output files...
+Files created in qiime2/taxonomy:
+-rw-r--r-- 1 jcnx71 URP_dbl  24M Jun 26 21:43 qiime2/taxonomy/CFM_16S_taxonomy_barplot.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 1.6M Jun 26 21:41 qiime2/taxonomy/CFM_16S_taxonomy.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 5.2M Jun 26 21:42 qiime2/taxonomy/CFM_16S_taxonomy_viz.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl  33M Jun 26 23:57 qiime2/taxonomy/CFM_ITS1_taxonomy_barplot.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 559K Jun 26 23:51 qiime2/taxonomy/CFM_ITS1_taxonomy.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 2.8M Jun 26 23:56 qiime2/taxonomy/CFM_ITS1_taxonomy_viz.qzv
+
+=== CLASSIFICATION SUMMARY ===
+16S Taxonomy Results:
+16S taxonomy file size: 1.6M
+
+ITS1 Taxonomy Results:
+ITS1 taxonomy file size: 560K
+
+Output files generated:
+- CFM_16S_taxonomy.qza (bacterial/archaeal taxonomic assignments)
+- CFM_16S_taxonomy_viz.qzv (16S taxonomy table visualization)
+- CFM_16S_taxonomy_barplot.qzv (16S interactive barplot)
+- CFM_ITS1_taxonomy.qza (fungal/eukaryotic taxonomic assignments)
+- CFM_ITS1_taxonomy_viz.qzv (ITS1 taxonomy table visualization)
+- CFM_ITS1_taxonomy_barplot.qzv (ITS1 interactive barplot)
+
+Classifiers used:
+- SILVA: Diverse-weighted classifier optimized for plant microbiomes
+- UNITE: Custom-trained eukaryotes classifier with pathogen detection
+
+Next steps:
+1. Download and examine taxonomy visualizations (.qzv files)
+2. Check taxonomic assignments and coverage
+3. Look for Phytophthora and other cacao pathogens in ITS1 data!
+4. Filter taxa if needed (remove chloroplasts, mitochondria, etc.)
+5. Proceed with alpha rarefaction and diversity analysis
+
+Taxonomic classification completed at: Thu 26 Jun 23:57:49 BST 2025
+Ready for alpha rarefaction and diversity analysis!

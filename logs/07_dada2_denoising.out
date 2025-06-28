@@ -1,0 +1,106 @@
+Starting DADA2 denoising...
+Date: Fri 20 Jun 08:33:37 BST 2025
+Host: cn025.ham8.dur.ac.uk
+CPUs: 16
+Memory: 64G
+Input directory: qiime2/denoise
+Output directory: qiime2/denoise
+Input files verified successfully
+
+=== DADA2 DENOISING: 16S rRNA V4 ===
+Starting 16S denoising at: Fri 20 Jun 08:33:37 BST 2025
+Parameters:
+  Forward truncation: 0 (no truncation - keep full sequences)
+  Reverse truncation: 0 (no truncation - keep full sequences)
+  Cores: 16
+R version 4.3.3 (2024-02-29) 
+DADA2: 1.30.0 / Rcpp: 1.0.13.1 / RcppParallel: 5.1.9 
+2) Filtering ................................................................................................................................................................................................................................................................................................................................................
+3) Learning Error Rates
+231365550 total bases in 1037112 reads from 9 samples will be used for learning the error rates.
+230278461 total bases in 1037112 reads from 9 samples will be used for learning the error rates.
+3) Denoise samples ................................................................................................................................................................................................................................................................................................................................................
+................................................................................................................................................................................................................................................................................................................................................
+5) Remove chimeras (method = consensus)
+6) Report read numbers through the pipeline
+7) Write output
+Running external command line application(s). This may print messages to stdout and/or stderr.
+The command(s) being run are below. These commands cannot be manually re-run as they will depend on temporary files that no longer exist.
+
+Command: run_dada.R --input_directory /local/slurm.13487518/tmpo60f_t3q/forward --input_directory_reverse /local/slurm.13487518/tmpo60f_t3q/reverse --output_path /local/slurm.13487518/tmpo60f_t3q/output.tsv.biom --output_track /local/slurm.13487518/tmpo60f_t3q/track.tsv --filtered_directory /local/slurm.13487518/tmpo60f_t3q/filt_f --filtered_directory_reverse /local/slurm.13487518/tmpo60f_t3q/filt_r --truncation_length 0 --truncation_length_reverse 0 --trim_left 0 --trim_left_reverse 0 --max_expected_errors 2.0 --max_expected_errors_reverse 2.0 --truncation_quality_score 2 --min_overlap 12 --pooling_method independent --chimera_method consensus --min_parental_fold 1.0 --allow_one_off False --num_threads 16 --learn_min_reads 1000000
+
+Saved FeatureTable[Frequency] to: qiime2/denoise/CFM_16S_dada2_table.qza
+Saved FeatureData[Sequence] to: qiime2/denoise/CFM_16S_dada2_repseqs.qza
+Saved SampleData[DADA2Stats] to: qiime2/denoise/CFM_16S_dada2_stats.qza
+SUCCESS: 16S DADA2 completed at: Fri 20 Jun 11:42:04 BST 2025
+Creating 16S summary visualizations...
+Saved Visualization to: qiime2/denoise/CFM_16S_dada2_table_summary.qzv
+Saved Visualization to: qiime2/denoise/CFM_16S_dada2_repseqs_summary.qzv
+Saved Visualization to: qiime2/denoise/CFM_16S_dada2_stats_summary.qzv
+16S visualizations created successfully
+
+=== DADA2 DENOISING: ITS1 Fungal ===
+Starting ITS1 denoising at: Fri 20 Jun 11:45:32 BST 2025
+Parameters:
+  Forward truncation: 0 (no truncation - keep full sequences)
+  Reverse truncation: 0 (no truncation - keep full sequences)
+  Cores: 16
+R version 4.3.3 (2024-02-29) 
+DADA2: 1.30.0 / Rcpp: 1.0.13.1 / RcppParallel: 5.1.9 
+2) Filtering ................................................................................................................................................................................................................................................................................................................................................
+3) Learning Error Rates
+223512891 total bases in 1015679 reads from 26 samples will be used for learning the error rates.
+225501782 total bases in 1015679 reads from 26 samples will be used for learning the error rates.
+3) Denoise samples ................................................................................................................................................................................................................................................................................................................................................
+................................................................................................................................................................................................................................................................................................................................................
+5) Remove chimeras (method = consensus)
+6) Report read numbers through the pipeline
+7) Write output
+Running external command line application(s). This may print messages to stdout and/or stderr.
+The command(s) being run are below. These commands cannot be manually re-run as they will depend on temporary files that no longer exist.
+
+Command: run_dada.R --input_directory /local/slurm.13487518/tmphi2fo0ui/forward --input_directory_reverse /local/slurm.13487518/tmphi2fo0ui/reverse --output_path /local/slurm.13487518/tmphi2fo0ui/output.tsv.biom --output_track /local/slurm.13487518/tmphi2fo0ui/track.tsv --filtered_directory /local/slurm.13487518/tmphi2fo0ui/filt_f --filtered_directory_reverse /local/slurm.13487518/tmphi2fo0ui/filt_r --truncation_length 0 --truncation_length_reverse 0 --trim_left 0 --trim_left_reverse 0 --max_expected_errors 2.0 --max_expected_errors_reverse 2.0 --truncation_quality_score 2 --min_overlap 12 --pooling_method independent --chimera_method consensus --min_parental_fold 1.0 --allow_one_off False --num_threads 16 --learn_min_reads 1000000
+
+Saved FeatureTable[Frequency] to: qiime2/denoise/CFM_ITS1_dada2_table.qza
+Saved FeatureData[Sequence] to: qiime2/denoise/CFM_ITS1_dada2_repseqs.qza
+Saved SampleData[DADA2Stats] to: qiime2/denoise/CFM_ITS1_dada2_stats.qza
+SUCCESS: ITS1 DADA2 completed at: Fri 20 Jun 13:15:50 BST 2025
+Creating ITS1 summary visualizations...
+Saved Visualization to: qiime2/denoise/CFM_ITS1_dada2_table_summary.qzv
+Saved Visualization to: qiime2/denoise/CFM_ITS1_dada2_repseqs_summary.qzv
+Saved Visualization to: qiime2/denoise/CFM_ITS1_dada2_stats_summary.qzv
+ITS1 visualizations created successfully
+
+=== DADA2 DENOISING COMPLETE ===
+Checking output files...
+Files created in qiime2/denoise:
+-rw-r--r-- 1 jcnx71 URP_dbl 2.1M Jun 20 11:41 qiime2/denoise/CFM_16S_dada2_repseqs.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 5.0M Jun 20 11:45 qiime2/denoise/CFM_16S_dada2_repseqs_summary.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl  21K Jun 20 11:41 qiime2/denoise/CFM_16S_dada2_stats.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 1.2M Jun 20 11:45 qiime2/denoise/CFM_16S_dada2_stats_summary.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 1.2M Jun 20 11:41 qiime2/denoise/CFM_16S_dada2_table.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 1.6M Jun 20 11:44 qiime2/denoise/CFM_16S_dada2_table_summary.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 961K Jun 20 13:15 qiime2/denoise/CFM_ITS1_dada2_repseqs.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 2.3M Jun 20 13:16 qiime2/denoise/CFM_ITS1_dada2_repseqs_summary.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl  21K Jun 20 13:15 qiime2/denoise/CFM_ITS1_dada2_stats.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 1.2M Jun 20 13:16 qiime2/denoise/CFM_ITS1_dada2_stats_summary.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 611K Jun 20 13:15 qiime2/denoise/CFM_ITS1_dada2_table.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 890K Jun 20 13:16 qiime2/denoise/CFM_ITS1_dada2_table_summary.qzv
+
+=== FINAL SUMMARY ===
+16S Results:
+16S table size: 1.2M
+16S sequences size: 2.1M
+
+ITS1 Results:
+ITS1 table size: 612K
+ITS1 sequences size: 964K
+
+Next steps:
+1. Download and examine denoising stats (.qzv files)
+2. Check feature table summaries
+3. Proceed with taxonomic classification
+4. Run diversity analysis
+
+DADA2 denoising completed at: Fri 20 Jun 13:16:36 BST 2025
+Ready for taxonomic classification!
