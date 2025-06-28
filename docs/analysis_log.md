@@ -213,8 +213,12 @@ cacao_flower_microbiome/
 ├── .gitignore  
 ├── .git/  
 ├── data/  
-│   └── raw_data/  
-├── docs/  
+│   └── raw_data/
+│	└── checkSize.xls  
+│	├── MD5.txt  
+│	├── X204SC25042477-Z01-F001  
+│	└── X204SC25042477-Z01-F001.tar
+jhe├── docs/  
 │   └── analysis_log.md  
 ├── logs/  
 │   ├── 01_lane_merging.out  
