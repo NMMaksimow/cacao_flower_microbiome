@@ -1,0 +1,123 @@
+Starting dataset filtering...
+Date: Mon 30 Jun 06:09:41 BST 2025
+Host: cn026.ham8.dur.ac.uk
+CPUs: 8
+Memory: 32G
+Input denoise directory: qiime2/denoise
+Input taxonomy directory: qiime2/taxonomy
+Output directory: qiime2/filtered
+Input files verified successfully
+
+=== 16S BACTERIAL DATASET FILTERING ===
+Starting 16S filtering at: Mon 30 Jun 06:09:42 BST 2025
+Removing plastids (chloroplasts) and mitochondria...
+Saved FeatureTable[Frequency] to: qiime2/filtered/CFM_16S_filtered_table.qza
+SUCCESS: 16S table filtering completed
+Filtering 16S representative sequences...
+Saved FeatureData[Sequence] to: qiime2/filtered/CFM_16S_filtered_repseqs.qza
+Creating 16S filtered table summary...
+Saved Visualization to: qiime2/filtered/CFM_16S_filtered_table_summary.qzv
+16S filtering complete. Plastids and mitochondria removed.
+
+=== ITS1 FUNGAL DATASET FILTERING ===
+Starting ITS1 filtering at: Mon 30 Jun 06:13:34 BST 2025
+Keeping only Kingdom Fungi...
+Saved FeatureTable[Frequency] to: qiime2/filtered/CFM_ITS1_filtered_table.qza
+SUCCESS: ITS1 table filtering completed
+Filtering ITS1 representative sequences...
+Saved FeatureData[Sequence] to: qiime2/filtered/CFM_ITS1_filtered_repseqs.qza
+Creating ITS1 filtered table summary...
+Saved Visualization to: qiime2/filtered/CFM_ITS1_filtered_table_summary.qzv
+ITS1 filtering complete. Only Fungi retained.
+
+=== ADDITIONAL FILTERING ===
+Removing singleton ASVs (frequency < 2)...
+Saved FeatureTable[Frequency] to: qiime2/filtered/CFM_16S_filtered_no_singletons.qza
+Saved FeatureTable[Frequency] to: qiime2/filtered/CFM_ITS1_filtered_no_singletons.qza
+Removing low-prevalence ASVs (present in <5% of samples)...
+Saved FeatureTable[Frequency] to: qiime2/filtered/CFM_16S_final_filtered.qza
+Saved FeatureTable[Frequency] to: qiime2/filtered/CFM_ITS1_final_filtered.qza
+Creating final filtered table summaries...
+Saved Visualization to: qiime2/filtered/CFM_16S_final_filtered_summary.qzv
+Saved Visualization to: qiime2/filtered/CFM_ITS1_final_filtered_summary.qzv
+
+=== CREATING PROKARYOTES-ONLY 16S DATASET ===
+Purpose: Standard bacterial microbiome analysis excluding eukaryotic DNA
+Note: This will remove Phytophthora sequences found in the 16S data
+Removing Domain Eukaryota from 16S dataset...
+Saved FeatureTable[Frequency] to: qiime2/filtered/CFM_16S_prokaryotes_only.qza
+SUCCESS: Prokaryotes-only table created
+Filtering representative sequences for prokaryotes-only dataset...
+Saved FeatureData[Sequence] to: qiime2/filtered/CFM_16S_prokaryotes_only_repseqs.qza
+Creating prokaryotes-only summary...
+Saved Visualization to: qiime2/filtered/CFM_16S_prokaryotes_only_summary.qzv
+Prokaryotes-only dataset created successfully
+
+=== DUAL 16S ANALYSIS APPROACH COMPLETE ===
+Two 16S datasets now available:
+1. CFM_16S_final_filtered.qza - includes eukaryotic DNA (Phytophthora)
+2. CFM_16S_prokaryotes_only.qza - standard bacterial microbiome
+
+=== DATASET FILTERING COMPLETE ===
+Checking output files...
+Files created in qiime2/filtered:
+-rw-r--r-- 1 jcnx71 URP_dbl 1.5M Jun 30 06:16 qiime2/filtered/CFM_16S_filtered_no_singletons.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 2.3M Jun 30 06:12 qiime2/filtered/CFM_16S_filtered_repseqs.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 1.5M Jun 30 06:11 qiime2/filtered/CFM_16S_filtered_table.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 1.9M Jun 30 06:13 qiime2/filtered/CFM_16S_filtered_table_summary.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 640K Jun 30 06:17 qiime2/filtered/CFM_16S_final_filtered.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 878K Jun 30 06:17 qiime2/filtered/CFM_16S_final_filtered_summary.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 643K Jun 30 06:18 qiime2/filtered/CFM_16S_prokaryotes_only.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 2.2M Jun 30 06:18 qiime2/filtered/CFM_16S_prokaryotes_only_repseqs.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 884K Jun 30 06:18 qiime2/filtered/CFM_16S_prokaryotes_only_summary.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 673K Jun 30 06:17 qiime2/filtered/CFM_ITS1_filtered_no_singletons.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 988K Jun 30 06:15 qiime2/filtered/CFM_ITS1_filtered_repseqs.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 667K Jun 30 06:14 qiime2/filtered/CFM_ITS1_filtered_table.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 929K Jun 30 06:16 qiime2/filtered/CFM_ITS1_filtered_table_summary.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 247K Jun 30 06:17 qiime2/filtered/CFM_ITS1_final_filtered.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 468K Jun 30 06:17 qiime2/filtered/CFM_ITS1_final_filtered_summary.qzv
+
+=== FILTERING SUMMARY ===
+16S Full Dataset (includes eukaryotic DNA):
+16S full dataset size: 640K
+
+16S Prokaryotes-Only Dataset:
+16S prokaryotes-only size: 644K
+
+ITS1 Filtering Results:
+ITS1 final filtered table size: 248K
+
+Output files generated:
+16S DATASETS:
+- CFM_16S_final_filtered.qza (includes eukaryotic DNA like Phytophthora)
+- CFM_16S_filtered_repseqs.qza (representative sequences for full dataset)
+- CFM_16S_final_filtered_summary.qzv (full dataset summary)
+- CFM_16S_prokaryotes_only.qza (standard bacterial microbiome)
+- CFM_16S_prokaryotes_only_repseqs.qza (prokaryotic sequences only)
+- CFM_16S_prokaryotes_only_summary.qzv (prokaryotes-only summary)
+
+ITS1 DATASET:
+- CFM_ITS1_final_filtered.qza (fungal communities only)
+- CFM_ITS1_filtered_repseqs.qza (fungal representative sequences)
+- CFM_ITS1_final_filtered_summary.qzv (fungal dataset summary)
+
+Filtering applied:
+- 16S FULL: Removed plastids and mitochondria, kept eukaryotic DNA (Phytophthora)
+- 16S PROKARYOTES: Additionally removed all Domain Eukaryota
+- ITS1: Kept only Kingdom Fungi
+- ALL: Removed singletons and low-prevalence ASVs (<5% samples)
+
+Analytical approach:
+1. Use 16S FULL dataset for comprehensive analysis including pathogens
+2. Use 16S PROKARYOTES dataset for standard bacterial microbiome comparison
+3. Use ITS1 dataset for fungal community analysis
+4. Compare results between 16S approaches in your publication
+
+Next steps:
+1. Download and examine all filtering summary (.qzv) files
+2. Compare feature counts between 16S full vs prokaryotes-only datasets
+3. Proceed with alpha rarefaction analysis on BOTH 16S datasets
+4. Document Phytophthora detection via 16S amplification in your methods
+
+Dataset filtering completed at: Mon 30 Jun 06:18:43 BST 2025
+Ready for dual-approach alpha rarefaction analysis!
