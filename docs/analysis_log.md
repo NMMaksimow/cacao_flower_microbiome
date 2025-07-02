@@ -217,8 +217,8 @@ cacao_flower_microbiome/
 │	└── checkSize.xls  
 │	├── MD5.txt  
 │	├── X204SC25042477-Z01-F001  
-│	└── X204SC25042477-Z01-F001.tar
-jhe├── docs/  
+│	└── X204SC25042477-Z01-F001.tar  
+├── docs/  
 │   └── analysis_log.md  
 ├── logs/  
 │   ├── 01_lane_merging.out  
