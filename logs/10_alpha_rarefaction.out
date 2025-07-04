@@ -1,0 +1,103 @@
+Starting alpha rarefaction analysis...
+Date: Mon 30 Jun 12:17:22 BST 2025
+Host: cn096.ham8.dur.ac.uk
+CPUs: 16
+Memory: 64G
+Input denoise directory: qiime2/denoise
+Input filtered directory: qiime2/filtered
+Output directory: qiime2/rarefaction
+Input files verified successfully
+
+=== UNFILTERED DATA RAREFACTION ANALYSIS ===
+Purpose: Quality assessment and comparison with filtered data
+Starting unfiltered rarefaction analysis at: Mon 30 Jun 12:17:23 BST 2025
+
+--- 16S UNFILTERED RAREFACTION ---
+Parameters:
+  Max depth: 60,000 reads
+  Steps: 50
+  Iterations: 10
+Saved Visualization to: qiime2/rarefaction/CFM_16S_unfiltered_alpha_rarefaction.qzv
+SUCCESS: 16S unfiltered rarefaction completed
+
+--- ITS1 UNFILTERED RAREFACTION ---
+Parameters:
+  Max depth: 40,000 reads
+  Steps: 50
+  Iterations: 10
+Saved Visualization to: qiime2/rarefaction/CFM_ITS1_unfiltered_alpha_rarefaction.qzv
+SUCCESS: ITS1 unfiltered rarefaction completed
+Unfiltered rarefaction analysis completed at: Mon 30 Jun 12:40:27 BST 2025
+
+=== FILTERED DATA RAREFACTION ANALYSIS ===
+Purpose: Determine optimal sampling depth for diversity analysis
+Starting filtered rarefaction analysis at: Mon 30 Jun 12:40:27 BST 2025
+
+--- 16S FILTERED RAREFACTION ---
+Starting 16S rarefaction analysis at: Mon 30 Jun 12:40:27 BST 2025
+Parameters:
+  Max depth: 50,000 reads
+  Steps: 50
+  Iterations: 10
+Saved Visualization to: qiime2/rarefaction/CFM_16S_alpha_rarefaction.qzv
+SUCCESS: 16S alpha rarefaction completed at: Mon 30 Jun 12:45:14 BST 2025
+
+=== ITS1 ALPHA RAREFACTION ===
+Starting ITS1 rarefaction analysis at: Mon 30 Jun 12:45:14 BST 2025
+Parameters:
+  Max depth: 30,000 reads
+  Steps: 50
+  Iterations: 10
+Saved Visualization to: qiime2/rarefaction/CFM_ITS1_alpha_rarefaction.qzv
+SUCCESS: ITS1 alpha rarefaction completed at: Mon 30 Jun 12:51:59 BST 2025
+
+=== ALPHA RAREFACTION COMPLETE ===
+Generating rarefaction summary report...
+Running rarefaction depth analysis...
+
+Checking output files...
+Files created in qiime2/rarefaction:
+-rw-r--r-- 1 jcnx71 URP_dbl 1.9M Jun 30 12:45 qiime2/rarefaction/CFM_16S_alpha_rarefaction.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 2.9M Jun 30 12:32 qiime2/rarefaction/CFM_16S_unfiltered_alpha_rarefaction.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 2.5M Jun 30 12:51 qiime2/rarefaction/CFM_ITS1_alpha_rarefaction.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 2.5M Jun 30 12:40 qiime2/rarefaction/CFM_ITS1_unfiltered_alpha_rarefaction.qzv
+
+=== RAREFACTION ANALYSIS SUMMARY ===
+Unfiltered rarefaction curves:
+- 16S unfiltered rarefaction: 2.9M
+- ITS1 unfiltered rarefaction: 2.5M
+
+Filtered rarefaction curves:
+
+Output files generated:
+UNFILTERED DATA (for comparison):
+- CFM_16S_unfiltered_alpha_rarefaction.qzv
+- CFM_ITS1_unfiltered_alpha_rarefaction.qzv
+
+FILTERED DATA (for analysis):
+- CFM_16S_filtered_full_alpha_rarefaction.qzv (includes eukaryotic DNA)
+- CFM_16S_prokaryotes_only_alpha_rarefaction.qzv (bacterial microbiome only)
+- CFM_ITS1_filtered_alpha_rarefaction.qzv (fungal communities)
+
+ANALYSIS TOOLS:
+- rarefaction_analysis_report.txt (comprehensive depth recommendations)
+- analyze_rarefaction_depth.py (enhanced analysis script)
+
+Next steps:
+1. Download and view ALL .qzv files at https://view.qiime2.org
+2. Compare unfiltered vs filtered rarefaction curves
+3. Compare 16S full vs prokaryotes-only datasets
+4. Review the comprehensive text report for recommended depths
+5. Choose your analysis approach:
+   - Use 16S FULL for pathogen-inclusive analysis
+   - Use 16S PROKARYOTES for standard bacterial microbiome
+   - Use both approaches for comprehensive publication
+
+Important comparisons to make:
+- Unfiltered vs filtered curves show filtering impact
+- 16S full vs prokaryotes-only shows eukaryotic DNA contribution
+- Use appropriate dataset recommendations for downstream analysis
+- Document both approaches in your methods section
+
+Alpha rarefaction analysis completed at: Mon 30 Jun 12:52:00 BST 2025
+Ready for phylogenetic tree construction with optimal depths!

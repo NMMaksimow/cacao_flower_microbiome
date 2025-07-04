@@ -1,0 +1,2 @@
+Could not find sample frequency data in qiime2/filtered/CFM_16S_final_filtered_summary.qzv
+Could not find sample frequency data in qiime2/filtered/CFM_ITS1_final_filtered_summary.qzv

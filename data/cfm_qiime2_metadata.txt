@@ -1,0 +1,338 @@
+sample-id	sublibrary_id	sample_type	management_type	farm_id	unique_farm_id	tree_id	tree_n	flower_n	collection_batch	extraction_batch	16s_pcr_batch	its1_pcr_batch	is_specimen	is_pollination	is_fungi
+#q2:types	categorical	categorical	categorical	categorical	categorical	categorical	categorical	categorical	categorical	categorical	categorical	categorical	categorical	categorical	categorical
+cib11	C1_14C_13_12	bagged_flower	inside_forest	issac_boadu	ib	ib1	1	1	2023-12-15	2024-10-01	2024-10-14	2024-10-02	2	1	1
+cib12	D1_14B_13_12	bagged_flower	inside_forest	issac_boadu	ib	ib1	1	2	2023-12-15	2024-10-01	2024-10-14	2024-10-02	0	NA	NA
+cib13	E1_13E_13_12	bagged_flower	inside_forest	issac_boadu	ib	ib1	1	3	2023-12-15	2024-10-01	2024-10-14	2024-10-02	0	NA	NA
+cib21	F1_13F_13_12	bagged_flower	inside_forest	issac_boadu	ib	ib2	2	1	2023-12-15	2024-10-01	2024-10-14	2024-10-02	0	NA	NA
+cib22	G1_13G_13_12	bagged_flower	inside_forest	issac_boadu	ib	ib2	2	2	2023-12-15	2024-10-01	2024-10-14	2024-10-02	0	NA	NA
+cib23	H1_20H_13_12	bagged_flower	inside_forest	issac_boadu	ib	ib2	2	3	2023-12-15	2024-10-01	2024-10-14	2024-10-02	0	NA	NA
+cib31	A2_13A_13_02	bagged_flower	inside_forest	issac_boadu	ib	ib3	3	1	2023-12-15	2024-10-01	2024-10-14	2024-10-02	0	NA	NA
+cib32	B2_13B_13_02	bagged_flower	inside_forest	issac_boadu	ib	ib3	3	2	2023-12-15	2024-10-01	2024-10-14	2024-10-02	0	NA	NA
+cib33	C2_14C_13_02	bagged_flower	inside_forest	issac_boadu	ib	ib3	3	3	2023-12-15	2024-10-01	2024-10-14	2024-10-02	0	NA	NA
+cib41	D2_14B_13_02	bagged_flower	inside_forest	issac_boadu	ib	ib4	4	1	2023-12-15	2024-10-01	2024-10-14	2024-10-02	0	NA	NA
+cib42	E2_13E_13_02	bagged_flower	inside_forest	issac_boadu	ib	ib4	4	2	2023-12-15	2024-10-01	2024-10-14	2024-10-02	0	NA	NA
+cib43	F2_13F_13_02	bagged_flower	inside_forest	issac_boadu	ib	ib4	4	3	2023-12-15	2024-10-01	2024-10-14	2024-10-02	0	NA	NA
+cib51	G2_13G_13_02	bagged_flower	inside_forest	issac_boadu	ib	ib5	5	1	2023-12-15	2024-10-01	2024-10-14	2024-10-02	2	1	NA
+cib52	H2_20H_13_02	bagged_flower	inside_forest	issac_boadu	ib	ib5	5	2	2023-12-15	2024-10-01	2024-10-14	2024-10-02	0	NA	NA
+cib53	A3_13A_13_03	bagged_flower	inside_forest	issac_boadu	ib	ib5	5	3	2023-12-15	2024-10-01	2024-10-14	2024-10-02	2	0	0
+cib61	B3_13B_13_03	bagged_flower	inside_forest	issac_boadu	ib	ib6	6	1	2023-12-15	2024-10-01	2024-10-14	2024-10-02	2	0	NA
+cib62	C3_14C_13_03	bagged_flower	inside_forest	issac_boadu	ib	ib6	6	2	2023-12-15	2024-10-01	2024-10-14	2024-10-02	2	0	NA
+cib63	D3_14B_13_03	bagged_flower	inside_forest	issac_boadu	ib	ib6	6	3	2023-12-15	2024-10-01	2024-10-14	2024-10-02	1	NA	NA
+cib71	E3_13E_13_03	bagged_flower	inside_forest	issac_boadu	ib	ib7	7	1	2023-12-15	2024-10-01	2024-10-14	2024-10-02	2	0	NA
+cib72	F3_13F_13_03	bagged_flower	inside_forest	issac_boadu	ib	ib7	7	2	2023-12-15	2024-10-01	2024-10-14	2024-10-02	2	0	0
+cib73	G3_13G_13_03	bagged_flower	inside_forest	issac_boadu	ib	ib7	7	3	2023-12-15	2024-10-01	2024-10-14	2024-10-02	2	0	NA
+cibEC	B1_13B_13_12	extraction_control	extraction_control	extraction_control	extraction_control	extraction_control	NA	NA	NA	2024-10-01	2024-10-14	2024-10-02	NA	NA	NA
+cibNC	A1_13A_13_12	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	NA	NA	NA	NA	2024-10-14	2024-10-02	NA	NA	NA
+cibPC	H3_20H_13_03	mock_community	mock_community	mock_community	mock_community	mock_community	NA	NA	NA	NA	2024-10-14	2024-10-02	NA	NA	NA
+pib11	C4_14C_13_04	openly_pollinated_flower	inside_forest	issac_boadu	ib	ib1	1	1	2023-12-15	2024-10-03	2024-10-24	2024-10-04	0	NA	NA
+pib12	D4_14B_13_04	openly_pollinated_flower	inside_forest	issac_boadu	ib	ib1	1	2	2023-12-15	2024-10-03	2024-10-24	2024-10-04	1	NA	NA
+pib13	E4_13E_13_04	openly_pollinated_flower	inside_forest	issac_boadu	ib	ib1	1	3	2023-12-15	2024-10-03	2024-10-24	2024-10-04	2	0	NA
+pib21	F4_13F_13_04	openly_pollinated_flower	inside_forest	issac_boadu	ib	ib2	2	1	2023-12-15	2024-10-03	2024-10-24	2024-10-04	2	1	0
+pib22	G4_13G_13_04	openly_pollinated_flower	inside_forest	issac_boadu	ib	ib2	2	2	2023-12-15	2024-10-03	2024-10-24	2024-10-04	2	1	0
+pib23	H4_20H_13_04	openly_pollinated_flower	inside_forest	issac_boadu	ib	ib2	2	3	2023-12-15	2024-10-03	2024-10-24	2024-10-04	2	1	1
+pib31	A5_13A_19_08	openly_pollinated_flower	inside_forest	issac_boadu	ib	ib3	3	1	2023-12-15	2024-10-03	2024-10-24	2024-10-04	1	NA	NA
+pib32	B5_13B_19_08	openly_pollinated_flower	inside_forest	issac_boadu	ib	ib3	3	2	2023-12-15	2024-10-03	2024-10-24	2024-10-04	2	1	0
+pib33	C5_14C_19_08	openly_pollinated_flower	inside_forest	issac_boadu	ib	ib3	3	3	2023-12-15	2024-10-03	2024-10-24	2024-10-04	1	NA	NA
+pib41	D5_14B_19_08	openly_pollinated_flower	inside_forest	issac_boadu	ib	ib4	4	1	2023-12-15	2024-10-03	2024-10-24	2024-10-04	2	1	1
+pib42	E5_13E_19_08	openly_pollinated_flower	inside_forest	issac_boadu	ib	ib4	4	2	2023-12-15	2024-10-03	2024-10-24	2024-10-04	2	1	1
+pib43	F5_13F_19_08	openly_pollinated_flower	inside_forest	issac_boadu	ib	ib4	4	3	2023-12-15	2024-10-03	2024-10-24	2024-10-04	1	NA	NA
+pib51	G5_13G_19_08	openly_pollinated_flower	inside_forest	issac_boadu	ib	ib5	5	1	2023-12-15	2024-10-03	2024-10-24	2024-10-04	1	NA	NA
+pib52	H5_20H_19_08	openly_pollinated_flower	inside_forest	issac_boadu	ib	ib5	5	2	2023-12-15	2024-10-03	2024-10-24	2024-10-04	2	1	NA
+pib53	A6_13A_13_06	openly_pollinated_flower	inside_forest	issac_boadu	ib	ib5	5	3	2023-12-15	2024-10-03	2024-10-24	2024-10-04	2	1	0
+pib61	B6_13B_13_06	openly_pollinated_flower	inside_forest	issac_boadu	ib	ib6	6	1	2023-12-15	2024-10-03	2024-10-24	2024-10-04	2	1	NA
+pib62	C6_14C_13_06	openly_pollinated_flower	inside_forest	issac_boadu	ib	ib6	6	2	2023-12-15	2024-10-03	2024-10-24	2024-10-04	2	1	0
+pib63	D6_14B_13_06	openly_pollinated_flower	inside_forest	issac_boadu	ib	ib6	6	3	2023-12-15	2024-10-03	2024-10-24	2024-10-04	1	NA	NA
+pib71	E6_13E_13_06	openly_pollinated_flower	inside_forest	issac_boadu	ib	ib7	7	1	2023-12-15	2024-10-03	2024-10-24	2024-10-04	2	1	1
+pib72	F6_13F_13_06	openly_pollinated_flower	inside_forest	issac_boadu	ib	ib7	7	2	2023-12-15	2024-10-03	2024-10-24	2024-10-04	2	0	1
+pib73	G6_13G_13_06	openly_pollinated_flower	inside_forest	issac_boadu	ib	ib7	7	3	2023-12-15	2024-10-03	2024-10-24	2024-10-04	2	1	0
+pibEC	B4_13B_13_04	extraction_control	extraction_control	extraction_control	extraction_control	extraction_control	NA	NA	NA	2024-10-03	2024-10-24	2024-10-04	NA	NA	NA
+pibNC	A4_13A_13_04	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	NA	NA	NA	NA	2024-10-24	2024-10-04	NA	NA	NA
+pibPC	H6_20H_13_06	mock_community	mock_community	mock_community	mock_community	mock_community	NA	NA	NA	NA	2024-10-24	2024-10-04	NA	NA	NA
+cvi11	C1_14C_13_12	bagged_flower	full_sun	victor	vi	vi1	1	1	2023-12-14	2024-10-06	2024-10-29	2024-10-07	2	0	0
+cvi12	D1_14B_13_12	bagged_flower	full_sun	victor	vi	vi1	1	2	2023-12-14	2024-10-06	2024-10-29	2024-10-07	0	NA	NA
+cvi13	E1_13E_13_12	bagged_flower	full_sun	victor	vi	vi1	1	3	2023-12-14	2024-10-06	2024-10-29	2024-10-07	2	0	0
+cvi21	F1_13F_13_12	bagged_flower	full_sun	victor	vi	vi2	2	1	2023-12-14	2024-10-06	2024-10-29	2024-10-07	1	NA	NA
+cvi22	G1_13G_13_12	bagged_flower	full_sun	victor	vi	vi2	2	2	2023-12-14	2024-10-06	2024-10-29	2024-10-07	2	0	0
+cvi23	H1_20H_13_12	bagged_flower	full_sun	victor	vi	vi2	2	3	2023-12-14	2024-10-06	2024-10-29	2024-10-07	2	0	0
+cvi31	A2_13A_13_02	bagged_flower	full_sun	victor	vi	vi3	3	1	2023-12-14	2024-10-06	2024-10-29	2024-10-07	1	NA	NA
+cvi32	B2_13B_13_02	bagged_flower	full_sun	victor	vi	vi3	3	2	2023-12-14	2024-10-06	2024-10-29	2024-10-07	1	NA	NA
+cvi33	C2_14C_13_02	bagged_flower	full_sun	victor	vi	vi3	3	3	2023-12-14	2024-10-06	2024-10-29	2024-10-07	2	0	0
+cvi41	D2_14B_13_02	bagged_flower	full_sun	victor	vi	vi4	4	1	2023-12-14	2024-10-06	2024-10-29	2024-10-07	2	1	0
+cvi42	E2_13E_13_02	bagged_flower	full_sun	victor	vi	vi4	4	2	2023-12-14	2024-10-06	2024-10-29	2024-10-07	0	NA	NA
+cvi43	F2_13F_13_02	bagged_flower	full_sun	victor	vi	vi4	4	3	2023-12-14	2024-10-06	2024-10-29	2024-10-07	2	1	0
+cvi51	G2_13G_13_02	bagged_flower	full_sun	victor	vi	vi5	5	1	2023-12-14	2024-10-06	2024-10-29	2024-10-07	2	0	0
+cvi52	H2_20H_13_02	bagged_flower	full_sun	victor	vi	vi5	5	2	2023-12-14	2024-10-06	2024-10-29	2024-10-07	2	1	0
+cvi53	A3_13A_13_03	bagged_flower	full_sun	victor	vi	vi5	5	3	2023-12-14	2024-10-06	2024-10-29	2024-10-07	2	1	0
+cvi61	B3_13B_13_03	bagged_flower	full_sun	victor	vi	vi6	6	1	2023-12-14	2024-10-06	2024-10-29	2024-10-07	2	0	0
+cvi62	C3_14C_13_03	bagged_flower	full_sun	victor	vi	vi6	6	2	2023-12-14	2024-10-06	2024-10-29	2024-10-07	2	0	0
+cvi63	D3_14B_13_03	bagged_flower	full_sun	victor	vi	vi6	6	3	2023-12-14	2024-10-06	2024-10-29	2024-10-07	2	0	0
+cvi71	E3_13E_13_03	bagged_flower	full_sun	victor	vi	vi7	7	1	2023-12-14	2024-10-06	2024-10-29	2024-10-07	2	1	0
+cvi72	F3_13F_13_03	bagged_flower	full_sun	victor	vi	vi7	7	2	2023-12-14	2024-10-06	2024-10-29	2024-10-07	2	1	0
+cvi73	G3_13G_13_03	bagged_flower	full_sun	victor	vi	vi7	7	3	2023-12-14	2024-10-06	2024-10-29	2024-10-07	2	0	0
+cviEC	B1_13B_13_12	extraction_control	extraction_control	extraction_control	extraction_control	extraction_control	NA	NA	NA	2024-10-06	2024-10-29	2024-10-07	NA	NA	NA
+cviNC	A1_13A_13_12	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	NA	NA	NA	NA	2024-10-29	2024-10-07	NA	NA	NA
+cviPC	H3_20H_13_03	mock_community	mock_community	mock_community	mock_community	mock_community	NA	NA	NA	NA	2024-10-29	2024-10-07	NA	NA	NA
+pvi11	C4_14C_13_04	openly_pollinated_flower	full_sun	victor	vi	vi1	1	1	2023-12-14	2024-10-08	2024-10-31	2024-10-09	2	0	1
+pvi12	D4_14B_13_04	openly_pollinated_flower	full_sun	victor	vi	vi1	1	2	2023-12-14	2024-10-08	2024-10-31	2024-10-09	2	1	1
+pvi13	E4_13E_13_04	openly_pollinated_flower	full_sun	victor	vi	vi1	1	3	2023-12-14	2024-10-08	2024-10-31	2024-10-09	2	1	1
+pvi21	F4_13F_13_04	openly_pollinated_flower	full_sun	victor	vi	vi2	2	1	2023-12-14	2024-10-08	2024-10-31	2024-10-09	2	1	1
+pvi22	G4_13G_13_04	openly_pollinated_flower	full_sun	victor	vi	vi2	2	2	2023-12-14	2024-10-08	2024-10-31	2024-10-09	1	NA	NA
+pvi23	H4_20H_13_04	openly_pollinated_flower	full_sun	victor	vi	vi2	2	3	2023-12-14	2024-10-08	2024-10-31	2024-10-09	1	NA	NA
+pvi31	A5_13A_19_08	openly_pollinated_flower	full_sun	victor	vi	vi3	3	1	2023-12-14	2024-10-08	2024-10-31	2024-10-09	1	NA	NA
+pvi32	B5_13B_19_08	openly_pollinated_flower	full_sun	victor	vi	vi3	3	2	2023-12-14	2024-10-08	2024-10-31	2024-10-09	1	NA	NA
+pvi33	C5_14C_19_08	openly_pollinated_flower	full_sun	victor	vi	vi3	3	3	2023-12-14	2024-10-08	2024-10-31	2024-10-09	2	1	0
+pvi41	D5_14B_19_08	openly_pollinated_flower	full_sun	victor	vi	vi4	4	1	2023-12-14	2024-10-08	2024-10-31	2024-10-09	1	NA	NA
+pvi42	E5_13E_19_08	openly_pollinated_flower	full_sun	victor	vi	vi4	4	2	2023-12-14	2024-10-08	2024-10-31	2024-10-09	1	NA	NA
+pvi43	F5_13F_19_08	openly_pollinated_flower	full_sun	victor	vi	vi4	4	3	2023-12-14	2024-10-08	2024-10-31	2024-10-09	1	NA	NA
+pvi51	G5_13G_19_08	openly_pollinated_flower	full_sun	victor	vi	vi5	5	1	2023-12-14	2024-10-08	2024-10-31	2024-10-09	2	0	1
+pvi52	H5_20H_19_08	openly_pollinated_flower	full_sun	victor	vi	vi5	5	2	2023-12-14	2024-10-08	2024-10-31	2024-10-09	2	1	1
+pvi53	A6_13A_13_06	openly_pollinated_flower	full_sun	victor	vi	vi5	5	3	2023-12-14	2024-10-08	2024-10-31	2024-10-09	2	0	1
+pvi61	B6_13B_13_06	openly_pollinated_flower	full_sun	victor	vi	vi6	6	1	2023-12-14	2024-10-08	2024-10-31	2024-10-09	1	NA	NA
+pvi62	C6_14C_13_06	openly_pollinated_flower	full_sun	victor	vi	vi6	6	2	2023-12-14	2024-10-08	2024-10-31	2024-10-09	2	0	1
+pvi63	D6_14B_13_06	openly_pollinated_flower	full_sun	victor	vi	vi6	6	3	2023-12-14	2024-10-08	2024-10-31	2024-10-09	2	0	1
+pvi71	E6_13E_13_06	openly_pollinated_flower	full_sun	victor	vi	vi7	7	1	2023-12-14	2024-10-08	2024-10-31	2024-10-09	2	1	1
+pvi72	F6_13F_13_06	openly_pollinated_flower	full_sun	victor	vi	vi7	7	2	2023-12-14	2024-10-08	2024-10-31	2024-10-09	2	0	1
+pvi73	G6_13G_13_06	openly_pollinated_flower	full_sun	victor	vi	vi7	7	3	2023-12-14	2024-10-08	2024-10-31	2024-10-09	2	0	1
+pviEC	B4_13B_13_04	extraction_control	extraction_control	extraction_control	extraction_control	extraction_control	NA	NA	NA	2024-10-08	2024-10-31	2024-10-09	NA	NA	NA
+pviNC	A4_13A_13_04	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	NA	NA	NA	NA	2024-10-31	2024-10-09	NA	NA	NA
+pviPC	H6_20H_13_06	mock_community	mock_community	mock_community	mock_community	mock_community	NA	NA	NA	NA	2024-10-31	2024-10-09	NA	NA	NA
+ckk11	C1_14C_13_12	bagged_flower	agroforest	ankamah_steven	kk	kk1	1	1	2023-12-14	2024-10-13	2024-11-04	2024-10-14	2	1	0
+ckk12	D1_14B_13_12	bagged_flower	agroforest	ankamah_steven	kk	kk1	1	2	2023-12-14	2024-10-13	2024-11-04	2024-10-14	2	0	0
+ckk13	E1_13E_13_12	bagged_flower	agroforest	ankamah_steven	kk	kk1	1	3	2023-12-14	2024-10-13	2024-11-04	2024-10-14	2	0	0
+ckk21	F1_13F_13_12	bagged_flower	agroforest	ankamah_steven	kk	kk2	2	1	2023-12-14	2024-10-13	2024-11-04	2024-10-14	0	NA	NA
+ckk22	G1_13G_13_12	bagged_flower	agroforest	ankamah_steven	kk	kk2	2	2	2023-12-14	2024-10-13	2024-11-04	2024-10-14	2	0	0
+ckk23	H1_20H_13_12	bagged_flower	agroforest	ankamah_steven	kk	kk2	2	3	2023-12-14	2024-10-13	2024-11-04	2024-10-14	0	NA	NA
+ckk31	A2_13A_13_02	bagged_flower	agroforest	ankamah_steven	kk	kk3	3	1	2023-12-14	2024-10-13	2024-11-04	2024-10-14	0	NA	NA
+ckk32	B2_13B_13_02	bagged_flower	agroforest	ankamah_steven	kk	kk3	3	2	2023-12-14	2024-10-13	2024-11-04	2024-10-14	0	NA	NA
+ckk33	C2_14C_13_02	bagged_flower	agroforest	ankamah_steven	kk	kk3	3	3	2023-12-14	2024-10-13	2024-11-04	2024-10-14	1	NA	NA
+ckk41	D2_14B_13_02	bagged_flower	agroforest	ankamah_steven	kk	kk4	4	1	2023-12-14	2024-10-13	2024-11-04	2024-10-14	0	NA	NA
+ckk42	E2_13E_13_02	bagged_flower	agroforest	ankamah_steven	kk	kk4	4	2	2023-12-14	2024-10-13	2024-11-04	2024-10-14	2	0	0
+ckk43	F2_13F_13_02	bagged_flower	agroforest	ankamah_steven	kk	kk4	4	3	2023-12-14	2024-10-13	2024-11-04	2024-10-14	2	0	0
+ckk51	G2_13G_13_02	bagged_flower	agroforest	ankamah_steven	kk	kk5	5	1	2023-12-14	2024-10-13	2024-11-04	2024-10-14	2	0	0
+ckk52	H2_20H_13_02	bagged_flower	agroforest	ankamah_steven	kk	kk5	5	2	2023-12-14	2024-10-13	2024-11-04	2024-10-14	2	0	0
+ckk53	A3_13A_13_03	bagged_flower	agroforest	ankamah_steven	kk	kk5	5	3	2023-12-14	2024-10-13	2024-11-04	2024-10-14	0	NA	NA
+ckk61	B3_13B_13_03	bagged_flower	agroforest	ankamah_steven	kk	kk6	6	1	2023-12-14	2024-10-13	2024-11-04	2024-10-14	2	0	0
+ckk62	C3_14C_13_03	bagged_flower	agroforest	ankamah_steven	kk	kk6	6	2	2023-12-14	2024-10-13	2024-11-04	2024-10-14	2	0	0
+ckk63	D3_14B_13_03	bagged_flower	agroforest	ankamah_steven	kk	kk6	6	3	2023-12-14	2024-10-13	2024-11-04	2024-10-14	2	0	0
+ckk71	E3_13E_13_03	bagged_flower	agroforest	ankamah_steven	kk	kk7	7	1	2023-12-14	2024-10-13	2024-11-04	2024-10-14	2	0	0
+ckk72	F3_13F_13_03	bagged_flower	agroforest	ankamah_steven	kk	kk7	7	2	2023-12-14	2024-10-13	2024-11-04	2024-10-14	2	1	0
+ckk73	G3_13G_13_03	bagged_flower	agroforest	ankamah_steven	kk	kk7	7	3	2023-12-14	2024-10-13	2024-11-04	2024-10-14	2	0	0
+ckkEC	B1_13B_13_12	extraction_control	extraction_control	extraction_control	extraction_control	extraction_control	NA	NA	NA	2024-10-13	2024-11-04	2024-10-14	NA	NA	NA
+ckkNC	A1_13A_13_12	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	NA	NA	NA	NA	2024-11-04	2024-10-14	NA	NA	NA
+ckkPC	H3_20H_13_03	mock_community	mock_community	mock_community	mock_community	mock_community	NA	NA	NA	NA	2024-11-04	2024-10-14	NA	NA	NA
+pkk11	C4_14C_13_04	openly_pollinated_flower	agroforest	ankamah_steven	kk	kk1	1	1	2023-12-14	2024-10-15	2024-11-04	2024-10-16	2	1	1
+pkk12	D4_14B_13_04	openly_pollinated_flower	agroforest	ankamah_steven	kk	kk1	1	2	2023-12-14	2024-10-15	2024-11-04	2024-10-16	1	NA	NA
+pkk13	E4_13E_13_04	openly_pollinated_flower	agroforest	ankamah_steven	kk	kk1	1	3	2023-12-14	2024-10-15	2024-11-04	2024-10-16	2	1	1
+pkk21	F4_13F_13_04	openly_pollinated_flower	agroforest	ankamah_steven	kk	kk2	2	1	2023-12-14	2024-10-15	2024-11-04	2024-10-16	2	1	1
+pkk22	G4_13G_13_04	openly_pollinated_flower	agroforest	ankamah_steven	kk	kk2	2	2	2023-12-14	2024-10-15	2024-11-04	2024-10-16	2	1	1
+pkk23	H4_20H_13_04	openly_pollinated_flower	agroforest	ankamah_steven	kk	kk2	2	3	2023-12-14	2024-10-15	2024-11-04	2024-10-16	1	NA	NA
+pkk31	A5_13A_19_08	openly_pollinated_flower	agroforest	ankamah_steven	kk	kk3	3	1	2023-12-14	2024-10-15	2024-11-04	2024-10-16	2	0	1
+pkk32	B5_13B_19_08	openly_pollinated_flower	agroforest	ankamah_steven	kk	kk3	3	2	2023-12-14	2024-10-15	2024-11-04	2024-10-16	2	0	0
+pkk33	C5_14C_19_08	openly_pollinated_flower	agroforest	ankamah_steven	kk	kk3	3	3	2023-12-14	2024-10-15	2024-11-04	2024-10-16	1	NA	NA
+pkk41	D5_14B_19_08	openly_pollinated_flower	agroforest	ankamah_steven	kk	kk4	4	1	2023-12-14	2024-10-15	2024-11-04	2024-10-16	2	1	1
+pkk42	E5_13E_19_08	openly_pollinated_flower	agroforest	ankamah_steven	kk	kk4	4	2	2023-12-14	2024-10-15	2024-11-04	2024-10-16	2	0	1
+pkk43	F5_13F_19_08	openly_pollinated_flower	agroforest	ankamah_steven	kk	kk4	4	3	2023-12-14	2024-10-15	2024-11-04	2024-10-16	0	NA	NA
+pkk51	G5_13G_19_08	openly_pollinated_flower	agroforest	ankamah_steven	kk	kk5	5	1	2023-12-14	2024-10-15	2024-11-04	2024-10-16	1	NA	NA
+pkk52	H5_20H_19_08	openly_pollinated_flower	agroforest	ankamah_steven	kk	kk5	5	2	2023-12-14	2024-10-15	2024-11-04	2024-10-16	2	0	1
+pkk53	A6_13A_13_06	openly_pollinated_flower	agroforest	ankamah_steven	kk	kk5	5	3	2023-12-14	2024-10-15	2024-11-04	2024-10-16	2	1	1
+pkk61	B6_13B_13_06	openly_pollinated_flower	agroforest	ankamah_steven	kk	kk6	6	1	2023-12-14	2024-10-15	2024-11-04	2024-10-16	2	1	0
+pkk62	C6_14C_13_06	openly_pollinated_flower	agroforest	ankamah_steven	kk	kk6	6	2	2023-12-14	2024-10-15	2024-11-04	2024-10-16	2	1	1
+pkk63	D6_14B_13_06	openly_pollinated_flower	agroforest	ankamah_steven	kk	kk6	6	3	2023-12-14	2024-10-15	2024-11-04	2024-10-16	2	1	1
+pkk71	E6_13E_13_06	openly_pollinated_flower	agroforest	ankamah_steven	kk	kk7	7	1	2023-12-14	2024-10-15	2024-11-04	2024-10-16	2	0	1
+pkk72	F6_13F_13_06	openly_pollinated_flower	agroforest	ankamah_steven	kk	kk7	7	2	2023-12-14	2024-10-15	2024-11-04	2024-10-16	2	0	1
+pkk73	G6_13G_13_06	openly_pollinated_flower	agroforest	ankamah_steven	kk	kk7	7	3	2023-12-14	2024-10-15	2024-11-04	2024-10-16	2	0	1
+pkkEC	B4_13B_13_04	extraction_control	extraction_control	extraction_control	extraction_control	extraction_control	NA	NA	NA	2024-10-15	2024-11-04	2024-10-16	NA	NA	NA
+pkkNC	A4_13A_13_04	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	NA	NA	NA	NA	2024-11-04	2024-10-16	NA	NA	NA
+pkkPC	H6_20H_13_06	mock_community	mock_community	mock_community	mock_community	mock_community	NA	NA	NA	NA	2024-11-04	2024-10-16	NA	NA	NA
+csa11	C1_14C_13_12	bagged_flower	near_forest	sambassor	sa	sa1	1	1	2023-12-14	2024-10-17	2024-11-07	2024-10-21	2	1	0
+csa12	D1_14B_13_12	bagged_flower	near_forest	sambassor	sa	sa1	1	2	2023-12-14	2024-10-17	2024-11-07	2024-10-21	2	0	0
+csa13	E1_13E_13_12	bagged_flower	near_forest	sambassor	sa	sa1	1	3	2023-12-14	2024-10-17	2024-11-07	2024-10-21	2	0	0
+csa21	F1_13F_13_12	bagged_flower	near_forest	sambassor	sa	sa2	2	1	2023-12-14	2024-10-17	2024-11-07	2024-10-21	0	NA	NA
+csa22	G1_13G_13_12	bagged_flower	near_forest	sambassor	sa	sa2	2	2	2023-12-14	2024-10-17	2024-11-07	2024-10-21	2	0	0
+csa23	H1_20H_13_12	bagged_flower	near_forest	sambassor	sa	sa2	2	3	2023-12-14	2024-10-17	2024-11-07	2024-10-21	0	NA	NA
+csa31	A2_13A_13_02	bagged_flower	near_forest	sambassor	sa	sa3	3	1	2023-12-14	2024-10-17	2024-11-07	2024-10-21	2	1	0
+csa32	B2_13B_13_02	bagged_flower	near_forest	sambassor	sa	sa3	3	2	2023-12-14	2024-10-17	2024-11-07	2024-10-21	2	1	0
+csa33	C2_14C_13_02	bagged_flower	near_forest	sambassor	sa	sa3	3	3	2023-12-14	2024-10-17	2024-11-07	2024-10-21	2	1	0
+csa41	D2_14B_13_02	bagged_flower	near_forest	sambassor	sa	sa4	4	1	2023-12-14	2024-10-17	2024-11-07	2024-10-21	2	0	0
+csa42	E2_13E_13_02	bagged_flower	near_forest	sambassor	sa	sa4	4	2	2023-12-14	2024-10-17	2024-11-07	2024-10-21	2	0	0
+csa43	F2_13F_13_02	bagged_flower	near_forest	sambassor	sa	sa4	4	3	2023-12-14	2024-10-17	2024-11-07	2024-10-21	2	0	0
+csa51	G2_13G_13_02	bagged_flower	near_forest	sambassor	sa	sa5	5	1	2023-12-14	2024-10-17	2024-11-07	2024-10-21	2	1	0
+csa52	H2_20H_13_02	bagged_flower	near_forest	sambassor	sa	sa5	5	2	2023-12-14	2024-10-17	2024-11-07	2024-10-21	2	0	0
+csa53	A3_13A_13_03	bagged_flower	near_forest	sambassor	sa	sa5	5	3	2023-12-14	2024-10-17	2024-11-07	2024-10-21	2	1	0
+csa61	B3_13B_13_03	bagged_flower	near_forest	sambassor	sa	sa6	6	1	2023-12-14	2024-10-17	2024-11-07	2024-10-21	2	1	0
+csa62	C3_14C_13_03	bagged_flower	near_forest	sambassor	sa	sa6	6	2	2023-12-14	2024-10-17	2024-11-07	2024-10-21	2	0	0
+csa63	D3_14B_13_03	bagged_flower	near_forest	sambassor	sa	sa6	6	3	2023-12-14	2024-10-17	2024-11-07	2024-10-21	2	1	0
+csa71	E3_13E_13_03	bagged_flower	near_forest	sambassor	sa	sa7	7	1	2023-12-14	2024-10-17	2024-11-07	2024-10-21	1	NA	NA
+csa72	F3_13F_13_03	bagged_flower	near_forest	sambassor	sa	sa7	7	2	2023-12-14	2024-10-17	2024-11-07	2024-10-21	2	0	0
+csa73	G3_13G_13_03	bagged_flower	near_forest	sambassor	sa	sa7	7	3	2023-12-14	2024-10-17	2024-11-07	2024-10-21	1	NA	NA
+csaEC	B1_13B_13_12	extraction_control	extraction_control	extraction_control	extraction_control	extraction_control	NA	NA	NA	2024-10-17	2024-11-07	2024-10-21	NA	NA	NA
+csaNC	A1_13A_13_12	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	NA	NA	NA	NA	2024-11-07	2024-10-21	NA	NA	NA
+csaPC	H3_20H_13_03	mock_community	mock_community	mock_community	mock_community	mock_community	NA	NA	NA	NA	2024-11-07	2024-10-21	NA	NA	NA
+psa11	C4_14C_13_04	openly_pollinated_flower	near_forest	sambassor	sa	sa1	1	1	2023-12-14	2024-10-22	2024-11-07	2024-10-22	2	0	1
+psa12	D4_14B_13_04	openly_pollinated_flower	near_forest	sambassor	sa	sa1	1	2	2023-12-14	2024-10-22	2024-11-07	2024-10-22	2	1	0
+psa13	E4_13E_13_04	openly_pollinated_flower	near_forest	sambassor	sa	sa1	1	3	2023-12-14	2024-10-22	2024-11-07	2024-10-22	2	0	1
+psa21	F4_13F_13_04	openly_pollinated_flower	near_forest	sambassor	sa	sa2	2	1	2023-12-14	2024-10-22	2024-11-07	2024-10-22	0	NA	NA
+psa22	G4_13G_13_04	openly_pollinated_flower	near_forest	sambassor	sa	sa2	2	2	2023-12-14	2024-10-22	2024-11-07	2024-10-22	1	NA	NA
+psa23	H4_20H_13_04	openly_pollinated_flower	near_forest	sambassor	sa	sa2	2	3	2023-12-14	2024-10-22	2024-11-07	2024-10-22	2	1	1
+psa31	A5_13A_19_08	openly_pollinated_flower	near_forest	sambassor	sa	sa3	3	1	2023-12-14	2024-10-22	2024-11-07	2024-10-22	2	1	0
+psa32	B5_13B_19_08	openly_pollinated_flower	near_forest	sambassor	sa	sa3	3	2	2023-12-14	2024-10-22	2024-11-07	2024-10-22	2	1	1
+psa33	C5_14C_19_08	openly_pollinated_flower	near_forest	sambassor	sa	sa3	3	3	2023-12-14	2024-10-22	2024-11-07	2024-10-22	2	1	0
+psa41	D5_14B_19_08	openly_pollinated_flower	near_forest	sambassor	sa	sa4	4	1	2023-12-14	2024-10-22	2024-11-07	2024-10-22	2	1	1
+psa42	E5_13E_19_08	openly_pollinated_flower	near_forest	sambassor	sa	sa4	4	2	2023-12-14	2024-10-22	2024-11-07	2024-10-22	2	1	1
+psa43	F5_13F_19_08	openly_pollinated_flower	near_forest	sambassor	sa	sa4	4	3	2023-12-14	2024-10-22	2024-11-07	2024-10-22	2	1	0
+psa51	G5_13G_19_08	openly_pollinated_flower	near_forest	sambassor	sa	sa5	5	1	2023-12-14	2024-10-22	2024-11-07	2024-10-22	2	1	1
+psa52	H5_20H_19_08	openly_pollinated_flower	near_forest	sambassor	sa	sa5	5	2	2023-12-14	2024-10-22	2024-11-07	2024-10-22	2	1	1
+psa53	A6_13A_13_06	openly_pollinated_flower	near_forest	sambassor	sa	sa5	5	3	2023-12-14	2024-10-22	2024-11-07	2024-10-22	2	1	0
+psa61	B6_13B_13_06	openly_pollinated_flower	near_forest	sambassor	sa	sa6	6	1	2023-12-14	2024-10-22	2024-11-07	2024-10-22	2	1	0
+psa62	C6_14C_13_06	openly_pollinated_flower	near_forest	sambassor	sa	sa6	6	2	2023-12-14	2024-10-22	2024-11-07	2024-10-22	2	0	0
+psa63	D6_14B_13_06	openly_pollinated_flower	near_forest	sambassor	sa	sa6	6	3	2023-12-14	2024-10-22	2024-11-07	2024-10-22	2	0	0
+psa71	E6_13E_13_06	openly_pollinated_flower	near_forest	sambassor	sa	sa7	7	1	2023-12-14	2024-10-22	2024-11-07	2024-10-22	2	1	1
+psa72	F6_13F_13_06	openly_pollinated_flower	near_forest	sambassor	sa	sa7	7	2	2023-12-14	2024-10-22	2024-11-07	2024-10-22	2	1	0
+psa73	G6_13G_13_06	openly_pollinated_flower	near_forest	sambassor	sa	sa7	7	3	2023-12-14	2024-10-22	2024-11-07	2024-10-22	1	NA	NA
+psaEC	B4_13B_13_04	extraction_control	extraction_control	extraction_control	extraction_control	extraction_control	NA	NA	NA	2024-10-22	2024-11-07	2024-10-22	NA	NA	NA
+psaNC	A4_13A_13_04	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	NA	NA	NA	NA	2024-11-07	2024-10-22	NA	NA	NA
+psaPC	H6_20H_13_06	mock_community	mock_community	mock_community	mock_community	mock_community	NA	NA	NA	NA	2024-11-07	2024-10-22	NA	NA	NA
+cvr11	C1_14C_13_12	bagged_flower	near_forest	victor	vr	vr1	1	1	2023-12-15	2024-10-23	2024-10-31	2024-10-23	2	0	0
+cvr12	D1_14B_13_12	bagged_flower	near_forest	victor	vr	vr1	1	2	2023-12-15	2024-10-23	2024-10-31	2024-10-23	2	1	1
+cvr13	E1_13E_13_12	bagged_flower	near_forest	victor	vr	vr1	1	3	2023-12-15	2024-10-23	2024-10-31	2024-10-23	2	0	0
+cvr21	F1_13F_13_12	bagged_flower	near_forest	victor	vr	vr2	2	1	2023-12-15	2024-10-23	2024-10-31	2024-10-23	2	0	0
+cvr22	G1_13G_13_12	bagged_flower	near_forest	victor	vr	vr2	2	2	2023-12-15	2024-10-23	2024-10-31	2024-10-23	2	1	0
+cvr23	H1_20H_13_12	bagged_flower	near_forest	victor	vr	vr2	2	3	2023-12-15	2024-10-23	2024-10-31	2024-10-23	2	0	0
+cvr31	A2_13A_13_02	bagged_flower	near_forest	victor	vr	vr3	3	1	2023-12-15	2024-10-23	2024-10-31	2024-10-23	0	NA	NA
+cvr32	B2_13B_13_02	bagged_flower	near_forest	victor	vr	vr3	3	2	2023-12-15	2024-10-23	2024-10-31	2024-10-23	1	NA	NA
+cvr33	C2_14C_13_02	bagged_flower	near_forest	victor	vr	vr3	3	3	2023-12-15	2024-10-23	2024-10-31	2024-10-23	1	NA	NA
+cvr41	D2_14B_13_02	bagged_flower	near_forest	victor	vr	vr4	4	1	2023-12-15	2024-10-23	2024-10-31	2024-10-23	1	NA	NA
+cvr42	E2_13E_13_02	bagged_flower	near_forest	victor	vr	vr4	4	2	2023-12-15	2024-10-23	2024-10-31	2024-10-23	2	0	0
+cvr43	F2_13F_13_02	bagged_flower	near_forest	victor	vr	vr4	4	3	2023-12-15	2024-10-23	2024-10-31	2024-10-23	2	0	0
+cvr51	G2_13G_13_02	bagged_flower	near_forest	victor	vr	vr5	5	1	2023-12-15	2024-10-23	2024-10-31	2024-10-23	1	NA	NA
+cvr52	H2_20H_13_02	bagged_flower	near_forest	victor	vr	vr5	5	2	2023-12-15	2024-10-23	2024-10-31	2024-10-23	1	NA	NA
+cvr53	A3_13A_13_03	bagged_flower	near_forest	victor	vr	vr5	5	3	2023-12-15	2024-10-23	2024-10-31	2024-10-23	1	NA	NA
+cvr61	B3_13B_13_03	bagged_flower	near_forest	victor	vr	vr6	6	1	2023-12-15	2024-10-23	2024-10-31	2024-10-23	1	NA	NA
+cvr62	C3_14C_13_03	bagged_flower	near_forest	victor	vr	vr6	6	2	2023-12-15	2024-10-23	2024-10-31	2024-10-23	2	0	0
+cvr63	D3_14B_13_03	bagged_flower	near_forest	victor	vr	vr6	6	3	2023-12-15	2024-10-23	2024-10-31	2024-10-23	0	NA	NA
+cvr71	E3_13E_13_03	bagged_flower	near_forest	victor	vr	vr7	7	1	2023-12-15	2024-10-23	2024-10-31	2024-10-23	1	NA	NA
+cvr72	F3_13F_13_03	bagged_flower	near_forest	victor	vr	vr7	7	2	2023-12-15	2024-10-23	2024-10-31	2024-10-23	1	NA	NA
+cvr73	G3_13G_13_03	bagged_flower	near_forest	victor	vr	vr7	7	3	2023-12-15	2024-10-23	2024-10-31	2024-10-23	1	NA	NA
+cvrEC	B1_13B_13_12	extraction_control	extraction_control	extraction_control	extraction_control	extraction_control	NA	NA	NA	2024-10-23	2024-10-31	2024-10-23	NA	NA	NA
+cvrNC	A1_13A_13_12	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	NA	NA	NA	NA	2024-10-31	2024-10-23	NA	NA	NA
+cvrPC	H3_20H_13_03	mock_community	mock_community	mock_community	mock_community	mock_community	NA	NA	NA	NA	2024-10-31	2024-10-23	NA	NA	NA
+pvr11	C4_14C_13_04	openly_pollinated_flower	near_forest	victor	vr	vr1	1	1	2023-12-15	2024-10-25	2024-11-02	2024-10-25	1	NA	NA
+pvr12	D4_14B_13_04	openly_pollinated_flower	near_forest	victor	vr	vr1	1	2	2023-12-15	2024-10-25	2024-11-02	2024-10-25	1	NA	NA
+pvr13	E4_13E_13_04	openly_pollinated_flower	near_forest	victor	vr	vr1	1	3	2023-12-15	2024-10-25	2024-11-02	2024-10-25	2	1	0
+pvr21	F4_13F_13_04	openly_pollinated_flower	near_forest	victor	vr	vr2	2	1	2023-12-15	2024-10-25	2024-11-02	2024-10-25	1	NA	NA
+pvr22	G4_13G_13_04	openly_pollinated_flower	near_forest	victor	vr	vr2	2	2	2023-12-15	2024-10-25	2024-11-02	2024-10-25	2	1	1
+pvr23	H4_20H_13_04	openly_pollinated_flower	near_forest	victor	vr	vr2	2	3	2023-12-15	2024-10-25	2024-11-02	2024-10-25	2	0	0
+pvr31	A5_13A_19_08	openly_pollinated_flower	near_forest	victor	vr	vr3	3	1	2023-12-15	2024-10-25	2024-11-02	2024-10-25	2	1	1
+pvr32	B5_13B_19_08	openly_pollinated_flower	near_forest	victor	vr	vr3	3	2	2023-12-15	2024-10-25	2024-11-02	2024-10-25	2	1	0
+pvr33	C5_14C_19_08	openly_pollinated_flower	near_forest	victor	vr	vr3	3	3	2023-12-15	2024-10-25	2024-11-02	2024-10-25	2	1	1
+pvr41	D5_14B_19_08	openly_pollinated_flower	near_forest	victor	vr	vr4	4	1	2023-12-15	2024-10-25	2024-11-02	2024-10-25	1	NA	NA
+pvr42	E5_13E_19_08	openly_pollinated_flower	near_forest	victor	vr	vr4	4	2	2023-12-15	2024-10-25	2024-11-02	2024-10-25	2	1	1
+pvr43	F5_13F_19_08	openly_pollinated_flower	near_forest	victor	vr	vr4	4	3	2023-12-15	2024-10-25	2024-11-02	2024-10-25	2	1	1
+pvr51	G5_13G_19_08	openly_pollinated_flower	near_forest	victor	vr	vr5	5	1	2023-12-15	2024-10-25	2024-11-02	2024-10-25	2	0	1
+pvr52	H5_20H_19_08	openly_pollinated_flower	near_forest	victor	vr	vr5	5	2	2023-12-15	2024-10-25	2024-11-02	2024-10-25	2	1	0
+pvr53	A6_13A_13_06	openly_pollinated_flower	near_forest	victor	vr	vr5	5	3	2023-12-15	2024-10-25	2024-11-02	2024-10-25	2	1	1
+pvr61	B6_13B_13_06	openly_pollinated_flower	near_forest	victor	vr	vr6	6	1	2023-12-15	2024-10-25	2024-11-02	2024-10-25	2	1	0
+pvr62	C6_14C_13_06	openly_pollinated_flower	near_forest	victor	vr	vr6	6	2	2023-12-15	2024-10-25	2024-11-02	2024-10-25	2	0	1
+pvr63	D6_14B_13_06	openly_pollinated_flower	near_forest	victor	vr	vr6	6	3	2023-12-15	2024-10-25	2024-11-02	2024-10-25	2	1	0
+pvr71	E6_13E_13_06	openly_pollinated_flower	near_forest	victor	vr	vr7	7	1	2023-12-15	2024-10-25	2024-11-02	2024-10-25	2	1	1
+pvr72	F6_13F_13_06	openly_pollinated_flower	near_forest	victor	vr	vr7	7	2	2023-12-15	2024-10-25	2024-11-02	2024-10-25	2	1	0
+pvr73	G6_13G_13_06	openly_pollinated_flower	near_forest	victor	vr	vr7	7	3	2023-12-15	2024-10-25	2024-11-02	2024-10-25	2	1	0
+pvrEC	B4_13B_13_04	extraction_control	extraction_control	extraction_control	extraction_control	extraction_control	NA	NA	NA	2024-10-25	2024-11-02	2024-10-25	NA	NA	NA
+pvrNC	A4_13A_13_04	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	NA	NA	NA	NA	2024-11-02	2024-10-25	NA	NA	NA
+pvrPC	H6_20H_13_06	mock_community	mock_community	mock_community	mock_community	mock_community	NA	NA	NA	NA	2024-11-02	2024-10-25	NA	NA	NA
+cyb11	C1_14C_13_12	bagged_flower	full_sun	yaw_berima	yb	yb1	1	1	2023-12-14	2024-10-27	2024-11-08	2024-10-27	1	NA	NA
+cyb12	D1_14B_13_12	bagged_flower	full_sun	yaw_berima	yb	yb1	1	2	2023-12-14	2024-10-27	2024-11-08	2024-10-27	1	NA	NA
+cyb13	E1_13E_13_12	bagged_flower	full_sun	yaw_berima	yb	yb1	1	3	2023-12-14	2024-10-27	2024-11-08	2024-10-27	1	NA	NA
+cyb21	F1_13F_13_12	bagged_flower	full_sun	yaw_berima	yb	yb2	2	1	2023-12-14	2024-10-27	2024-11-08	2024-10-27	2	1	0
+cyb22	G1_13G_13_12	bagged_flower	full_sun	yaw_berima	yb	yb2	2	2	2023-12-14	2024-10-27	2024-11-08	2024-10-27	1	NA	NA
+cyb23	H1_20H_13_12	bagged_flower	full_sun	yaw_berima	yb	yb2	2	3	2023-12-14	2024-10-27	2024-11-08	2024-10-27	2	1	0
+cyb31	A2_13A_13_02	bagged_flower	full_sun	yaw_berima	yb	yb3	3	1	2023-12-14	2024-10-27	2024-11-08	2024-10-27	2	1	0
+cyb32	B2_13B_13_02	bagged_flower	full_sun	yaw_berima	yb	yb3	3	2	2023-12-14	2024-10-27	2024-11-08	2024-10-27	2	0	0
+cyb33	C2_14C_13_02	bagged_flower	full_sun	yaw_berima	yb	yb3	3	3	2023-12-14	2024-10-27	2024-11-08	2024-10-27	1	NA	NA
+cyb41	D2_14B_13_02	bagged_flower	full_sun	yaw_berima	yb	yb4	4	1	2023-12-14	2024-09-20	2024-11-08	2024-10-27	2	1	0
+cyb42	E2_13E_13_02	bagged_flower	full_sun	yaw_berima	yb	yb4	4	2	2023-12-14	2024-09-20	2024-11-08	2024-10-27	2	1	0
+cyb43	F2_13F_13_02	bagged_flower	full_sun	yaw_berima	yb	yb4	4	3	2023-12-14	2024-09-20	2024-11-08	2024-10-27	2	1	1
+cyb51	G2_13G_13_02	bagged_flower	full_sun	yaw_berima	yb	yb5	5	1	2023-12-14	2024-10-27	2024-11-08	2024-10-27	0	NA	NA
+cyb52	H2_20H_13_02	bagged_flower	full_sun	yaw_berima	yb	yb5	5	2	2023-12-14	2024-10-27	2024-11-08	2024-10-27	2	0	
+cyb53	A3_13A_13_03	bagged_flower	full_sun	yaw_berima	yb	yb5	5	3	2023-12-14	2024-10-27	2024-11-08	2024-10-27	2	0	
+cyb61	B3_13B_13_03	bagged_flower	full_sun	yaw_berima	yb	yb6	6	1	2023-12-14	2024-10-27	2024-11-08	2024-10-27	0	NA	NA
+cyb62	C3_14C_13_03	bagged_flower	full_sun	yaw_berima	yb	yb6	6	2	2023-12-14	2024-10-27	2024-11-08	2024-10-27	1	NA	NA
+cyb63	D3_14B_13_03	bagged_flower	full_sun	yaw_berima	yb	yb6	6	3	2023-12-14	2024-10-27	2024-11-08	2024-10-27	2	0	
+cyb71	E3_13E_13_03	bagged_flower	full_sun	yaw_berima	yb	yb7	7	1	2023-12-14	2024-10-27	2024-11-08	2024-10-27	2	0	
+cyb72	F3_13F_13_03	bagged_flower	full_sun	yaw_berima	yb	yb7	7	2	2023-12-14	2024-10-27	2024-11-08	2024-10-27	2	0	
+cyb73	G3_13G_13_03	bagged_flower	full_sun	yaw_berima	yb	yb7	7	3	2023-12-14	2024-10-27	2024-11-08	2024-10-27	1	NA	NA
+cybEC	B1_13B_13_12	extraction_control	extraction_control	extraction_control	extraction_control	extraction_control	NA	NA	NA	2024-10-27	2024-11-08	2024-10-27	NA	NA	NA
+cybNC	A1_13A_13_12	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	NA	NA	NA	NA	2024-11-08	2024-10-27	NA	NA	NA
+cybPC	H3_20H_13_03	mock_community	mock_community	mock_community	mock_community	mock_community	NA	NA	NA	NA	2024-11-08	2024-10-27	NA	NA	NA
+pyb11	C4_14C_13_04	openly_pollinated_flower	full_sun	yaw_berima	yb	yb1	1	1	2023-12-14	2024-10-28	2024-11-08	2024-10-28	1	NA	NA
+pyb12	D4_14B_13_04	openly_pollinated_flower	full_sun	yaw_berima	yb	yb1	1	2	2023-12-14	2024-10-28	2024-11-08	2024-10-28	1	NA	NA
+pyb13	E4_13E_13_04	openly_pollinated_flower	full_sun	yaw_berima	yb	yb1	1	3	2023-12-14	2024-10-28	2024-11-08	2024-10-28	2	0	
+pyb21	F4_13F_13_04	openly_pollinated_flower	full_sun	yaw_berima	yb	yb2	2	1	2023-12-14	2024-10-28	2024-11-08	2024-10-28	2	0	
+pyb22	G4_13G_13_04	openly_pollinated_flower	full_sun	yaw_berima	yb	yb2	2	2	2023-12-14	2024-10-28	2024-11-08	2024-10-28	2	0	
+pyb23	H4_20H_13_04	openly_pollinated_flower	full_sun	yaw_berima	yb	yb2	2	3	2023-12-14	2024-10-28	2024-11-08	2024-10-28	2	1	1
+pyb31	A5_13A_19_08	openly_pollinated_flower	full_sun	yaw_berima	yb	yb3	3	1	2023-12-14	2024-10-28	2024-11-08	2024-10-28	2	0	
+pyb32	B5_13B_19_08	openly_pollinated_flower	full_sun	yaw_berima	yb	yb3	3	2	2023-12-14	2024-10-28	2024-11-08	2024-10-28	2	0	
+pyb33	C5_14C_19_08	openly_pollinated_flower	full_sun	yaw_berima	yb	yb3	3	3	2023-12-14	2024-10-28	2024-11-08	2024-10-28	2	1	0
+pyb41	D5_14B_19_08	openly_pollinated_flower	full_sun	yaw_berima	yb	yb4	4	1	2023-12-14	2024-09-20	2024-11-08	2024-10-28	1	NA	NA
+pyb42	E5_13E_19_08	openly_pollinated_flower	full_sun	yaw_berima	yb	yb4	4	2	2023-12-14	2024-09-20	2024-11-08	2024-10-28	2	0	
+pyb43	F5_13F_19_08	openly_pollinated_flower	full_sun	yaw_berima	yb	yb4	4	3	2023-12-14	2024-09-20	2024-11-08	2024-10-28	1	NA	NA
+pyb51	G5_13G_19_08	openly_pollinated_flower	full_sun	yaw_berima	yb	yb5	5	1	2023-12-14	2024-10-28	2024-11-08	2024-10-28	2	0	
+pyb52	H5_20H_19_08	openly_pollinated_flower	full_sun	yaw_berima	yb	yb5	5	2	2023-12-14	2024-10-28	2024-11-08	2024-10-28	1	NA	NA
+pyb53	A6_13A_13_06	openly_pollinated_flower	full_sun	yaw_berima	yb	yb5	5	3	2023-12-14	2024-10-28	2024-11-08	2024-10-28	1	NA	NA
+pyb61	B6_13B_13_06	openly_pollinated_flower	full_sun	yaw_berima	yb	yb6	6	1	2023-12-14	2024-10-28	2024-11-08	2024-10-28	2	0	0
+pyb62	C6_14C_13_06	openly_pollinated_flower	full_sun	yaw_berima	yb	yb6	6	2	2023-12-14	2024-10-28	2024-11-08	2024-10-28	1	NA	NA
+pyb63	D6_14B_13_06	openly_pollinated_flower	full_sun	yaw_berima	yb	yb6	6	3	2023-12-14	2024-10-28	2024-11-08	2024-10-28	0	NA	NA
+pyb71	E6_13E_13_06	openly_pollinated_flower	full_sun	yaw_berima	yb	yb7	7	1	2023-12-14	2024-10-28	2024-11-08	2024-10-28	1	NA	NA
+pyb72	F6_13F_13_06	openly_pollinated_flower	full_sun	yaw_berima	yb	yb7	7	2	2023-12-14	2024-10-28	2024-11-08	2024-10-28	2	0	
+pyb73	G6_13G_13_06	openly_pollinated_flower	full_sun	yaw_berima	yb	yb7	7	3	2023-12-14	2024-10-28	2024-11-08	2024-10-28	2	0	
+pybEC	B4_13B_13_04	extraction_control	extraction_control	extraction_control	extraction_control	extraction_control	NA	NA	NA	2024-10-28	2024-11-08	2024-10-28	NA	NA	NA
+pybNC	A4_13A_13_04	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	NA	NA	NA	NA	2024-11-08	2024-10-28	NA	NA	NA
+pybPC	H6_20H_13_06	mock_community	mock_community	mock_community	mock_community	mock_community	NA	NA	NA	NA	2024-11-08	2024-10-28	NA	NA	NA
+cmt11	C1_14C_13_12	bagged_flower	agroforest	moses	mt	mt1	1	1	2023-12-14	2024-10-30	2024-11-13	2024-10-30	1	NA	NA
+cmt12	D1_14B_13_12	bagged_flower	agroforest	moses	mt	mt1	1	2	2023-12-14	2024-10-30	2024-11-13	2024-10-30	2	0	
+cmt13	E1_13E_13_12	bagged_flower	agroforest	moses	mt	mt1	1	3	2023-12-14	2024-10-30	2024-11-13	2024-10-30	2	0	
+cmt21	F1_13F_13_12	bagged_flower	agroforest	moses	mt	mt2	2	1	2023-12-14	2024-10-30	2024-11-13	2024-10-30	2	0	
+cmt22	G1_13G_13_12	bagged_flower	agroforest	moses	mt	mt2	2	2	2023-12-14	2024-10-30	2024-11-13	2024-10-30	2	0	
+cmt23	H1_20H_13_12	bagged_flower	agroforest	moses	mt	mt2	2	3	2023-12-14	2024-10-30	2024-11-13	2024-10-30	2	0	
+cmt31	A2_13A_13_02	bagged_flower	agroforest	moses	mt	mt3	3	1	2023-12-14	2024-10-30	2024-11-13	2024-10-30	2	0	
+cmt32	B2_13B_13_02	bagged_flower	agroforest	moses	mt	mt3	3	2	2023-12-14	2024-10-30	2024-11-13	2024-10-30	2	0	
+cmt33	C2_14C_13_02	bagged_flower	agroforest	moses	mt	mt3	3	3	2023-12-14	2024-10-30	2024-11-13	2024-10-30	0	NA	NA
+cmt41	D2_14B_13_02	bagged_flower	agroforest	moses	mt	mt4	4	1	2023-12-14	2024-10-30	2024-11-13	2024-10-30	2	1	0
+cmt42	E2_13E_13_02	bagged_flower	agroforest	moses	mt	mt4	4	2	2023-12-14	2024-10-30	2024-11-13	2024-10-30	2	0	
+cmt43	F2_13F_13_02	bagged_flower	agroforest	moses	mt	mt4	4	3	2023-12-14	2024-10-30	2024-11-13	2024-10-30	0	NA	NA
+cmt51	G2_13G_13_02	bagged_flower	agroforest	moses	mt	mt5	5	1	2023-12-14	2024-10-30	2024-11-13	2024-10-30	2	0	
+cmt52	H2_20H_13_02	bagged_flower	agroforest	moses	mt	mt5	5	2	2023-12-14	2024-10-30	2024-11-13	2024-10-30	2	0	
+cmt53	A3_13A_13_03	bagged_flower	agroforest	moses	mt	mt5	5	3	2023-12-14	2024-10-30	2024-11-13	2024-10-30	2	0	
+cmt61	B3_13B_13_03	bagged_flower	agroforest	moses	mt	mt6	6	1	2023-12-14	2024-10-30	2024-11-13	2024-10-30	2	0	
+cmt62	C3_14C_13_03	bagged_flower	agroforest	moses	mt	mt6	6	2	2023-12-14	2024-10-30	2024-11-13	2024-10-30	2	0	
+cmt63	D3_14B_13_03	bagged_flower	agroforest	moses	mt	mt6	6	3	2023-12-14	2024-10-30	2024-11-13	2024-10-30	2	1	0
+cmt71	E3_13E_13_03	bagged_flower	agroforest	moses	mt	mt7	7	1	2023-12-14	2024-09-20	2024-11-13	2024-10-30	0	NA	NA
+cmt72	F3_13F_13_03	bagged_flower	agroforest	moses	mt	mt7	7	2	2023-12-14	2024-09-20	2024-11-13	2024-10-30	0	NA	NA
+cmt73	G3_13G_13_03	bagged_flower	agroforest	moses	mt	mt7	7	3	2023-12-14	2024-09-20	2024-11-13	2024-10-30	0	NA	NA
+cmtEC	B1_13B_13_12	extraction_control	extraction_control	extraction_control	extraction_control	extraction_control	NA	NA	NA	2024-10-30	2024-11-13	2024-10-30	NA	NA	NA
+cmtNC	A1_13A_13_12	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	NA	NA	NA	NA	2024-11-13	2024-10-30	NA	NA	NA
+cmtPC	H3_20H_13_03	mock_community	mock_community	mock_community	mock_community	mock_community	NA	NA	NA	NA	2024-11-13	2024-10-30	NA	NA	NA
+pmt11	C4_14C_13_04	openly_pollinated_flower	agroforest	moses	mt	mt1	1	1	2023-12-14	2024-11-01	2024-11-14	2024-11-01	2	0	
+pmt12	D4_14B_13_04	openly_pollinated_flower	agroforest	moses	mt	mt1	1	2	2023-12-14	2024-11-01	2024-11-14	2024-11-01	2	1	1
+pmt13	E4_13E_13_04	openly_pollinated_flower	agroforest	moses	mt	mt1	1	3	2023-12-14	2024-11-01	2024-11-14	2024-11-01	2	1	1
+pmt21	F4_13F_13_04	openly_pollinated_flower	agroforest	moses	mt	mt2	2	1	2023-12-14	2024-11-01	2024-11-14	2024-11-01	2	1	0
+pmt22	G4_13G_13_04	openly_pollinated_flower	agroforest	moses	mt	mt2	2	2	2023-12-14	2024-11-01	2024-11-14	2024-11-01	2	1	1
+pmt23	H4_20H_13_04	openly_pollinated_flower	agroforest	moses	mt	mt2	2	3	2023-12-14	2024-11-01	2024-11-14	2024-11-01	0	NA	NA
+pmt31	A5_13A_19_08	openly_pollinated_flower	agroforest	moses	mt	mt3	3	1	2023-12-14	2024-11-01	2024-11-14	2024-11-01	0	NA	NA
+pmt32	B5_13B_19_08	openly_pollinated_flower	agroforest	moses	mt	mt3	3	2	2023-12-14	2024-11-01	2024-11-14	2024-11-01	2	0	
+pmt33	C5_14C_19_08	openly_pollinated_flower	agroforest	moses	mt	mt3	3	3	2023-12-14	2024-11-01	2024-11-14	2024-11-01	2	1	1
+pmt41	D5_14B_19_08	openly_pollinated_flower	agroforest	moses	mt	mt4	4	1	2023-12-14	2024-11-01	2024-11-14	2024-11-01	2	0	
+pmt42	E5_13E_19_08	openly_pollinated_flower	agroforest	moses	mt	mt4	4	2	2023-12-14	2024-11-01	2024-11-14	2024-11-01	0	NA	NA
+pmt43	F5_13F_19_08	openly_pollinated_flower	agroforest	moses	mt	mt4	4	3	2023-12-14	2024-11-01	2024-11-14	2024-11-01	1	NA	NA
+pmt51	G5_13G_19_08	openly_pollinated_flower	agroforest	moses	mt	mt5	5	1	2023-12-14	2024-11-01	2024-11-14	2024-11-01	2	0	
+pmt52	H5_20H_19_08	openly_pollinated_flower	agroforest	moses	mt	mt5	5	2	2023-12-14	2024-11-01	2024-11-14	2024-11-01	1	NA	NA
+pmt53	A6_13A_13_06	openly_pollinated_flower	agroforest	moses	mt	mt5	5	3	2023-12-14	2024-11-01	2024-11-14	2024-11-01	2	0	
+pmt61	B6_13B_13_06	openly_pollinated_flower	agroforest	moses	mt	mt6	6	1	2023-12-14	2024-11-01	2024-11-14	2024-11-01	2	0	
+pmt62	C6_14C_13_06	openly_pollinated_flower	agroforest	moses	mt	mt6	6	2	2023-12-14	2024-11-01	2024-11-14	2024-11-01	2	0	
+pmt63	D6_14B_13_06	openly_pollinated_flower	agroforest	moses	mt	mt6	6	3	2023-12-14	2024-11-01	2024-11-14	2024-11-01	2	1	0
+pmt71	E6_13E_13_06	openly_pollinated_flower	agroforest	moses	mt	mt7	7	1	2023-12-14	2024-09-20	2024-11-14	2024-11-01	0	NA	NA
+pmt72	F6_13F_13_06	openly_pollinated_flower	agroforest	moses	mt	mt7	7	2	2023-12-14	2024-09-20	2024-11-14	2024-11-01	2	1	0
+pmt73	G6_13G_13_06	openly_pollinated_flower	agroforest	moses	mt	mt7	7	3	2023-12-14	2024-09-20	2024-11-14	2024-11-01	2	0	
+pmtEC	B4_13B_13_04	extraction_control	extraction_control	extraction_control	extraction_control	extraction_control	NA	NA	NA	2024-11-01	2024-11-14	2024-11-01	NA	NA	NA
+pmtNC	A4_13A_13_04	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	negative_pcr_control	NA	NA	NA	NA	2024-11-14	2024-11-01	NA	NA	NA
+pmtPC	H6_20H_13_06	mock_community	mock_community	mock_community	mock_community	mock_community	NA	NA	NA	NA	2024-11-14	2024-11-01	NA	NA	NA
