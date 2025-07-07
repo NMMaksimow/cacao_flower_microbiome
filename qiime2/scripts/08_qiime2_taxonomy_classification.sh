@@ -28,7 +28,7 @@ module load qiime2/2024.10amplicon
 # Set directories
 INPUT_DIR="qiime2/denoise"
 OUTPUT_DIR="qiime2/taxonomy"
-DB_DIR="qiime2/databases"  # Updated to match your structure
+DB_DIR="qiime2/databases"
 
 echo "Input directory: $INPUT_DIR"
 echo "Output directory: $OUTPUT_DIR"
