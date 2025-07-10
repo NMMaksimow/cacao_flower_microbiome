@@ -1,13 +1,13 @@
 ## 🌺 Cacao Flower Microbiome Project Overview
 
-This repository contains the bioinformatics analysis pipeline for investigating the effects of pollinators on flower-associated microbial communities in cacao (*Theobroma cacao*) across deforestation gradients in Ghana.
+This repository contains the bioinformatics analysis pipeline for investigating the effects of pollinators on flower-associated microbial communities in cacao (*Theobroma cacao* L.) across deforestation gradients in Ghana.
 
 ## 🔬 Research Questions
 
-1. **Microbial Community Characterization**: Describe bacterial and fungal *T. cacao* flower communities for the first time
-2. **Management Effects**: Investigate how farm management type affects flower microbiomes
-3. **Pollinator Footprint**: Identify the microbial signature of pollinator visitation
-4. **Functional Correlations**: Examine relationships between microbiome structure and pollination success
+1. **Microbial Community Characterization**: Describe bacterial and fungal *T. cacao* flower communities for the first time with a focus on pathogens and mutualistic symbionts;
+2. **Management Effects**: Investigate how farm management type affects flower microbiomes along the deforestation gradient;
+3. **Pollinator Footprint**: Identify the microbial signature of flower-visitng animals;
+4. **Functional Correlations**: Examine relationships between microbiome structure and the success of the early step of fertilisation.
 
 ## 🏞️ Study Design
 
@@ -52,12 +52,12 @@ cacao_flower_microbiome/
 
 **⚠️ This is an ongoing analysis repository**
 
-Analysis pipeline is under active development. Raw sequencing data will be deposited in public repositories upon publication.
+The analysis pipeline is under active development. Raw sequencing data will be deposited in public repositories upon publication.
 
 ## 🤝 Open Science & Reproducibility
 
-All analysis scripts are version-controlled and documented for reproducibility. Methodology and results will be made fully available upon publication.
+All analysis scripts are documented for reproducibility. Development includes AI assistance for code optimisation. Methodology and results will be made fully available upon publication.
 
 ---
 
-**Keywords**: microbiome, pollinators, cacao, deforestation, 16S rRNA, ITS1, QIIME2, amplicon sequencing, Ghana, tropical ecology
+**Keywords**: microbiome, anthosphere, pollination ecology, *Theobroma cacao*, deforestation, 16S rRNA, ITS1, QIIME2, metabarcoding, Ghana, tropical ecology
