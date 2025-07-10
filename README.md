@@ -22,7 +22,7 @@ This repository contains the bioinformatics analysis pipeline for investigating 
 - **Controls**: 42 total (14 extraction + 14 PCR negative + 14 mock communities)
 
 ### **Molecular Methods**
-- **Marker genes**: 16S rRNA V4 (bacteria) + ITS1 (fungi)
+- **Marker genes**: 16S rRNA V4 (515f/806r, bacteria) + ITS1 (ITS1f/ITS2, fungi)
 - **Sequencing platform**: Illumina NovaSeq 2×250bp
 - **Multiplexing and indexing**: Two-level approach enabling high sample throughput with combinatorial dual-indexing (48 sublibraries, 336 samples per marker)
 
