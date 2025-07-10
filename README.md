@@ -34,18 +34,18 @@ This repository contains the bioinformatics analysis pipeline for investigating 
 
 ```
 cacao_flower_microbiome/
-├── docs/                          # Analysis documentation /
-│   └── analysis_log.md            # Detailed progress tracking /
-├── data/                          # Metadata and small data files /
-├── qiime2/                        # QIIME2 analysis pipeline /
-│   ├── scripts/                   # Analysis scripts (01-10+) /
-│   ├── import/                    # Raw data import /
-│   ├── denoise/                   # DADA2 ASV calling / 
-│   ├── taxonomy/                  # Taxonomic classification /
-│   ├── filtered/                  # Quality-filtered datasets / 
-│   └── rarefaction/               # Alpha rarefaction analysis /
-├── logs/                          # SLURM job outputs / 
-└── README.md                      # This file /
+├── docs/                          # Analysis documentation
+│   └── analysis_log.md            # Detailed progress tracking
+├── data/                          # Metadata and small data files
+├── qiime2/                        # QIIME2 analysis pipeline
+│   ├── scripts/                   # Analysis scripts (01-10+)
+│   ├── import/                    # Raw data import
+│   ├── denoise/                   # DADA2 ASV calling
+│   ├── taxonomy/                  # Taxonomic classification
+│   ├── filtered/                  # Quality-filtered datasets
+│   └── rarefaction/               # Alpha rarefaction analysis
+├── logs/                          # SLURM job outputs
+└── README.md                      # This file
 ```
 
 ## 🔄 Current Status
@@ -60,4 +60,4 @@ All analysis scripts are documented for reproducibility. Development includes AI
 
 ---
 
-**Keywords**: microbiome, anthosphere, pollination ecology, *Theobroma cacao*, deforestation, 16S rRNA, ITS1, QIIME2, metabarcoding, Ghana, tropical ecology
+**Keywords**: microbiome, anthosphere, pollination ecology, *Theobroma cacao*, deforestation, 16S rRNA, ITS1, QIIME2, metabarcoding, Ghana, pollen-pistil interaction
