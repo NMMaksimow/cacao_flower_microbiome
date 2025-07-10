@@ -1,4 +1,4 @@
-## 🌺 Project Overview
+## 🌺 Cacao Flower Microbiome Project Overview
 
 This repository contains the bioinformatics analysis pipeline for investigating the effects of pollinators on flower-associated microbial communities in cacao (*Theobroma cacao*) across deforestation gradients in Ghana.
 
