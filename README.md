@@ -11,24 +11,20 @@ This repository contains the bioinformatics analysis pipeline for investigating 
 
 ## 🏞️ Study Design
 
-### **Experimental Framework**
-- **Pollinator Exclusion Experiment**: Bagged vs. openly pollinated flowers
-- **Deforestation Gradient**: 4 management types across 7 farms in Ghana
+### **Experimental Framework & Sampling Strategy**
+- **Visitint insect exclusion experiment**: 3 bagged + 3 openly pollinated flowers per tree
+- **Deforestation gradient**: 4 management types across 7 farms in Ghana at different stages of extensive farming:
   - Full sun (2 farms)
   - Agroforest (2 farms) 
   - Near forest (2 farms)
   - Inside tropical forest (1 farm)
-
-### **Sampling Strategy**
 - **Biological samples**: 294 flowers (7 trees/farm × 6 flowers/tree)
 - **Controls**: 42 total (14 extraction + 14 PCR negative + 14 mock communities)
-- **Design**: 3 bagged + 3 openly pollinated flowers per tree
 
 ### **Molecular Methods**
-- **Targets**: 16S rRNA V4 (bacteria) + ITS1 (fungi)
-- **Platform**: Illumina NovaSeq 2×250bp
-- **Indexing**: Combinatorial dual-indexing (48 sublibraries, 672 total libraries)
-- **Multiplexing**: Two-level approach enabling high sample throughput
+- **Marker genes**: 16S rRNA V4 (bacteria) + ITS1 (fungi)
+- **Sequencing platform**: Illumina NovaSeq 2×250bp
+- **Multiplexing and indexing**: Two-level approach enabling high sample throughput with combinatorial dual-indexing (48 sublibraries, 336 samples per marker)
 
 ## 📁 Repository Structure
 
