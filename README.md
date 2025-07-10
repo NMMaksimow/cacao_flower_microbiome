@@ -34,11 +34,11 @@ cacao_flower_microbiome/
 │   └── analysis_log.md            # Detailed progress tracking
 ├── data/                          # Metadata and small data files
 ├── qiime2/                        # QIIME2 analysis pipeline
-│   ├── scripts/                   # Analysis scripts (01-10+)
-│   ├── import/                    # Raw data import
+│   ├── scripts/                   # Analysis scripts
+│   ├── import/                    # Raw data preprocessing and import into QIIME2
 │   ├── denoise/                   # DADA2 ASV calling
 │   ├── taxonomy/                  # Taxonomic classification
-│   ├── filtered/                  # Quality-filtered datasets
+│   ├── filtered/                  # Quality- and taxonomy-filtered datasets
 │   └── rarefaction/               # Alpha rarefaction analysis
 ├── logs/                          # SLURM job outputs
 └── README.md                      # This file
