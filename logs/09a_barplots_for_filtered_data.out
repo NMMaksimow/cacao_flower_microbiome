@@ -1,0 +1,42 @@
+Starting filtered data visualization creation...
+Date: Sat  5 Jul 11:29:05 BST 2025
+Host: cn005.ham8.dur.ac.uk
+CPUs: 4
+Memory: 16G
+Filtered data directory: qiime2/filtered
+Taxonomy directory: qiime2/taxonomy
+Metadata file: data/cfm_qiime2_metadata.txt
+Metadata file found, will include in visualizations
+Required files verified
+
+=== CREATING 16S TAXONOMY BARPLOTS ===
+Creating 16S chloroplast/mitochondria filtered barplot...
+Saved Visualization to: qiime2/filtered/CFM_16S_filtered_chloro_mito_barplot.qzv
+SUCCESS: 16S chloroplast/mitochondria barplot created
+Creating 16S fully filtered barplot...
+Saved Visualization to: qiime2/filtered/CFM_16S_filtered_chloro_mito_singl_lowprev3_barplot.qzv
+SUCCESS: 16S fully filtered barplot created
+Creating 16S prokaryotes-only barplot...
+Saved Visualization to: qiime2/filtered/CFM_16S_filtered_prokaryotes_only_singl_lowprev3_barplot.qzv
+SUCCESS: 16S prokaryotes-only barplot created
+
+=== CREATING ITS1 TAXONOMY BARPLOTS ===
+Creating ITS1 fungi-only filtered barplot...
+Saved Visualization to: qiime2/filtered/CFM_ITS1_filtered_fungi_only_barplot.qzv
+SUCCESS: ITS1 fungi-only barplot created
+Creating ITS1 fully filtered barplot...
+Saved Visualization to: qiime2/filtered/CFM_ITS1_filtered_fungi_only_singl_lowprev3_barplot.qzv
+SUCCESS: ITS1 fully filtered barplot created
+
+=== VISUALIZATION CREATION COMPLETE ===
+
+Created barplot visualizations:
+- CFM_16S_filtered_chloro_mito_barplot.qzv
+- CFM_16S_filtered_chloro_mito_singl_lowprev3_barplot.qzv
+- CFM_16S_filtered_prokaryotes_only_singl_lowprev3_barplot.qzv
+- CFM_ITS1_filtered_fungi_only_barplot.qzv
+- CFM_ITS1_filtered_fungi_only_singl_lowprev3_barplot.qzv
+
+All visualizations saved in: qiime2/filtered
+
+Visualization creation completed at: Sat  5 Jul 11:33:54 BST 2025

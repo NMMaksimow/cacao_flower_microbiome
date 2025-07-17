@@ -1,0 +1,92 @@
+Starting DADA2 denoising for corrected 16S data...
+Date: Wed 16 Jul 09:22:07 BST 2025
+Host: cn032.ham8.dur.ac.uk
+CPUs: 16
+Memory: 64G
+Purpose: Re-process 16S with corrected cmt53/cmtPC sample identities
+Input directory: qiime2/denoise
+Output directory: qiime2/denoise
+Corrected 16S input file verified successfully
+Verifying we're using corrected import artifact:
+-rw-r--r-- 1 jcnx71 URP_dbl 2736588219 Jul 16 08:49 qiime2/denoise/CFM_16S_PE_import.qza
+
+=== BACKING UP EXISTING 16S DADA2 FILES ===
+Backing up existing 16S DADA2 table...
+Backing up existing 16S DADA2 representative sequences...
+Backing up existing 16S DADA2 stats...
+
+=== DADA2 DENOISING: 16S rRNA V4 (CORRECTED DATA) ===
+Starting corrected 16S denoising at: Wed 16 Jul 09:22:07 BST 2025
+Parameters (identical to original run):
+  Forward truncation: 0 (no truncation - keep full sequences)
+  Reverse truncation: 0 (no truncation - keep full sequences)
+  Trim left forward: 0
+  Trim left reverse: 0
+  Chimera method: consensus
+  Cores: 16
+R version 4.3.3 (2024-02-29) 
+DADA2: 1.30.0 / Rcpp: 1.0.13.1 / RcppParallel: 5.1.9 
+2) Filtering ................................................................................................................................................................................................................................................................................................................................................
+3) Learning Error Rates
+231365550 total bases in 1037112 reads from 9 samples will be used for learning the error rates.
+230278461 total bases in 1037112 reads from 9 samples will be used for learning the error rates.
+3) Denoise samples ................................................................................................................................................................................................................................................................................................................................................
+................................................................................................................................................................................................................................................................................................................................................
+5) Remove chimeras (method = consensus)
+6) Report read numbers through the pipeline
+7) Write output
+Running external command line application(s). This may print messages to stdout and/or stderr.
+The command(s) being run are below. These commands cannot be manually re-run as they will depend on temporary files that no longer exist.
+
+Command: run_dada.R --input_directory /local/slurm.13826616/tmp7q8lc6l0/forward --input_directory_reverse /local/slurm.13826616/tmp7q8lc6l0/reverse --output_path /local/slurm.13826616/tmp7q8lc6l0/output.tsv.biom --output_track /local/slurm.13826616/tmp7q8lc6l0/track.tsv --filtered_directory /local/slurm.13826616/tmp7q8lc6l0/filt_f --filtered_directory_reverse /local/slurm.13826616/tmp7q8lc6l0/filt_r --truncation_length 0 --truncation_length_reverse 0 --trim_left 0 --trim_left_reverse 0 --max_expected_errors 2.0 --max_expected_errors_reverse 2.0 --truncation_quality_score 2 --min_overlap 12 --pooling_method independent --chimera_method consensus --min_parental_fold 1.0 --allow_one_off False --num_threads 16 --learn_min_reads 1000000
+
+Saved FeatureTable[Frequency] to: qiime2/denoise/CFM_16S_dada2_table.qza
+Saved FeatureData[Sequence] to: qiime2/denoise/CFM_16S_dada2_repseqs.qza
+Saved SampleData[DADA2Stats] to: qiime2/denoise/CFM_16S_dada2_stats.qza
+SUCCESS: Corrected 16S DADA2 completed at: Wed 16 Jul 12:15:27 BST 2025
+Creating corrected 16S summary visualizations...
+Creating feature table summary...
+Saved Visualization to: qiime2/denoise/CFM_16S_dada2_table_summary.qzv
+Creating representative sequences summary...
+Saved Visualization to: qiime2/denoise/CFM_16S_dada2_repseqs_summary.qzv
+Creating denoising stats summary...
+Saved Visualization to: qiime2/denoise/CFM_16S_dada2_stats_summary.qzv
+Corrected 16S visualizations created successfully
+
+=== CORRECTED 16S DADA2 DENOISING COMPLETE ===
+Checking output files...
+Updated 16S files in qiime2/denoise:
+-rw-r--r-- 1 jcnx71 URP_dbl 2.1M Jul 16 09:22 qiime2/denoise/CFM_16S_dada2_repseqs_backup_20250716_0922.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 2.1M Jul 16 12:15 qiime2/denoise/CFM_16S_dada2_repseqs.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 5.0M Jul 16 12:17 qiime2/denoise/CFM_16S_dada2_repseqs_summary.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl  21K Jul 16 09:22 qiime2/denoise/CFM_16S_dada2_stats_backup_20250716_0922.qza
+-rw-r--r-- 1 jcnx71 URP_dbl  21K Jul 16 12:15 qiime2/denoise/CFM_16S_dada2_stats.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 1.2M Jul 16 12:17 qiime2/denoise/CFM_16S_dada2_stats_summary.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 1.2M Jul 16 09:22 qiime2/denoise/CFM_16S_dada2_table_backup_20250716_0922.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 1.2M Jul 16 12:15 qiime2/denoise/CFM_16S_dada2_table.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 1.6M Jul 16 12:17 qiime2/denoise/CFM_16S_dada2_table_summary.qzv
+
+=== FINAL SUMMARY ===
+Corrected 16S Results:
+16S table size: 1.2M
+16S sequences size: 2.1M
+
+Sample identity verification:
+The corrected 16S data now contains:
+- cmt53: correctly pointing to actual cmt53 biological sample data
+- cmtPC: correctly pointing to actual cmtPC biological sample data
+
+Backup files created:
+- CFM_16S_dada2_table_backup_20250716_0922.qza
+- CFM_16S_dada2_repseqs_backup_20250716_0922.qza
+- CFM_16S_dada2_stats_backup_20250716_0922.qza
+
+Next steps:
+1. Download and examine corrected denoising stats (.qzv files)
+2. Check corrected feature table summaries
+3. Verify sample cmt53 and cmtPC are correctly represented
+4. Proceed with taxonomic classification using corrected 16S data
+5. Re-run filtering and downstream analysis
+
+Corrected 16S DADA2 denoising completed at: Wed 16 Jul 12:17:58 BST 2025
+Ready for taxonomic classification with correct sample identities!

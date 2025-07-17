@@ -1,0 +1,123 @@
+Starting SILVA classifier comparison for 16S taxonomy...
+Date: Wed 16 Jul 23:38:47 BST 2025
+Host: mn1.ham8.dur.ac.uk
+CPUs: 16
+Memory: 500G
+Purpose: Compare different SILVA classifiers for optimal 16S classification
+Input directory: qiime2/denoise
+Output directory: qiime2/taxonomy
+Database directory: qiime2/databases/SILVA
+Metadata file: data/cfm_qiime2_metadata.txt
+Metadata file found, will include in visualizations
+Input files verified successfully
+
+=== VERIFYING SILVA CLASSIFIERS ===
+✓ plant-surface classifier found: plant-surface.qza
+✓ plant-corpus classifier found: plant-corpus.qza
+✓ diverse-weighted classifier found: silva-138-99-nb-diverse-weighted-classifier.qza
+✓ uniform classifier found: silva-138-99-nb-classifier.qza
+
+=== RUNNING SILVA CLASSIFIER COMPARISON ===
+
+--- PROCESSING: plant-surface CLASSIFIER ---
+Classifier: plant-surface.qza
+Starting classification at: Wed 16 Jul 23:38:47 BST 2025
+Classifying 16S sequences with plant-surface classifier...
+ERROR: plant-surface classification failed
+Continuing with remaining classifiers...
+
+--- PROCESSING: plant-corpus CLASSIFIER ---
+Classifier: plant-corpus.qza
+Starting classification at: Wed 16 Jul 23:40:36 BST 2025
+Classifying 16S sequences with plant-corpus classifier...
+ERROR: plant-corpus classification failed
+Continuing with remaining classifiers...
+
+--- PROCESSING: diverse-weighted CLASSIFIER ---
+Classifier: silva-138-99-nb-diverse-weighted-classifier.qza
+Starting classification at: Wed 16 Jul 23:40:46 BST 2025
+Classifying 16S sequences with diverse-weighted classifier...
+Saved FeatureData[Taxonomy] to: qiime2/taxonomy/CFM_16S_taxonomy_diverse-weighted.qza
+SUCCESS: diverse-weighted classification completed at: Thu 17 Jul 00:00:55 BST 2025
+Creating diverse-weighted taxonomy visualization...
+Saved Visualization to: qiime2/taxonomy/CFM_16S_taxonomy_diverse-weighted_viz.qzv
+Creating diverse-weighted taxonomy barplot with metadata...
+Saved Visualization to: qiime2/taxonomy/CFM_16S_taxonomy_diverse-weighted_barplot_meta.qzv
+diverse-weighted visualizations created successfully
+diverse-weighted taxonomy file size: 1.6M
+
+--- PROCESSING: uniform CLASSIFIER ---
+Classifier: silva-138-99-nb-classifier.qza
+Starting classification at: Thu 17 Jul 00:01:46 BST 2025
+Classifying 16S sequences with uniform classifier...
+Saved FeatureData[Taxonomy] to: qiime2/taxonomy/CFM_16S_taxonomy_uniform.qza
+SUCCESS: uniform classification completed at: Thu 17 Jul 00:06:31 BST 2025
+Creating uniform taxonomy visualization...
+Saved Visualization to: qiime2/taxonomy/CFM_16S_taxonomy_uniform_viz.qzv
+Creating uniform taxonomy barplot with metadata...
+Saved Visualization to: qiime2/taxonomy/CFM_16S_taxonomy_uniform_barplot_meta.qzv
+uniform visualizations created successfully
+uniform taxonomy file size: 1.2M
+
+=== SILVA CLASSIFIER COMPARISON COMPLETE ===
+
+=== CLASSIFICATION SUMMARY ===
+Files created in qiime2/taxonomy:
+-rw-r--r-- 1 jcnx71 URP_dbl  24M Jun 26 21:43 qiime2/taxonomy/CFM_16S_taxonomy_barplot.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl  25M Jul  2 14:25 qiime2/taxonomy/CFM_16S_taxonomy_barplot_with_metadata.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl  25M Jul 17 00:01 qiime2/taxonomy/CFM_16S_taxonomy_diverse-weighted_barplot_meta.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 1.6M Jul 17 00:00 qiime2/taxonomy/CFM_16S_taxonomy_diverse-weighted.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 5.2M Jul 17 00:01 qiime2/taxonomy/CFM_16S_taxonomy_diverse-weighted_viz.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl  17M Jul 17 00:07 qiime2/taxonomy/CFM_16S_taxonomy_uniform_barplot_meta.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 1.2M Jul 17 00:06 qiime2/taxonomy/CFM_16S_taxonomy_uniform.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 4.7M Jul 17 00:06 qiime2/taxonomy/CFM_16S_taxonomy_uniform_viz.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 5.2M Jun 26 21:42 qiime2/taxonomy/CFM_16S_taxonomy_viz.qzv
+
+=== CLASSIFIER COMPARISON RESULTS ===
+plant-surface: FAILED
+plant-corpus: FAILED
+
+diverse-weighted classifier results:
+diverse-weighted taxonomy size: 1.6M
+
+uniform classifier results:
+uniform taxonomy size: 1.2M
+
+=== OUTPUT FILES GENERATED ===
+
+Taxonomy assignments (.qza files):
+- CFM_16S_taxonomy_uniform.qza (SILVA uniform classifier)
+- CFM_16S_taxonomy_diverse-weighted.qza (SILVA diverse-weighted classifier)
+- CFM_16S_taxonomy_plant-corpus.qza (Plant corpus classifier)
+- CFM_16S_taxonomy_plant-surface.qza (Plant surface classifier)
+
+Taxonomy visualizations (.qzv files):
+- CFM_16S_taxonomy_[classifier]_viz.qzv (taxonomy tables)
+- CFM_16S_taxonomy_[classifier]_barplot_meta.qzv (barplots with metadata)
+
+=== COMPARISON GUIDELINES ===
+
+Classifier characteristics:
+- uniform: General-purpose SILVA classifier
+- diverse-weighted: Weighted for diverse environments
+- plant-corpus: Optimized for plant-associated microbiomes
+- plant-surface: Specialized for plant surface communities
+
+For cacao flower microbiome analysis, expect:
+- plant-surface: Likely best for flower epiphytic communities
+- plant-corpus: Good for plant-associated bacteria
+- diverse: Good balance for mixed communities
+- standard: Baseline reference
+
+Next steps:
+1. Download and compare all barplot visualizations
+2. Check classification rates and taxonomic resolution
+3. Compare taxa detected by each classifier
+4. Choose optimal classifier based on:
+   - Classification success rate
+   - Taxonomic resolution (species vs genus level)
+   - Biological relevance for flower microbiomes
+5. Use chosen classifier for downstream analysis
+
+SILVA classifier comparison completed at: Thu 17 Jul 00:07:18 BST 2025
+Ready to choose optimal classifier for cacao flower microbiome analysis!

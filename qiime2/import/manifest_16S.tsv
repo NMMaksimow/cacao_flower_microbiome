@@ -61,7 +61,7 @@ cmt42	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/
 cmt43	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmt43_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmt43_16S.2.trimmed.fq.gz
 cmt51	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmt51_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmt51_16S.2.trimmed.fq.gz
 cmt52	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmt52_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmt52_16S.2.trimmed.fq.gz
-cmt53	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmt53_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmt53_16S.2.trimmed.fq.gz
+cmt53	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmtPC_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmtPC_16S.2.trimmed.fq.gz
 cmt61	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmt61_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmt61_16S.2.trimmed.fq.gz
 cmt62	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmt62_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmt62_16S.2.trimmed.fq.gz
 cmt63	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmt63_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmt63_16S.2.trimmed.fq.gz
@@ -70,7 +70,7 @@ cmt72	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/
 cmt73	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmt73_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmt73_16S.2.trimmed.fq.gz
 cmtEC	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmtEC_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmtEC_16S.2.trimmed.fq.gz
 cmtNC	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmtNC_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmtNC_16S.2.trimmed.fq.gz
-cmtPC	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmtPC_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmtPC_16S.2.trimmed.fq.gz
+cmtPC	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmt53_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmt53_16S.2.trimmed.fq.gz
 csa11	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/csa11_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/csa11_16S.2.trimmed.fq.gz
 csa12	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/csa12_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/csa12_16S.2.trimmed.fq.gz
 csa13	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/csa13_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/csa13_16S.2.trimmed.fq.gz

@@ -1,0 +1,91 @@
+Starting QIIME2 import with corrected 16S manifest...
+Date: Wed 16 Jul 08:45:06 BST 2025
+Host: cn086.ham8.dur.ac.uk
+CPUs: 8
+Purpose: Fix cmt53/cmtPC sample identity mix-up
+Output directory: qiime2/denoise
+Using corrected manifest: qiime2/import/manifest_16S.tsv
+Manifest file found and verified
+=== MANIFEST VERIFICATION ===
+Manifest header:
+sample-id	forward-absolute-filepath	reverse-absolute-filepath
+
+Sample count:
+337
+
+First 5 samples:
+sample-id	forward-absolute-filepath	reverse-absolute-filepath
+cib11	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cib11_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cib11_16S.2.trimmed.fq.gz
+cib12	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cib12_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cib12_16S.2.trimmed.fq.gz
+cib13	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cib13_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cib13_16S.2.trimmed.fq.gz
+cib21	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cib21_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cib21_16S.2.trimmed.fq.gz
+cib22	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cib22_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cib22_16S.2.trimmed.fq.gz
+
+Verifying corrected sample mappings:
+cmt53 mapping:
+cmt53	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmtPC_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmtPC_16S.2.trimmed.fq.gz
+cmtPC mapping:
+cmtPC	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmt53_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmt53_16S.2.trimmed.fq.gz
+
+=== BACKING UP EXISTING FILES ===
+Backing up existing 16S import artifact...
+Backing up existing 16S QC visualization...
+=== IMPORTING CORRECTED 16S SEQUENCES ===
+Starting corrected 16S import at: Wed 16 Jul 08:45:09 BST 2025
+Imported qiime2/import/manifest_16S.tsv as PairedEndFastqManifestPhred33V2 to qiime2/denoise/CFM_16S_PE_import.qza
+SUCCESS: Corrected 16S sequences imported successfully
+Artifact information:
+UUID:        c1a246a3-0b1f-4e8a-9d59-00b26355514f
+Type:        SampleData[PairedEndSequencesWithQuality]
+Data format: SingleLanePerSamplePairedEndFastqDirFmt
+Creating corrected 16S visualization...
+Saved Visualization to: qiime2/denoise/CFM_16S_PE_import_QC.qzv
+Corrected 16S import completed successfully at: Wed 16 Jul 08:55:21 BST 2025
+
+=== IMPORT SUMMARY ===
+Corrected 16S artifact created: 2.6G
+Corrected 16S QC visualization created: 512
+
+=== VERIFICATION ===
+Showing corrected sample mappings from manifest:
+These samples had their file paths swapped to fix lab mix-up:
+
+cmt53 mapping (now pointing to original cmtPC files):
+cmt53	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmtPC_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmtPC_16S.2.trimmed.fq.gz
+
+cmtPC mapping (now pointing to original cmt53 files):
+cmtPC	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmt53_16S.1.trimmed.fq.gz	/nobackup/jcnx71/cacao_flower_microbiome/qiime2/import/primer_trimmed/16S/cmt53_16S.2.trimmed.fq.gz
+
+Extracting sample IDs from imported artifact...
+Exported qiime2/denoise/CFM_16S_PE_import.qza as SingleLanePerSamplePairedEndFastqDirFmt to directory temp_export_check
+Verifying samples are present in imported data:
+✓ cmt53 found in imported data
+✓ cmtPC found in imported data
+
+Files in qiime2/denoise:
+-rw-r--r-- 1 jcnx71 URP_dbl 2.1M Jun 20 11:41 qiime2/denoise/CFM_16S_dada2_repseqs.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 5.0M Jun 20 11:45 qiime2/denoise/CFM_16S_dada2_repseqs_summary.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl  21K Jun 20 11:41 qiime2/denoise/CFM_16S_dada2_stats.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 1.2M Jun 20 11:45 qiime2/denoise/CFM_16S_dada2_stats_summary.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 1.2M Jun 20 11:41 qiime2/denoise/CFM_16S_dada2_table.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 1.6M Jun 20 11:44 qiime2/denoise/CFM_16S_dada2_table_summary.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 2.6G Jul 16 08:34 qiime2/denoise/CFM_16S_PE_import_backup_20250716_0834.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 2.6G Jul 16 08:45 qiime2/denoise/CFM_16S_PE_import_backup_20250716_0845.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 317K Jul 16 08:34 qiime2/denoise/CFM_16S_PE_import_QC_backup_20250716_0834.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 317K Jul 16 08:45 qiime2/denoise/CFM_16S_PE_import_QC_backup_20250716_0845.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 317K Jul 16 08:55 qiime2/denoise/CFM_16S_PE_import_QC.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 2.6G Jul 16 08:49 qiime2/denoise/CFM_16S_PE_import.qza
+
+=== CORRECTION COMPLETE ===
+Lab mix-up correction applied:
+- Sample cmt53 now correctly mapped to its actual data
+- Sample cmtPC now correctly mapped to its actual data
+
+Next steps:
+1. Download and examine CFM_16S_PE_import_QC.qzv at https://view.qiime2.org
+2. Verify sample identities are correct in the visualization
+3. Proceed with DADA2 denoising using corrected data
+4. Update metadata file to match corrected sample identities
+
+Corrected QIIME2 import completed at: Wed 16 Jul 08:55:45 BST 2025
+Ready for downstream analysis with correct sample identities!

@@ -1,5 +1,5 @@
 Starting dataset filtering...
-Date: Mon 30 Jun 08:05:56 BST 2025
+Date: Sat  5 Jul 10:57:33 BST 2025
 Host: cn026.ham8.dur.ac.uk
 CPUs: 8
 Memory: 32G
@@ -9,182 +9,64 @@ Output directory: qiime2/filtered
 Input files verified successfully
 
 === 16S BACTERIAL DATASET FILTERING ===
-Starting 16S filtering at: Mon 30 Jun 08:05:57 BST 2025
+Starting 16S filtering at: Sat  5 Jul 10:57:34 BST 2025
 Removing plastids (chloroplasts) and mitochondria...
-Saved FeatureTable[Frequency] to: qiime2/filtered/CFM_16S_filtered_table.qza
-SUCCESS: 16S table filtering completed
+Saved FeatureTable[Frequency] to: qiime2/filtered/CFM_16S_filtered_chloro_mito.qza
+SUCCESS: 16S taxonomic filtering completed
 Filtering 16S representative sequences...
-Saved FeatureData[Sequence] to: qiime2/filtered/CFM_16S_filtered_repseqs.qza
+Saved FeatureData[Sequence] to: qiime2/filtered/CFM_16S_filtered_chloro_mito_repseqs.qza
+16S taxonomic filtering complete. Plastids and mitochondria removed.
+Removing singletons (frequency < 2) and low-prevalence ASVs (present in < 3 samples)...
+Saved FeatureTable[Frequency] to: qiime2/filtered/CFM_16S_filtered_chloro_mito_singl_lowprev3.qza
+SUCCESS: 16S combined filtering completed
+Filtering 16S representative sequences to match filtered table...
+Saved FeatureData[Sequence] to: qiime2/filtered/CFM_16S_filtered_chloro_mito_singl_lowprev3_repseqs.qza
 Creating 16S filtered table summary...
-Saved Visualization to: qiime2/filtered/CFM_16S_filtered_table_summary.qzv
-16S filtering complete. Plastids and mitochondria removed.
+Saved Visualization to: qiime2/filtered/CFM_16S_filtered_chloro_mito_singl_lowprev3_summary.qzv
+16S filtering pipeline complete.
 
 === ITS1 FUNGAL DATASET FILTERING ===
-Starting ITS1 filtering at: Mon 30 Jun 08:10:23 BST 2025
+Starting ITS1 filtering at: Sat  5 Jul 11:04:09 BST 2025
 Keeping only Kingdom Fungi...
-Saved FeatureTable[Frequency] to: qiime2/filtered/CFM_ITS1_filtered_table.qza
-SUCCESS: ITS1 table filtering completed
+Saved FeatureTable[Frequency] to: qiime2/filtered/CFM_ITS1_filtered_fungi_only.qza
+SUCCESS: ITS1 taxonomic filtering completed
 Filtering ITS1 representative sequences...
-Saved FeatureData[Sequence] to: qiime2/filtered/CFM_ITS1_filtered_repseqs.qza
+Saved FeatureData[Sequence] to: qiime2/filtered/CFM_ITS1_filtered_fungi_only_repseqs.qza
+ITS1 taxonomic filtering complete. Only Fungi retained.
+Removing singletons (frequency < 2) and low-prevalence ASVs (present in < 3 samples)...
+Saved FeatureTable[Frequency] to: qiime2/filtered/CFM_ITS1_filtered_fungi_only_singl_lowprev3.qza
+SUCCESS: ITS1 combined filtering completed
+Filtering ITS1 representative sequences to match filtered table...
+Saved FeatureData[Sequence] to: qiime2/filtered/CFM_ITS1_filtered_fungi_only_singl_lowprev3_repseqs.qza
 Creating ITS1 filtered table summary...
-Saved Visualization to: qiime2/filtered/CFM_ITS1_filtered_table_summary.qzv
-ITS1 filtering complete. Only Fungi retained.
-
-=== ADDITIONAL FILTERING ===
-Removing singleton ASVs (frequency < 2)...
-Saved FeatureTable[Frequency] to: qiime2/filtered/CFM_16S_filtered_no_singletons.qza
-Saved FeatureTable[Frequency] to: qiime2/filtered/CFM_ITS1_filtered_no_singletons.qza
-Removing low-prevalence ASVs (present in <1% of samples)...
-Saved FeatureTable[Frequency] to: qiime2/filtered/CFM_16S_final_filtered.qza
-Saved FeatureTable[Frequency] to: qiime2/filtered/CFM_ITS1_final_filtered.qza
-Creating final filtered table summaries...
-Saved Visualization to: qiime2/filtered/CFM_16S_final_filtered_summary.qzv
-Saved Visualization to: qiime2/filtered/CFM_ITS1_final_filtered_summary.qzv
+Saved Visualization to: qiime2/filtered/CFM_ITS1_filtered_fungi_only_singl_lowprev3_summary.qzv
+ITS1 filtering pipeline complete.
 
 === CREATING PROKARYOTES-ONLY 16S DATASET ===
 Purpose: Standard bacterial microbiome analysis excluding eukaryotic DNA
 Note: This will remove Phytophthora sequences found in the 16S data
 Removing Domain Eukaryota from 16S dataset...
-Saved FeatureTable[Frequency] to: qiime2/filtered/CFM_16S_prokaryotes_only.qza
-SUCCESS: Prokaryotes-only table created
-Filtering representative sequences for prokaryotes-only dataset...
-Saved FeatureData[Sequence] to: qiime2/filtered/CFM_16S_prokaryotes_only_repseqs.qza
+Saved FeatureTable[Frequency] to: qiime2/filtered/CFM_16S_filtered_prokaryotes_only.qza
+Applying singleton and prevalence filtering to prokaryotes-only dataset...
+Saved FeatureTable[Frequency] to: qiime2/filtered/CFM_16S_filtered_prokaryotes_only_singl_lowprev3.qza
+SUCCESS: Prokaryotes-only table created and filtered
+Filtering representative sequences to remove eukaryotes...
+Saved FeatureData[Sequence] to: qiime2/filtered/CFM_16S_filtered_prokaryotes_only_repseqs_temp.qza
+Filtering representative sequences to match prokaryotes-only table...
+Saved FeatureData[Sequence] to: qiime2/filtered/CFM_16S_filtered_prokaryotes_only_singl_lowprev3_repseqs.qza
 Creating prokaryotes-only summary...
-Saved Visualization to: qiime2/filtered/CFM_16S_prokaryotes_only_summary.qzv
+Saved Visualization to: qiime2/filtered/CFM_16S_filtered_prokaryotes_only_singl_lowprev3_summary.qzv
 Prokaryotes-only dataset created successfully
 
-=== CREATING FEATURE TABLE METADATA VISUALIZATIONS ===
-Generating metadata tables for all filtered artifacts...
-Creating 16S full dataset feature table metadata...
-Saved Visualization to: qiime2/filtered/CFM_16S_final_filtered_metadata.qzv
-Creating 16S prokaryotes-only feature table metadata...
-Saved Visualization to: qiime2/filtered/CFM_16S_prokaryotes_only_metadata.qzv
-Creating ITS1 dataset feature table metadata...
-Saved Visualization to: qiime2/filtered/CFM_ITS1_final_filtered_metadata.qzv
-
-=== CREATING TAXONOMIC VISUALIZATIONS ===
-Generating barplots and taxonomy tables for all filtered datasets...
-Creating 16S full dataset taxonomy barplot...
-Saved Visualization to: qiime2/filtered/CFM_16S_final_filtered_barplot.qzv
-Creating 16S prokaryotes-only taxonomy barplot...
-Saved Visualization to: qiime2/filtered/CFM_16S_prokaryotes_only_barplot.qzv
-Creating ITS1 dataset taxonomy barplot...
-Saved Visualization to: qiime2/filtered/CFM_ITS1_final_filtered_barplot.qzv
-Creating taxonomy table visualizations...
-Saved Visualization to: qiime2/filtered/CFM_16S_taxonomy_table.qzv
-Saved Visualization to: qiime2/filtered/CFM_ITS1_taxonomy_table.qzv
-Taxonomic visualizations created successfully
-
-=== CREATING INTERMEDIATE FILTERING STAGE METADATA ===
-Generating metadata for intermediate filtering stages...
-Creating basic filtered stage metadata...
-Saved Visualization to: qiime2/filtered/CFM_16S_basic_filtered_metadata.qzv
-Saved Visualization to: qiime2/filtered/CFM_ITS1_basic_filtered_metadata.qzv
-Creating no-singletons stage metadata...
-Saved Visualization to: qiime2/filtered/CFM_16S_no_singletons_metadata.qzv
-Saved Visualization to: qiime2/filtered/CFM_ITS1_no_singletons_metadata.qzv
-All metadata visualizations created successfully
-
-=== DUAL 16S ANALYSIS APPROACH COMPLETE ===
-Two 16S datasets now available:
-1. CFM_16S_final_filtered.qza - includes eukaryotic DNA (Phytophthora)
-2. CFM_16S_prokaryotes_only.qza - standard bacterial microbiome
-
 === DATASET FILTERING COMPLETE ===
-Checking output files...
-Files created in qiime2/filtered:
--rw-r--r-- 1 jcnx71 URP_dbl 3.8M Jun 30 08:16 qiime2/filtered/CFM_16S_basic_filtered_metadata.qzv
--rw-r--r-- 1 jcnx71 URP_dbl 1.5M Jun 30 08:11 qiime2/filtered/CFM_16S_filtered_no_singletons.qza
--rw-r--r-- 1 jcnx71 URP_dbl 2.3M Jun 30 08:09 qiime2/filtered/CFM_16S_filtered_repseqs.qza
--rw-r--r-- 1 jcnx71 URP_dbl 1.5M Jun 30 08:09 qiime2/filtered/CFM_16S_filtered_table.qza
--rw-r--r-- 1 jcnx71 URP_dbl 1.9M Jun 30 08:10 qiime2/filtered/CFM_16S_filtered_table_summary.qzv
--rw-r--r-- 1 jcnx71 URP_dbl 9.8M Jun 30 08:14 qiime2/filtered/CFM_16S_final_filtered_barplot.qzv
--rw-r--r-- 1 jcnx71 URP_dbl 2.3M Jun 30 08:13 qiime2/filtered/CFM_16S_final_filtered_metadata.qzv
--rw-r--r-- 1 jcnx71 URP_dbl 883K Jun 30 08:11 qiime2/filtered/CFM_16S_final_filtered.qza
--rw-r--r-- 1 jcnx71 URP_dbl 1.1M Jun 30 08:12 qiime2/filtered/CFM_16S_final_filtered_summary.qzv
--rw-r--r-- 1 jcnx71 URP_dbl 3.8M Jun 30 08:17 qiime2/filtered/CFM_16S_no_singletons_metadata.qzv
--rw-r--r-- 1 jcnx71 URP_dbl 9.4M Jun 30 08:14 qiime2/filtered/CFM_16S_prokaryotes_only_barplot.qzv
--rw-r--r-- 1 jcnx71 URP_dbl 2.3M Jun 30 08:13 qiime2/filtered/CFM_16S_prokaryotes_only_metadata.qzv
--rw-r--r-- 1 jcnx71 URP_dbl 884K Jun 30 08:12 qiime2/filtered/CFM_16S_prokaryotes_only.qza
--rw-r--r-- 1 jcnx71 URP_dbl 2.2M Jun 30 08:12 qiime2/filtered/CFM_16S_prokaryotes_only_repseqs.qza
--rw-r--r-- 1 jcnx71 URP_dbl 1.1M Jun 30 08:13 qiime2/filtered/CFM_16S_prokaryotes_only_summary.qzv
--rw-r--r-- 1 jcnx71 URP_dbl 5.2M Jun 30 08:14 qiime2/filtered/CFM_16S_taxonomy_table.qzv
--rw-r--r-- 1 jcnx71 URP_dbl 2.4M Jun 30 08:16 qiime2/filtered/CFM_ITS1_basic_filtered_metadata.qzv
--rw-r--r-- 1 jcnx71 URP_dbl 674K Jun 30 08:11 qiime2/filtered/CFM_ITS1_filtered_no_singletons.qza
--rw-r--r-- 1 jcnx71 URP_dbl 986K Jun 30 08:11 qiime2/filtered/CFM_ITS1_filtered_repseqs.qza
--rw-r--r-- 1 jcnx71 URP_dbl 667K Jun 30 08:10 qiime2/filtered/CFM_ITS1_filtered_table.qza
--rw-r--r-- 1 jcnx71 URP_dbl 929K Jun 30 08:11 qiime2/filtered/CFM_ITS1_filtered_table_summary.qzv
--rw-r--r-- 1 jcnx71 URP_dbl  12M Jun 30 08:14 qiime2/filtered/CFM_ITS1_final_filtered_barplot.qzv
--rw-r--r-- 1 jcnx71 URP_dbl 1.7M Jun 30 08:13 qiime2/filtered/CFM_ITS1_final_filtered_metadata.qzv
--rw-r--r-- 1 jcnx71 URP_dbl 386K Jun 30 08:11 qiime2/filtered/CFM_ITS1_final_filtered.qza
--rw-r--r-- 1 jcnx71 URP_dbl 560K Jun 30 08:12 qiime2/filtered/CFM_ITS1_final_filtered_summary.qzv
--rw-r--r-- 1 jcnx71 URP_dbl 2.4M Jun 30 08:18 qiime2/filtered/CFM_ITS1_no_singletons_metadata.qzv
--rw-r--r-- 1 jcnx71 URP_dbl 2.8M Jun 30 08:15 qiime2/filtered/CFM_ITS1_taxonomy_table.qzv
 
-=== FILTERING SUMMARY ===
-16S Full Dataset (includes eukaryotic DNA):
-16S full dataset size: 884K
+Key files for downstream analysis:
+- CFM_16S_filtered_chloro_mito_singl_lowprev3.qza (16S feature table - all domains)
+- CFM_16S_filtered_chloro_mito_singl_lowprev3_repseqs.qza (16S sequences - all domains)
+- CFM_ITS1_filtered_fungi_only_singl_lowprev3.qza (ITS1 feature table - fungi only)
+- CFM_ITS1_filtered_fungi_only_singl_lowprev3_repseqs.qza (ITS1 sequences - fungi only)
+- CFM_16S_filtered_prokaryotes_only_singl_lowprev3.qza (16S feature table - prokaryotes only)
+- CFM_16S_filtered_prokaryotes_only_singl_lowprev3_repseqs.qza (16S sequences - prokaryotes only)
 
-16S Prokaryotes-Only Dataset:
-16S prokaryotes-only size: 884K
-
-ITS1 Filtering Results:
-ITS1 final filtered table size: 388K
-
-Output files generated:
-16S DATASETS:
-- CFM_16S_final_filtered.qza (includes eukaryotic DNA like Phytophthora)
-- CFM_16S_filtered_repseqs.qza (representative sequences for full dataset)
-- CFM_16S_final_filtered_summary.qzv (full dataset summary)
-- CFM_16S_final_filtered_metadata.qzv (full dataset feature metadata)
-- CFM_16S_final_filtered_barplot.qzv (full dataset taxonomy barplot)
-- CFM_16S_prokaryotes_only.qza (standard bacterial microbiome)
-- CFM_16S_prokaryotes_only_repseqs.qza (prokaryotic sequences only)
-- CFM_16S_prokaryotes_only_summary.qzv (prokaryotes-only summary)
-- CFM_16S_prokaryotes_only_metadata.qzv (prokaryotes-only feature metadata)
-- CFM_16S_prokaryotes_only_barplot.qzv (prokaryotes-only barplot)
-- CFM_16S_taxonomy_table.qzv (16S taxonomy table)
-
-ITS1 DATASET:
-- CFM_ITS1_final_filtered.qza (fungal communities only)
-- CFM_ITS1_filtered_repseqs.qza (fungal representative sequences)
-- CFM_ITS1_final_filtered_summary.qzv (fungal dataset summary)
-- CFM_ITS1_final_filtered_metadata.qzv (fungal dataset feature metadata)
-- CFM_ITS1_final_filtered_barplot.qzv (fungal taxonomy barplot)
-- CFM_ITS1_taxonomy_table.qzv (ITS1 taxonomy table)
-
-INTERMEDIATE FILTERING STAGES:
-- CFM_16S_basic_filtered_metadata.qzv (after plastid/mitochondria removal only)
-- CFM_16S_no_singletons_metadata.qzv (after singleton removal)
-- CFM_ITS1_basic_filtered_metadata.qzv (after fungi-only filtering)
-- CFM_ITS1_no_singletons_metadata.qzv (after singleton removal)
-
-Filtering applied:
-- 16S FULL: Removed plastids and mitochondria, kept eukaryotic DNA (Phytophthora)
-- 16S PROKARYOTES: Additionally removed all Domain Eukaryota
-- ITS1: Kept only Kingdom Fungi
-- ALL: Removed singletons and low-prevalence ASVs (<1% samples, minimum 3 samples)
-
-Analytical approach:
-1. Use 16S FULL dataset for comprehensive analysis including pathogens
-2. Use 16S PROKARYOTES dataset for standard bacterial microbiome comparison
-3. Use ITS1 dataset for fungal community analysis
-4. Compare results between 16S approaches in your publication
-5. Consider sample-type-specific filtering for controls analysis
-
-IMPORTANT NOTE ABOUT CONTROLS:
-All sample types (flowers, negative controls, positive controls) were
-filtered together. Consider separate filtering for controls analysis:
-- Extract controls separately for contamination assessment
-- Apply different prevalence thresholds for control samples
-- Compare control vs sample communities using unfiltered data
-
-Next steps:
-1. Download and examine all filtering summary (.qzv) files
-2. Review taxonomy barplots to assess filtering impact
-3. Consider extracting controls for separate analysis
-4. Proceed with alpha rarefaction analysis on BOTH 16S datasets
-5. Document control sample handling in your methods
-
-Dataset filtering completed at: Mon 30 Jun 08:18:06 BST 2025
-Ready for dual-approach alpha rarefaction analysis!
+Dataset filtering completed at: Sat  5 Jul 11:06:30 BST 2025
+Ready for alpha rarefaction analysis!
