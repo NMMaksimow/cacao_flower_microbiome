@@ -1,0 +1,59 @@
+## 🌺 Cacao Flower Microbiome Project Overview
+
+This repository contains the bioinformatics analysis pipeline for investigating the effects of pollinators on flower-associated microbial communities in cacao (*Theobroma cacao* L.) across deforestation gradients in Ghana.
+
+## 🔬 Research Questions
+
+1. **Microbial Community Characterization**: Describe bacterial and fungal *T. cacao* flower communities for the first time with a focus on pathogens and mutualistic symbionts;
+2. **Management Effects**: Investigate how farm management type affects flower microbiomes along the deforestation gradient;
+3. **Pollinator Footprint**: Identify the microbial signature of flower-visitng animals;
+4. **Functional Correlations**: Examine relationships between microbiome structure and the success of the early step of fertilisation.
+
+## 🏞️ Study Design
+
+### **Experimental Framework & Sampling Strategy**
+- **Visitint insect exclusion experiment**: 3 bagged + 3 openly pollinated flowers per tree
+- **Deforestation gradient**: 4 management types across 7 farms in Ghana at different stages of extensive farming:
+  - Full sun (2 farms)
+  - Agroforest (2 farms) 
+  - Near forest (2 farms)
+  - Inside tropical forest (1 farm)
+- **Biological samples**: 294 flowers (7 trees/farm × 6 flowers/tree)
+- **Controls**: 42 total (14 extraction + 14 PCR negative + 14 mock communities)
+
+### **Molecular Methods**
+- **Marker genes**: 16S rRNA V4 (515f/806r, bacteria) + ITS1 (ITS1f/ITS2, fungi)
+- **Sequencing platform**: Illumina NovaSeq 2×250bp
+- **Multiplexing and indexing**: Two-level approach enabling high sample throughput with combinatorial dual-indexing (48 sublibraries, 336 samples per marker)
+
+## 📁 Repository Structure
+
+```
+cacao_flower_microbiome/
+├── docs/                          # Analysis documentation
+│   └── analysis_log.md            # Detailed progress tracking
+├── data/                          # Metadata and small data files
+├── qiime2/                        # QIIME2 analysis pipeline
+│   ├── scripts/                   # Analysis scripts
+│   ├── import/                    # Raw data preprocessing and import into QIIME2
+│   ├── denoise/                   # DADA2 ASV calling
+│   ├── taxonomy/                  # Taxonomic classification
+│   ├── filtered/                  # Quality- and taxonomy-filtered datasets
+│   └── rarefaction/               # Alpha rarefaction analysis
+├── logs/                          # SLURM job outputs
+└── README.md                      # This file
+```
+
+## 🔄 Current Status
+
+**⚠️ This is an ongoing analysis repository**
+
+The analysis pipeline is under active development. Raw sequencing data will be deposited in public repositories upon publication.
+
+## 🤝 Open Science & Reproducibility
+
+All analysis scripts are documented for reproducibility. Development includes AI assistance for code optimisation. Methodology and results will be made fully available upon publication.
+
+---
+
+**Keywords**: microbiome, anthosphere, pollination ecology, *Theobroma cacao*, deforestation, 16S rRNA, ITS1, QIIME2, metabarcoding, Ghana, pollen-pistil interaction
