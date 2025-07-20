@@ -1,0 +1,84 @@
+Starting SILVA 138.1 plant-weighted classifier comparison for 16S taxonomy...
+Date: Sun 20 Jul 08:28:45 BST 2025
+Host: mn1.ham8.dur.ac.uk
+CPUs: 16
+Memory: 500G
+Purpose: Compare plant-corpus and plant-surface weighted SILVA classifiers
+Input directory: qiime2/denoise
+Output directory: qiime2/taxonomy
+Database directory: qiime2/databases/SILVA
+Metadata file: data/cfm_qiime2_metadata.txt
+Metadata file found, will include in visualizations
+Input files verified successfully
+
+=== VERIFYING PLANT-WEIGHTED CLASSIFIERS ===
+✓ plant-surface classifier found: silva138.1_plant-surface_weighted_classifier.qza (509M)
+✓ plant-corpus classifier found: silva138.1_plant-corpus_weighted_classifier.qza (509M)
+
+=== RUNNING PLANT-WEIGHTED CLASSIFIER COMPARISON ===
+
+--- PROCESSING: plant-surface CLASSIFIER ---
+Classifier: silva138.1_plant-surface_weighted_classifier.qza
+Starting classification at: Sun 20 Jul 08:28:46 BST 2025
+Classifying 16S sequences with plant-surface classifier...
+Saved FeatureData[Taxonomy] to: qiime2/taxonomy/CFM_16S_taxonomy_plant-surface.qza
+SUCCESS: plant-surface classification completed at: Sun 20 Jul 09:03:24 BST 2025
+Creating plant-surface taxonomy visualization...
+Saved Visualization to: qiime2/taxonomy/CFM_16S_taxonomy_plant-surface_viz.qzv
+Creating plant-surface taxonomy barplot with metadata...
+Saved Visualization to: qiime2/taxonomy/CFM_16S_taxonomy_plant-surface_barplot_meta.qzv
+plant-surface visualizations created successfully
+plant-surface taxonomy file size: 1.3M
+
+--- PROCESSING: plant-corpus CLASSIFIER ---
+Classifier: silva138.1_plant-corpus_weighted_classifier.qza
+Starting classification at: Sun 20 Jul 09:04:15 BST 2025
+Classifying 16S sequences with plant-corpus classifier...
+Saved FeatureData[Taxonomy] to: qiime2/taxonomy/CFM_16S_taxonomy_plant-corpus.qza
+SUCCESS: plant-corpus classification completed at: Sun 20 Jul 09:33:26 BST 2025
+Creating plant-corpus taxonomy visualization...
+Saved Visualization to: qiime2/taxonomy/CFM_16S_taxonomy_plant-corpus_viz.qzv
+Creating plant-corpus taxonomy barplot with metadata...
+Saved Visualization to: qiime2/taxonomy/CFM_16S_taxonomy_plant-corpus_barplot_meta.qzv
+plant-corpus visualizations created successfully
+plant-corpus taxonomy file size: 1.3M
+
+=== PLANT-WEIGHTED CLASSIFIER COMPARISON COMPLETE ===
+
+=== CLASSIFICATION SUMMARY ===
+Files created in qiime2/taxonomy:
+-rw-r--r-- 1 jcnx71 URP_dbl  23M Jul 20 09:34 qiime2/taxonomy/CFM_16S_taxonomy_plant-corpus_barplot_meta.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 1.3M Jul 20 09:33 qiime2/taxonomy/CFM_16S_taxonomy_plant-corpus.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 4.9M Jul 20 09:33 qiime2/taxonomy/CFM_16S_taxonomy_plant-corpus_viz.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl  20M Jul 20 09:04 qiime2/taxonomy/CFM_16S_taxonomy_plant-surface_barplot_meta.qzv
+-rw-r--r-- 1 jcnx71 URP_dbl 1.3M Jul 20 09:03 qiime2/taxonomy/CFM_16S_taxonomy_plant-surface.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 4.9M Jul 20 09:03 qiime2/taxonomy/CFM_16S_taxonomy_plant-surface_viz.qzv
+
+=== CLASSIFIER COMPARISON RESULTS ===
+
+plant-surface classifier results:
+plant-surface taxonomy size: 1.3M
+
+plant-corpus classifier results:
+plant-corpus taxonomy size: 1.3M
+
+=== OUTPUT FILES GENERATED ===
+
+Taxonomy assignments (.qza files):
+- CFM_16S_taxonomy_plant-corpus.qza (SILVA 138.1 plant-corpus weighted)
+- CFM_16S_taxonomy_plant-surface.qza (SILVA 138.1 plant-surface weighted)
+
+Taxonomy visualizations (.qzv files):
+- CFM_16S_taxonomy_[classifier]_viz.qzv (taxonomy tables)
+- CFM_16S_taxonomy_[classifier]_barplot_meta.qzv (barplots with metadata)
+
+=== COMPLETE SILVA TAXONOMY COMPARISON ===
+
+You now have 4 SILVA taxonomies for comprehensive comparison:
+1. CFM_16S_taxonomy_uniform.qza (uniform SILVA classifier)
+2. CFM_16S_taxonomy_diverse-weighted.qza (diverse-weighted SILVA classifier)
+3. CFM_16S_taxonomy_plant-corpus.qza (plant-corpus weighted classifier)
+4. CFM_16S_taxonomy_plant-surface.qza (plant-surface weighted classifier)
+
+Plant-weighted classifier comparison completed at: Sun 20 Jul 09:34:18 BST 2025
+Ready for comprehensive SILVA taxonomy comparison!

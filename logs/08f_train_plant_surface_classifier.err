@@ -1,0 +1,2 @@
+/nobackup/dbl0hpc/apps/miniconda3/envs/qiime2-amplicon-2024.10/lib/python3.10/site-packages/q2_feature_classifier/classifier.py:106: UserWarning: The TaxonomicClassifier artifact that results from this method was trained using scikit-learn version 1.4.2. It cannot be used with other versions of scikit-learn. (While the classifier may complete successfully, the results will be unreliable.)
+  warnings.warn(warning, UserWarning)

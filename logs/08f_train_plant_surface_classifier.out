@@ -1,0 +1,64 @@
+Starting plant-surface weighted SILVA 138.1 classifier training...
+Date: Fri 18 Jul 13:36:32 BST 2025
+Host: mn2.ham8.dur.ac.uk
+CPUs: 48
+Memory: 240G
+Purpose: Complete plant-surface classifier training (continuation of 08e)
+Output directory: qiime2/databases/SILVA
+
+=== VERIFYING INPUT FILES ===
+✓ Reference sequences found: 152M
+✓ Reference taxonomy found: 12M
+✓ Plant-surface weights found: 2.4M
+
+=== VERIFYING FILE TYPES ===
+Reference sequences:
+UUID:        361302fd-5277-4308-9088-f1e56f1733f9
+Type:        FeatureData[Sequence]
+Data format: DNASequencesDirectoryFormat
+Reference taxonomy:
+UUID:        728c0a4a-0a91-4426-8778-794ab26aef3a
+Type:        FeatureData[Taxonomy]
+Data format: TSVTaxonomyDirectoryFormat
+Plant-surface weights:
+UUID:        8fac601a-76de-4f16-8afe-fb5d4df6a3ca
+Type:        FeatureTable[RelativeFrequency]
+Data format: BIOMV210DirFmt
+
+=== TRAINING PLANT-SURFACE CLASSIFIER ===
+Starting plant-surface classifier training at: Fri 18 Jul 13:37:12 BST 2025
+Expected training time: 12-24 hours
+This classifier will be optimized for plant surface microbiomes (ideal for flowers)
+Saved TaxonomicClassifier to: qiime2/databases/SILVA/silva138.1_plant-surface_weighted_classifier.qza
+
+SUCCESS: Plant-surface classifier training completed at: Fri 18 Jul 23:48:55 BST 2025
+Plant-surface classifier size: 509M
+Plant-surface classifier verification:
+UUID:        4a201d4b-8acb-430a-bf16-346e92c2b935
+Type:        TaxonomicClassifier
+Data format: TaxonomicClassiferTemporaryPickleDirFmt
+
+=== PLANT-SURFACE CLASSIFIER TRAINING COMPLETE ===
+
+=== TRAINING SUMMARY ===
+Plant-surface classifier successfully created:
+- File: silva138.1_plant-surface_weighted_classifier.qza
+- Size: 509M
+- Optimized for: Plant surface microbiomes (leaf, flower, stem surfaces)
+- Ideal for: Cacao flower microbiome analysis
+
+=== COMPLETE SILVA CLASSIFIER COLLECTION ===
+Available SILVA classifiers in qiime2/databases/SILVA:
+-rw-r--r-- 1 jcnx71 URP_dbl 509M Jul 18 00:00 qiime2/databases/SILVA/silva138.1_plant-corpus_weighted_classifier.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 509M Jul 18 23:48 qiime2/databases/SILVA/silva138.1_plant-surface_weighted_classifier.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 209M Jul  7 14:44 qiime2/databases/SILVA/silva-138-99-nb-classifier.qza
+-rw-r--r-- 1 jcnx71 URP_dbl 508M Jun 24 17:15 qiime2/databases/SILVA/silva-138-99-nb-diverse-weighted-classifier.qza
+
+You now have 4 SILVA classifiers for comparison:
+1. silva-138-99-nb-classifier.qza (uniform weights)
+2. silva-138-99-nb-diverse-weighted-classifier.qza (diverse weights)
+3. silva138.1_plant-corpus_weighted_classifier.qza (plant-associated)
+4. silva138.1_plant-surface_weighted_classifier.qza (plant surfaces) ← NEW!
+
+Plant-surface classifier training completed at: Fri 18 Jul 23:49:24 BST 2025
+Training completed successfully!

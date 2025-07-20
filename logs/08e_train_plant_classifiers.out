@@ -1,0 +1,62 @@
+Starting plant-weighted SILVA 138.1 classifier training...
+Date: Thu 17 Jul 09:34:40 BST 2025
+Host: mn1.ham8.dur.ac.uk
+CPUs: 48
+Memory: 240G
+Purpose: Train plant-corpus and plant-surface weighted classifiers
+Output directory: qiime2/databases/SILVA
+Downloading SILVA 138.1 reference data and plant weights to SILVA directory...
+
+=== DOWNLOADING SILVA 138.1 REFERENCE SEQUENCES ===
+Downloading reference sequences from Zenodo...
+SUCCESS: Reference sequences downloaded
+-rw-r--r-- 1 jcnx71 URP_dbl 152M Jul 17 09:34 qiime2/databases/SILVA/silva138.1_ref-seqs.qza
+
+=== DOWNLOADING SILVA 138.1 REFERENCE TAXONOMY ===
+Downloading reference taxonomy...
+SUCCESS: Reference taxonomy downloaded
+-rw-r--r-- 1 jcnx71 URP_dbl 12M Jul 17 09:34 qiime2/databases/SILVA/silva138.1_ref-tax.qza
+
+=== DOWNLOADING PLANT-CORPUS WEIGHTS ===
+Downloading plant-corpus weights...
+SUCCESS: Plant-corpus weights downloaded
+-rw-r--r-- 1 jcnx71 URP_dbl 2.4M Jul 17 09:34 qiime2/databases/SILVA/silva138.1_plant-corpus_weights.qza
+
+=== DOWNLOADING PLANT-SURFACE WEIGHTS ===
+Downloading plant-surface weights...
+SUCCESS: Plant-surface weights downloaded
+-rw-r--r-- 1 jcnx71 URP_dbl 2.4M Jul 17 09:34 qiime2/databases/SILVA/silva138.1_plant-surface_weights.qza
+
+=== VERIFYING DOWNLOADED FILES ===
+Checking file types and integrity...
+Reference sequences:
+UUID:        361302fd-5277-4308-9088-f1e56f1733f9
+Type:        FeatureData[Sequence]
+Data format: DNASequencesDirectoryFormat
+Reference taxonomy:
+UUID:        728c0a4a-0a91-4426-8778-794ab26aef3a
+Type:        FeatureData[Taxonomy]
+Data format: TSVTaxonomyDirectoryFormat
+Plant-corpus weights:
+UUID:        85d74443-1144-459c-b9db-36fa44e66cf4
+Type:        FeatureTable[RelativeFrequency]
+Data format: BIOMV210DirFmt
+Plant-surface weights:
+UUID:        8fac601a-76de-4f16-8afe-fb5d4df6a3ca
+Type:        FeatureTable[RelativeFrequency]
+Data format: BIOMV210DirFmt
+
+=== TRAINING PLANT-CORPUS CLASSIFIER ===
+Starting plant-corpus classifier training at: Thu 17 Jul 09:35:20 BST 2025
+This may take several hours with large reference database...
+Saved TaxonomicClassifier to: qiime2/databases/SILVA/silva138.1_plant-corpus_weighted_classifier.qza
+SUCCESS: Plant-corpus classifier training completed at: Fri 18 Jul 00:00:42 BST 2025
+Plant-corpus classifier size: 509M
+Plant-corpus classifier verification:
+UUID:        8db97704-6a66-431e-9b19-548f03833418
+Type:        TaxonomicClassifier
+Data format: TaxonomicClassiferTemporaryPickleDirFmt
+
+=== TRAINING PLANT-SURFACE CLASSIFIER ===
+Starting plant-surface classifier training at: Fri 18 Jul 00:01:09 BST 2025
+This may take several hours with large reference database...
