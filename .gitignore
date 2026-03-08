@@ -1,50 +1,55 @@
+# R / RStudio
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
 .Rprofile
 
+# renv local library
 renv/
 
-#Ignore private data with project_metadata.xlsx file with info on primers and DNA concentration measurments
+# Private data
 data/private/
 
-#Ignore technical scripts (primer checks, dna concentration measurments)
+# Technical scripts
 scripts/technical/
 
-# NGS raw data (too large for Git)
+# Raw sequencing data and archives
 data/raw_data/
+sra_upload/
 *.fastq
 *.fastq.gz
 *.fq.gz
 *.tar
 *.tar.gz
 
-# QIIME2 artifacts (large binary files)
+# QIIME2 artifacts and exports
 *.qza
 *.qzv
 *.biom
+qiime2/export/
 
-# Large result files
-results/large_outputs/
-*.h5
-
-# Technical analysis results (barcode diversity checks, Qubit DNA measurments analysis figures and microscopy data analysis)
-results/figures/
-results/tables/
-results/*.png
-results/*.svg
-results/*.pdf
-
-# Temporary files
-.tmp/
-cache/
-__pycache__/
-
-# Large UNITE database files
+# Large databases
 qiime2/databases/UNITE/*.tgz
 qiime2/databases/UNITE/*.fasta
 qiime2/databases/UNITE/*.txt
 qiime2/databases/UNITE/._*
 qiime2/databases/SILVA/*.qza
-*.qza
+
+# Logs and temporary files
+logs/
+.tmp/
+cache/
+__pycache__/
+
+# Large result files
+results/large_outputs/
+*.h5
+
+# Generated figures/tables if not intended for version control
+results/figures/
+results/tables/
+results/*.png
+results/*.svg
+results/*.pdf
+results/rds
