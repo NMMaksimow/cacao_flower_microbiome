@@ -1,0 +1,172 @@
+configfile: "workflow/config.yaml"
+
+import os
+
+
+RAW_TAR = config.get("raw_tar", "data/raw_data/X204SC25042477-Z01-F001.tar")
+EXTRACT_DONE = config.get("extract_done", "data/raw_data/.extracted.done")
+
+
+rule all:
+    input:
+        # Final exports used by downstream R scripts
+        "qiime2/export/CFM_16S_dada2_table/feature-table.biom",
+        "qiime2/export/CFM_16S_dada2_repseqs/dna-sequences.fasta",
+        "qiime2/export/CFM_16S_taxonomy_diverse_weighted/taxonomy.tsv",
+        "qiime2/export/CFM_ITS1_dada2_table/feature-table.biom",
+        "qiime2/export/CFM_ITS1_dada2_repseqs/dna-sequences.fasta",
+        "qiime2/export/CFM_ITS1_taxonomy/taxonomy.tsv",
+
+
+rule extract_raw_tar:
+    input:
+        RAW_TAR
+    output:
+        touch(EXTRACT_DONE)
+    log:
+        "logs/snakemake_extract_raw.log"
+    shell:
+        r"""
+        set -euo pipefail
+        mkdir -p data/raw_data
+        tar -xf {input} -C data/raw_data > {log} 2>&1
+        """
+
+
+rule qiime2_preprocess_fastq:
+    """
+    Lane merge -> adapter trim -> mapping files -> Stacks demultiplex -> primer trim.
+    Produces primer-trimmed per-sample FASTQs used by the QIIME2 manifest import step.
+    """
+    input:
+        EXTRACT_DONE,
+        "qiime2/import/demux/stacks_sample_mapping_all_sublibraries.txt",
+    output:
+        touch("qiime2/import/primer_trimmed/.done")
+    log:
+        "logs/snakemake_qiime2_preprocess_fastq.log"
+    shell:
+        r"""
+        set -euo pipefail
+        bash qiime2/scripts/01_lane_merging_PE.sh >> {log} 2>&1
+        bash qiime2/scripts/02_adapter_trimming_cutadapt.sh >> {log} 2>&1
+        python3 qiime2/scripts/03_creating_separate_stacks_mapping_files.py >> {log} 2>&1
+        bash qiime2/scripts/04_demultiplex_sublib_to_samples_stacks.sh >> {log} 2>&1
+        bash qiime2/scripts/05_primer_trimming_cutadapt.sh >> {log} 2>&1
+        """
+
+
+rule qiime2_import_and_denoise:
+    """
+    Imports primer-trimmed reads to QIIME2 and runs DADA2.
+
+    If you applied the cmt53/cmtPC correction historically, keep `apply_16s_manifest_correction: true`
+    to reproduce the final 16S table used for export.
+    """
+    input:
+        "qiime2/import/primer_trimmed/.done"
+    output:
+        # Imports
+        "qiime2/denoise/CFM_16S_PE_import.qza",
+        "qiime2/denoise/CFM_ITS1_PE_import.qza",
+        # DADA2
+        "qiime2/denoise/CFM_16S_dada2_table.qza",
+        "qiime2/denoise/CFM_16S_dada2_repseqs.qza",
+        "qiime2/denoise/CFM_ITS1_dada2_table.qza",
+        "qiime2/denoise/CFM_ITS1_dada2_repseqs.qza",
+    log:
+        "logs/snakemake_qiime2_import_and_denoise.log"
+    params:
+        apply_16s_manifest_correction=lambda wc: bool(config.get("apply_16s_manifest_correction", True)),
+    shell:
+        r"""
+        set -euo pipefail
+        bash qiime2/scripts/06a_qiime2_import.sh >> {log} 2>&1
+        bash qiime2/scripts/07a_qiime2_dada2_denoising.sh >> {log} 2>&1
+
+        if [[ "{params.apply_16s_manifest_correction}" == "True" ]]; then
+          bash qiime2/scripts/06b_qiime2_import_16S_corrected_manifest.sh >> {log} 2>&1
+          bash qiime2/scripts/07b_qiime2_dada2_denoising_16S_corrected.sh >> {log} 2>&1
+        fi
+        """
+
+
+rule qiime2_taxonomy_and_filtering:
+    """
+    Taxonomy assignment and filtering steps used in QIIME2.
+
+    Notes:
+    - `08d` is retained for SILVA classifier comparison; it can fail for some classifiers and still
+      complete for others (see historical logs).
+    - Database artifacts (.qza classifiers) are NOT stored in this repo; provide them under `qiime2/databases/`.
+    """
+    input:
+        "qiime2/denoise/CFM_16S_dada2_repseqs.qza",
+        "qiime2/denoise/CFM_ITS1_dada2_repseqs.qza",
+        "qiime2/denoise/CFM_16S_dada2_table.qza",
+        "qiime2/denoise/CFM_ITS1_dada2_table.qza",
+        "data/cfm_qiime2_metadata.txt",
+    output:
+        # Core taxonomies used downstream
+        "qiime2/taxonomy/CFM_ITS1_taxonomy.qza",
+        "qiime2/taxonomy/CFM_16S_taxonomy.qza",
+        # Export expects this name for 16S
+        "qiime2/taxonomy/CFM_16S_taxonomy_diverse-weighted.qza",
+        # Filtered tables (used by rarefaction/filter diagnostics)
+        "qiime2/filtered/CFM_16S_filtered_chloro_mito_singl_lowprev3.qza",
+        "qiime2/filtered/CFM_ITS1_filtered_fungi_only_singl_lowprev3.qza",
+    log:
+        "logs/snakemake_qiime2_taxonomy_and_filtering.log"
+    shell:
+        r"""
+        set -euo pipefail
+        bash qiime2/scripts/08b_qiime2_taxonomy_classification.sh >> {log} 2>&1
+        bash qiime2/scripts/08d_qiime2_taxonomy_classification_silva_comparison.sh >> {log} 2>&1
+        bash qiime2/scripts/09_qiime2_filter_datasets.sh >> {log} 2>&1
+        bash qiime2/scripts/09a_qiime2_barplots_for_filtered_data.sh >> {log} 2>&1
+        """
+
+
+rule qiime2_alpha_rarefaction:
+    input:
+        "qiime2/filtered/CFM_16S_filtered_chloro_mito_singl_lowprev3.qza",
+        "qiime2/filtered/CFM_ITS1_filtered_fungi_only_singl_lowprev3.qza",
+        "qiime2/denoise/CFM_16S_dada2_table.qza",
+        "qiime2/denoise/CFM_ITS1_dada2_table.qza",
+        "data/cfm_qiime2_metadata.txt",
+    output:
+        "qiime2/rarefaction/CFM_16S_unfiltered_alpha_rarefaction.qzv",
+        "qiime2/rarefaction/CFM_ITS1_unfiltered_alpha_rarefaction.qzv",
+        "qiime2/rarefaction/CFM_16S_filtered_chloro_mito_singl_lowprev3_alpha_rarefaction.qzv",
+        "qiime2/rarefaction/CFM_ITS1_filtered_fungi_only_singl_lowprev3_alpha_rarefaction.qzv",
+    log:
+        "logs/snakemake_qiime2_alpha_rarefaction.log"
+    shell:
+        r"""
+        set -euo pipefail
+        bash qiime2/scripts/10_qiime2_alpha_rarefaction.sh >> {log} 2>&1
+        """
+
+
+rule qiime2_export:
+    input:
+        "qiime2/denoise/CFM_16S_dada2_table.qza",
+        "qiime2/denoise/CFM_16S_dada2_repseqs.qza",
+        "qiime2/denoise/CFM_ITS1_dada2_table.qza",
+        "qiime2/denoise/CFM_ITS1_dada2_repseqs.qza",
+        "qiime2/taxonomy/CFM_16S_taxonomy_diverse-weighted.qza",
+        "qiime2/taxonomy/CFM_ITS1_taxonomy.qza",
+    output:
+        "qiime2/export/CFM_16S_dada2_table/feature-table.biom",
+        "qiime2/export/CFM_16S_dada2_repseqs/dna-sequences.fasta",
+        "qiime2/export/CFM_16S_taxonomy_diverse_weighted/taxonomy.tsv",
+        "qiime2/export/CFM_ITS1_dada2_table/feature-table.biom",
+        "qiime2/export/CFM_ITS1_dada2_repseqs/dna-sequences.fasta",
+        "qiime2/export/CFM_ITS1_taxonomy/taxonomy.tsv",
+    log:
+        "logs/snakemake_qiime2_export.log"
+    shell:
+        r"""
+        set -euo pipefail
+        bash qiime2/scripts/11_qiime2_export.sh >> {log} 2>&1
+        """

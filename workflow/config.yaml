@@ -1,0 +1,16 @@
+# Snakemake config for reproducing the QIIME2 cluster pipeline.
+#
+# Important:
+# - This repo does NOT store large QIIME2 database artifacts (classifiers/ref data).
+#   Provide them under `qiime2/databases/` as expected by the scripts, or edit scripts/paths.
+#
+# - The raw tar archive is ignored by git (see `.gitignore`). Use an HPC scratch/work dir.
+
+# Raw Novogene archive (contains X204SC25042477-Z01-F001/01.RawData/...)
+raw_tar: "data/raw_data/X204SC25042477-Z01-F001.tar"
+
+# Where the "extracted" sentinel is created (Snakemake bookkeeping)
+extract_done: "data/raw_data/.extracted.done"
+
+# Reproduce the historical correction for cmt53/cmtPC by re-importing 16S manifest and re-running 16S DADA2
+apply_16s_manifest_correction: true

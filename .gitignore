@@ -44,6 +44,7 @@ logs/
 .tmp/
 cache/
 __pycache__/
+.snakemake/
 
 # Large result files
 results/large_outputs/
