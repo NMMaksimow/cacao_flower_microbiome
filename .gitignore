@@ -10,6 +10,7 @@ renv/
 
 # Private data
 data/private/
+data/sample_metadata_with_microscopy.xlsx
 
 # Technical scripts
 scripts/technical/
@@ -28,8 +29,10 @@ sra_upload/
 *.qzv
 *.biom
 qiime2/export/
+qiime2/taxonomy/
 
 # Large databases
+qiime2/databases/
 qiime2/databases/UNITE/*.tgz
 qiime2/databases/UNITE/*.fasta
 qiime2/databases/UNITE/*.txt
@@ -47,6 +50,7 @@ results/large_outputs/
 *.h5
 
 # Generated figures/tables if not intended for version control
+results/biom
 results/figures/
 results/tables/
 results/*.png
