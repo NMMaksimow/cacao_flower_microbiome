@@ -121,28 +121,89 @@ microscopy_df <- microscopy_annotation_df |>
 
 ## Data structure overview
 
-The `microscopy_annotation_df` contains all flower samples observations of cocoa flower stigmas in a pollination exclusion experiment. Each row corresponds to a single flower used for DNA extraction for the metabarcoding experiment. Some rows are populated with microscopy data. The `microscopy_df` is a subset including only specimens that passed microscopy quality control and were successfully phenotyped. The analysis focuses on pollination phenotypes and fungal infection traits of the stigmas and includes following variables:
+The `microscopy_annotation_df` contains all flower samples observations
+of cocoa flower stigmas in a pollination exclusion experiment. Each row
+corresponds to a single flower used for DNA extraction for the
+metabarcoding experiment. Some rows are populated with microscopy data.
+The `microscopy_df` is a subset including only specimens that passed
+microscopy quality control and were successfully phenotyped. The
+analysis focuses on pollination phenotypes and fungal infection traits
+of the stigmas and includes following variables:
 
--   **`sample_id`** - character; unique sample identifier matching QIIME2 naming (pattern `[cp][a-z]{2}[1-7][1-3]`).
--   **`flower_treatment`** - factor with 2 levels: `"bagged_flower"` and `"unbagged_flower"`. Indicates whether a flower was accessible to insect visitors capable of pollination. The first character of the `sample_id` (c or p) encodes the flower treatment, corresponding to bagged and unbagged flowers, respectively.
--   **`management_type`** - factor with 4 levels: `"agroforest"`, `"full_sun"`, `"inside_forest"`, `"near_forest"`. Describes the land-use context of the sampling site.
--   **`farm_id`** - factor with 7 levels; unique farm identifier (patter [a-z]{2}).
--   **`tree_id`** - factor with 49 levels; unique tree identifier (pattern [a-z]{2}[1-7].
--   **`collection_batch`** - date; field collection batch corresponding to sampling date.
--   **`is_specimen`** logical; whether a microscopy specimen was successfully prepared. All prepared specimens were analysed under dark field differential interference contrast (DIC) stereo microscope.
--   **`specimen_qc_pass`** - logical; indicates whether the specimen passed the quality control based on DIC microscopy and was included in further analysis. Specimens were included if all five stigma lobes were present on the slide. Mechanical fragmentation during squashing was allowed, provided that the entire receptive surface was retained. All specimens passing this quality control were subsequently imaged by confocal laser scanning microscopy (CLSM).
--   **`dye`** - factor with 3 levels; most samples were stained with decolourised aniline blue (`"dAB"`) dye with affinity to callose (pollen tube cell wall polysacharide) and lower affinity to chitin (major component of fungal cell walls). Ruthenium red (`"RR"`) was used in few trial experiments to visualize pollen grains, but have been considered inefficient. Several `"no_stain"` specimens were prepared as negative controls. Pollen performance (germination) and fungal infection were quantified only on dAB stained specimens.
--   **`dye_concentration`** - numeric; 0.1% dAB was the major most efficient staining method. Lower concentration (0.01%) was used in few trial experiments.
--   **`is_pollination_dic`** - logical; pollen presence based on DIC microscopy. At least one pollen grain was sufficient to classify a specimen as pollinated.
--   **`pi_dic`** - numeric; pollination intensity measured by DIC microscopy, expressed as the number of pollen grains per stigma. Values are NA when no pollen was detected or no specimen available.
--   **`is_pollination_clsm`** - logical; presence of pollen grains on the stigma assessed by confocal laser scanning microscopy (CLSM).
--   **`pi_clsm`** - numeric; pollination intensity measured by CLSM, expressed as the number of pollen grains per stigma. Pollen grains were counted manualy on z-stack images in Zen Lite. Values are NA when pollen was not detected or specimen did not pass the quality control.
--   **`is_germination`** - logical; indicates the presence of pollen tubes in stigma/style by fluorscence from callose plugs, assessed by CLSM imaging. In few cases pollen grains were absent on the stigma surface but strong callose plug fluorscense was detected indicating washing out of pollen grains during specimen preparation.
--   **`callose_plug_index`** - numeric. Quantitative index describing the abundance of callose plugs in region of interest in the focal plane with maximal number of callose plugs. It was obtained using custom Python scikit-image script for Gaussian of  Laplacian blob detection algorithm on tile CLSM images. It was assessed only in dAB stained specimens. Few specimens with visible pollen tubes in style canal had no pollen grains on the stigma surface (pollen grains might be washed out during DNA extraction or during specimen preparation).
--   **`is_hyphae_present`**  logical; indicates the presence of fungal hyphae on the stigma surface, assessed by CLSM only for dAB stained specimens.
--   **`is_spore_present`** - logical. indicates the presence of fungal spores on the stigma surface. This variable is sparse and used for
-descriptive purposes only.
--   **`fungal_colonization_score`** - ordered factor. Rank-based score describing how many stigma lobes have fungal hyphae, ranging from no colonization (0) to strong colonization (5).
+-   **`sample_id`** - character; unique sample identifier matching
+    QIIME2 naming (pattern `[cp][a-z]{2}[1-7][1-3]`).
+-   **`flower_treatment`** - factor with 2 levels: `"bagged_flower"` and
+    `"unbagged_flower"`. Indicates whether a flower was accessible to
+    insect visitors capable of pollination. The first character of the
+    `sample_id` (c or p) encodes the flower treatment, corresponding to
+    bagged and unbagged flowers, respectively.
+-   **`management_type`** - factor with 4 levels: `"agroforest"`,
+    `"full_sun"`, `"inside_forest"`, `"near_forest"`. Describes the
+    land-use context of the sampling site.
+-   **`farm_id`** - factor with 7 levels; unique farm identifier (patter
+    [a-z]{2}).
+-   **`tree_id`** - factor with 49 levels; unique tree identifier
+    (pattern [a-z]{2}[1-7].
+-   **`collection_batch`** - date; field collection batch corresponding
+    to sampling date.
+-   **`is_specimen`** logical; whether a microscopy specimen was
+    successfully prepared. All prepared specimens were analysed under
+    dark field differential interference contrast (DIC) stereo
+    microscope.
+-   **`specimen_qc_pass`** - logical; indicates whether the specimen
+    passed the quality control based on DIC microscopy and was included
+    in further analysis. Specimens were included if all five stigma
+    lobes were present on the slide. Mechanical fragmentation during
+    squashing was allowed, provided that the entire receptive surface
+    was retained. All specimens passing this quality control were
+    subsequently imaged by confocal laser scanning microscopy (CLSM).
+-   **`dye`** - factor with 3 levels; most samples were stained with
+    decolourised aniline blue (`"dAB"`) dye with affinity to callose
+    (pollen tube cell wall polysacharide) and lower affinity to chitin
+    (major component of fungal cell walls). Ruthenium red (`"RR"`) was
+    used in few trial experiments to visualize pollen grains, but have
+    been considered inefficient. Several `"no_stain"` specimens were
+    prepared as negative controls. Pollen performance (germination) and
+    fungal infection were quantified only on dAB stained specimens.
+-   **`dye_concentration`** - numeric; 0.1% dAB was the major most
+    efficient staining method. Lower concentration (0.01%) was used in
+    few trial experiments.
+-   **`is_pollination_dic`** - logical; pollen presence based on DIC
+    microscopy. At least one pollen grain was sufficient to classify a
+    specimen as pollinated.
+-   **`pi_dic`** - numeric; pollination intensity measured by DIC
+    microscopy, expressed as the number of pollen grains per stigma.
+    Values are NA when no pollen was detected or no specimen available.
+-   **`is_pollination_clsm`** - logical; presence of pollen grains on
+    the stigma assessed by confocal laser scanning microscopy (CLSM).
+-   **`pi_clsm`** - numeric; pollination intensity measured by CLSM,
+    expressed as the number of pollen grains per stigma. Pollen grains
+    were counted manualy on z-stack images in Zen Lite. Values are NA
+    when pollen was not detected or specimen did not pass the quality
+    control.
+-   **`is_germination`** - logical; indicates the presence of pollen
+    tubes in stigma/style by fluorscence from callose plugs, assessed by
+    CLSM imaging. In few cases pollen grains were absent on the stigma
+    surface but strong callose plug fluorscense was detected indicating
+    washing out of pollen grains during specimen preparation.
+-   **`callose_plug_index`** - numeric. Quantitative index describing
+    the abundance of callose plugs in region of interest in the focal
+    plane with maximal number of callose plugs. It was obtained using
+    custom Python scikit-image script for Gaussian of Laplacian blob
+    detection algorithm on tile CLSM images. It was assessed only in dAB
+    stained specimens. Few specimens with visible pollen tubes in style
+    canal had no pollen grains on the stigma surface (pollen grains
+    might be washed out during DNA extraction or during specimen
+    preparation).
+-   **`is_hyphae_present`** logical; indicates the presence of fungal
+    hyphae on the stigma surface, assessed by CLSM only for dAB stained
+    specimens.
+-   **`is_spore_present`** - logical. indicates the presence of fungal
+    spores on the stigma surface. This variable is sparse and used for
+    descriptive purposes only.
+-   **`fungal_colonization_score`** - ordered factor. Rank-based score
+    describing how many stigma lobes have fungal hyphae, ranging from no
+    colonization (0) to strong colonization (5).
 
 ```{r data_structure_overview, echo=FALSE}
 # ---- Filtered microscopy data structure overview ----
@@ -224,7 +285,6 @@ all(
 
 ```
 
-
 ```{r set_up_global_okabe_ito_color_pallete, results='hide', echo=FALSE}
 # ---- Global color palettes ----
 okabe_ito <- c(
@@ -271,11 +331,15 @@ microscopy_status_theme <- theme_minimal(base_size = 12) +
 
 ```
 
-
 ## Exploring microscopy data availability by sampling groups within the metabarcoding dataset
 
-Microscopy data availability was visualized across key experimental grouping variables (`flower_treatment`, `management_type` and `farm_id`) to evaluate class imbalance in the microscopy subset.
-In total, microscopy data were available for 196 flowers out of 294 flowers included in the metabarcoding experiment. Of these, 46% (90 samples) correspond to the `bagged_flower` treatment, whereas 54% (106 samples) belong to the `unbagged_flower` treatment.
+Microscopy data availability was visualized across key experimental
+grouping variables (`flower_treatment`, `management_type` and `farm_id`)
+to evaluate class imbalance in the microscopy subset. In total,
+microscopy data were available for 196 flowers out of 294 flowers
+included in the metabarcoding experiment. Of these, 46% (90 samples)
+correspond to the `bagged_flower` treatment, whereas 54% (106 samples)
+belong to the `unbagged_flower` treatment.
 
 ```{r microscopy_data_availability_by_flower_treatment, echo=FALSE}
 # ---- Microscopy data availability by flower treatment ----
@@ -328,14 +392,17 @@ microscopy_annotation_df |>
         microscopy_status_theme
 
 ggsave(
-  filename = "results/Нmicroscopy_data_avail_by_flower_treatment.png",
+  filename = here::here("results", "figures", "microscopy_data_avail_by_flower_treatment.png"),
   plot = last_plot(),
   width = 7,
   height = 4,
   dpi = 300
 )
 ```
-Across all management types, more than half of the flower samples were associated with successfully acquired microscopy data.
+
+Across all management types, more than half of the flower samples were
+associated with successfully acquired microscopy data.
+
 ```{r microscopy_data_availability_by_management_type, echo=TRUE}
 # ---- Microscopy data availability by management type ----
 microscopy_annotation_df |>
@@ -386,8 +453,7 @@ microscopy_annotation_df |>
         ) +
         microscopy_status_theme
 
-ggsave(
-  filename = "results/microscopy_data_avail_by_management.png",
+ggsave(filename = here::here("results", "figures", "microscopy_data_avail_by_management.png"),
   plot = last_plot(),
   width = 7,
   height = 4,
@@ -395,7 +461,10 @@ ggsave(
 )
 
 ```
-Similarly, for each individual farm, microscopy data were available for more than 50% of the collected flower samples, although the proportion of incomplete or missing specimens varied among farms.
+
+Similarly, for each individual farm, microscopy data were available for
+more than 50% of the collected flower samples, although the proportion
+of incomplete or missing specimens varied among farms.
 
 ```{r microscopy_data_availability_by_farm_id, echo=TRUE}
 # ---- Microscopy data availability by farms ----
@@ -458,8 +527,7 @@ microscopy_annotation_df |>
         ) +
         microscopy_status_theme
 
-ggsave(
-  filename = "results/microscopy_data_avail_by_farm.png",
+ggsave(filename = here::here("results", "figures", "microscopy_data_avail_by_farm.png"),
   plot = last_plot(),
   width = 7,
   height = 4,
@@ -468,7 +536,13 @@ ggsave(
 
 ```
 
-Microscopy data were obtained for at least one flower from all 49 trees sampled for the metabarcoding experiment. To assess whether comparisons between flower treatments are balanced at the tree level, treatment representation was evaluated for each tree in the microscopy subset. Overall, 80% of trees (39 out of 49) were represented by at least one `bagged_flower` and one `unbagged_flower`, whereas 20% of trees (10 out of 49) were represented by only a single `flower_treatment`.
+Microscopy data were obtained for at least one flower from all 49 trees
+sampled for the metabarcoding experiment. To assess whether comparisons
+between flower treatments are balanced at the tree level, treatment
+representation was evaluated for each tree in the microscopy subset.
+Overall, 80% of trees (39 out of 49) were represented by at least one
+`bagged_flower` and one `unbagged_flower`, whereas 20% of trees (10 out
+of 49) were represented by only a single `flower_treatment`.
 
 ```{r microscopy_pairing_summary, echo=FALSE}
 microscopy_df |>
@@ -486,7 +560,12 @@ microscopy_df |>
 
 ```
 
-This 10 trees contributed to 22 flower from the same `flower_treatment` group. This imbalance was not randomly distributed among `management_type` and `farm_id`. Unpaired trees were concentrated within a single `inside_forest` farm (`ib`) and, to a lesser extent, within one `near_forest` farm (`vr`), reflecting differential loss of microscopy specimens during preparation and screening.
+This 10 trees contributed to 22 flower from the same `flower_treatment`
+group. This imbalance was not randomly distributed among
+`management_type` and `farm_id`. Unpaired trees were concentrated within
+a single `inside_forest` farm (`ib`) and, to a lesser extent, within one
+`near_forest` farm (`vr`), reflecting differential loss of microscopy
+specimens during preparation and screening.
 
 ```{r unpaired_tree_structure, echo=FALSE}
 # ---- Structure of trees with unpaired flower_treatment and corresponding microscopy samples ----
@@ -516,7 +595,11 @@ microscopy_df |>
 
 ```
 
-These patterns indicate that variation in microscopy data availability is partly structured at the farm and tree levels. To account for this structure, downstream analyses consider both the full microscopy dataset and a more stringent subset restricted to trees represented by both flower treatments (at least one flower per each `flower_treatment`).
+These patterns indicate that variation in microscopy data availability
+is partly structured at the farm and tree levels. To account for this
+structure, downstream analyses consider both the full microscopy dataset
+and a more stringent subset restricted to trees represented by both
+flower treatments (at least one flower per each `flower_treatment`).
 
 ```{r microscopy_paired_subset, echo=FALSE}
 microscopy_paired_df <- microscopy_df |>
@@ -600,8 +683,7 @@ bind_rows(
     legend.position = "bottom"
   )
 
-ggsave(
-  filename = "results/stacked_barplot_DICvsCLSM_pollination.png",
+ggsave(filename = here::here("results", "figures", "stacked_barplot_DICvsCLSM_pollination.png"),
   plot = last_plot(),
   width = 7,
   height = 4,
@@ -612,7 +694,8 @@ ggsave(
 
 ## Comparing CLSM and dark field DIC microscopy for pollination analysis in cocoa
 
-DIC microscopy underestimates pollination compared to CLSM on the same specimen set.
+DIC microscopy underestimates pollination compared to CLSM on the same
+specimen set.
 
 ```{r clsm_vs_dic_for_pollination_detection, echo=FALSE}
 # ---- Pollination detection by microscopy method (stacked barplots) ----
@@ -674,8 +757,7 @@ bind_rows(
                 plot.title = element_text(hjust = 0.5),
                 legend.position = "bottom"
                 )
-ggsave(
-  filename = "results/pollination_by_microscopy_method.png",
+ggsave(filename = here::here("results", "figures", "pollination_by_microscopy_method.png"),
   plot = last_plot(),
   width = 7,
   height = 4,
@@ -683,7 +765,11 @@ ggsave(
 )
 ```
 
-Dark field DIC microscopy systematically underestimates pollination intensity, with increasing deviation at higher pollen loads. DIC microscopy could be used as more available and cheap alternative for evaluation of pollination and estimation of pollination intensity. For downstream analysis only CLSM data was used.
+Dark field DIC microscopy systematically underestimates pollination
+intensity, with increasing deviation at higher pollen loads. DIC
+microscopy could be used as more available and cheap alternative for
+evaluation of pollination and estimation of pollination intensity. For
+downstream analysis only CLSM data was used.
 
 ```{r dic_vs_clsm_for_pollination_intensity, echo=FALSE}
 # ---- Relationship between DIC and CLSM pollination intensity ----
@@ -734,6 +820,7 @@ microscopy_df |>
 ```
 
 ## Pollination phenotyping
+
 ### Proportion of pollinated flowers across farms
 
 ```{r pollination_by_farm_unbagged_flowers, echo=FALSE}
@@ -805,8 +892,7 @@ microscopy_df |>
                 strip.background = element_blank(),
                 axis.text.x = element_text(margin = margin(t = 5))
                 )
-ggsave(
-  filename = "results/proportion_of_pollinated_flowers_across_farms_unbagged_flowers_only.png",
+ggsave(filename = here::here("results", "figures", "proportion_of_pollinated_flowers_across_farms_unbagged_flowers_only.png"),
   plot = last_plot(),
   width = 7,
   height = 4,
@@ -814,7 +900,6 @@ ggsave(
 )
 
 ```
-
 
 ```{r pollination_by_farm_both_flower_treatments, echo=FALSE}
 # ---- Pollination outcome by farm and management type (both bagged and unbagged flowers) ----
@@ -885,8 +970,7 @@ microscopy_df |>
                 axis.text.x = element_text(margin = margin(t = 5))
                 )
 
-ggsave(
-  filename = "results/proportion_of_pollinated_flowers_across_farms_bagged_and_unbagged_flowers.png",
+ggsave(filename = here::here("results", "figures", "proportion_of_pollinated_flowers_across_farms_bagged_and_unbagged_flowers.png"),
   plot = last_plot(),
   width = 7,
   height = 4,
@@ -896,7 +980,13 @@ ggsave(
 ```
 
 ### Effectiveness of bagging as pollinator exclusion method
-Pollen detection is consistently lower in `bagged_flower`s compared to `unbagged_flower`s across farms and management types. While this pattern suggests an effect of pollinator exclusion, formal inference requires accounting for the non-independence of flowers sampled from the same tree.
+
+Pollen detection is consistently lower in `bagged_flower`s compared to
+`unbagged_flower`s across farms and management types. While this pattern
+suggests an effect of pollinator exclusion, formal inference requires
+accounting for the non-independence of flowers sampled from the same
+tree.
+
 ```{r proportion_of_pollinated_flowers_by_flower_treatment_clsm, echo=FALSE}
 # ---- Proportion of pollinated flowers by treatment (all flowers with available microscopy data) ----
 microscopy_df |>
@@ -937,8 +1027,7 @@ microscopy_df |>
                 ) +
         microscopy_status_theme
 
-ggsave(
-  filename = "results/proportion_of_flowers_by_flower_treatment_all_flowers.png",
+ggsave(filename = here::here("results", "figures", "proportion_of_flowers_by_flower_treatment_all_flowers.png"),
   plot = last_plot(),
   width = 7,
   height = 4,
@@ -946,7 +1035,8 @@ ggsave(
 )
 ```
 
-These stack barplot includes data only from trees with at least one bagged and unbagged flower with available microscopy data.
+These stack barplot includes data only from trees with at least one
+bagged and unbagged flower with available microscopy data.
 
 ```{r proportion_of_pollinated_flowers_by_flower_treatment_clsm_strict, eval=FALSE}
 # ---- Proportion of pollinated flowers (CLSM) by treatment (only trees with at least one bagged and unbagged flower) ----
@@ -990,7 +1080,15 @@ microscopy_paired_df |>
 
 ```
 
-Pollination frequency differed significantly between flower treatments. After accounting for non-independence of flowers sampled from the same tree using a binomial generalized linear mixed model, unbagged flowers showed a substantially higher probability of pollen detection compared to bagged flowers (odds ratio в‰€ 4.1, p < 0.001). Inclusion of farm identity as an additional random effect did not improve model fit, as between-farm variance was negligible after accounting for tree-level variation. Therefore, subsequent analyses retained tree identity as the sole random effect.
+Pollination frequency differed significantly between flower treatments.
+After accounting for non-independence of flowers sampled from the same
+tree using a binomial generalized linear mixed model, unbagged flowers
+showed a substantially higher probability of pollen detection compared
+to bagged flowers (odds ratio в‰€ 4.1, p \< 0.001). Inclusion of farm
+identity as an additional random effect did not improve model fit, as
+between-farm variance was negligible after accounting for tree-level
+variation. Therefore, subsequent analyses retained tree identity as the
+sole random effect.
 
 ```{r binomial_glmm_pollination_flower_treatment, echo=FALSE}
 
@@ -1008,20 +1106,28 @@ glmm_pollination_flower_treatment <- glmer(
 summary(glmm_pollination_flower_treatment)
 ```
 
-
 ```{r}
 library(performance)
 
 performance::r2_nakagawa(glmm_pollination_flower_treatment)
 ```
 
-
 ### Pollination intensity
 
-Residual pollination in control group (**`bagged_flower`**) might be caused by insects able to get through the bag or insects preexisting in flower buds prior to bagging. Bagged flowers show predominantly low pollination intensity with rare high-intensity events. Only one sample in control group had seed saturating pollination intensity (\> 110 pollen grains/stigma) (M. Falque et al., 1995). To facilitate downstream microbiome analyses, pollination intensity was treated as an ordinal proxy for pollinator visitation, distinguishing marginal pollen presence from moderate and saturating pollen loads
+Residual pollination in control group (**`bagged_flower`**) might be
+caused by insects able to get through the bag or insects preexisting in
+flower buds prior to bagging. Bagged flowers show predominantly low
+pollination intensity with rare high-intensity events. Only one sample
+in control group had seed saturating pollination intensity (\> 110
+pollen grains/stigma) (M. Falque et al., 1995). To facilitate downstream
+microbiome analyses, pollination intensity was treated as an ordinal
+proxy for pollinator visitation, distinguishing marginal pollen presence
+from moderate and saturating pollen loads
 
+Pollination intensity distribution is zero-inflated (many non-pollinated
+flowers) and highly skewed (long tail with rare successful pollination
+events).
 
-Pollination intensity distribution is zero-inflated (many non-pollinated flowers) and highly skewed (long tail with rare successful pollination events).
 ```{r distribution_of_pi_clsm_by_flower_treatment, echo=FALSE}
 microscopy_df |>
         filter(!is.na(pi_clsm)) |>
@@ -1043,8 +1149,7 @@ microscopy_df |>
         ) +
         microscopy_status_theme
 
-ggsave(
-  filename = "results/distribution_of_pi_clsm_by_flower_treatment.png",
+ggsave(filename = here::here("results", "figures", "distribution_of_pi_clsm_by_flower_treatment.png"),
   plot = last_plot(),
   width = 7,
   height = 4,
@@ -1053,8 +1158,6 @@ ggsave(
 ```
 
 ### Pollen performance (pollen germination and callose plug index)
-
-###
 
 ```{r proportion_of_flowers_with_germinated_pollen_by_flower_treatment, echo=FALSE}
 # ---- Proportion of flowers with germinated pollen by flower treatment (all flowers with available microscopy data) ----
@@ -1096,8 +1199,7 @@ microscopy_df |>
                 ) +
         microscopy_status_theme
 
-ggsave(
-  filename = "results/proportion_of_flowers_with_germinated_pollen_by_flower_treatment.png",
+ggsave(filename = here::here("results", "figures", "proportion_of_flowers_with_germinated_pollen_by_flower_treatment.png"),
   plot = last_plot(),
   width = 7,
   height = 4,
@@ -1107,7 +1209,9 @@ ggsave(
 
 ### Proportion of flowers with germinated pollen across farms
 
-Flowers with callose plug signal were treated as having germinated pollen grains. The following visualization represents percentage of such flowers across farms ordered by management type.  
+Flowers with callose plug signal were treated as having germinated
+pollen grains. The following visualization represents percentage of such
+flowers across farms ordered by management type.
 
 ```{r pollen_germination_by_farm_unbagged_flowers, echo=FALSE}
 # ---- Flowers with germinated pollen by farm and management type (only unbagged flowers) ----
@@ -1177,8 +1281,7 @@ microscopy_df |>
                 strip.background = element_blank(),
                 axis.text.x = element_text(margin = margin(t = 5))
                 )
-ggsave(
-  filename = "results/proportion_of_flowers_with_germinated_pollen_across_farms_unbagged_only.png",
+ggsave(filename = here::here("results", "figures", "proportion_of_flowers_with_germinated_pollen_across_farms_unbagged_only.png"),
   plot = last_plot(),
   width = 7,
   height = 4,
@@ -1187,7 +1290,8 @@ ggsave(
 
 ```
 
-The same stacked barplot based on both treatment groups is distorted by the `bagged_flower`s with low pollination.
+The same stacked barplot based on both treatment groups is distorted by
+the `bagged_flower`s with low pollination.
 
 ```{r germination_by_farm_both_flower_treatments, echo=FALSE}
 # ---- Germination by farm and management type (both bagged and unbagged flowers) ----
@@ -1257,8 +1361,7 @@ microscopy_df |>
                 axis.text.x = element_text(margin = margin(t = 5))
                 )
 
-ggsave(
-  filename = "pollen_germination_proportion_across_farms_bagged_and_unbagged_flowers.png",
+ggsave(filename = here::here("results", "figures", "pollen_germination_proportion_across_farms_bagged_and_unbagged_flowers.png"),
   plot = last_plot(),
   width = 7,
   height = 4,
@@ -1269,7 +1372,9 @@ ggsave(
 
 # 
 
-Scatter plot between pollination intensity and callose plug index. Flowers with high callose plug index and low pollination intensity might indicate on dislodged pollen clumps during microscopy workflow.
+Scatter plot between pollination intensity and callose plug index.
+Flowers with high callose plug index and low pollination intensity might
+indicate on dislodged pollen clumps during microscopy workflow.
 
 ```{r scatterplot_pi_clsm_vs_callose_plug_index, echo=FALSE}
 microscopy_df |>
@@ -1305,6 +1410,7 @@ microscopy_df |>
 ```
 
 ### Developing tires for pollination and pollen performance phenotypes
+
 ```{r}
 microscopy_df |>
   filter(
@@ -1341,9 +1447,17 @@ microscopy_df |>
 ```
 
 ## Phenotyping stigma fungal colonization
-To evaluate whether flower availability to visiting insects influences fungal colonization of cocoa stigmas, fungal hyphae presence was first summarized by flower treatment. Bagging represents a physical barrier limiting contact with insect vectors, and therefore provides a natural contrast for assessing environmentally mediated fungal exposure.
 
-Fungal colonization was scored as a binary trait based on CLSM observations, indicating the presence or absence of hyphae on the stigma surface. Proportions were calculated within each `flower_treatment` to visualize relative frequencies of fungal colonization.
+To evaluate whether flower availability to visiting insects influences
+fungal colonization of cocoa stigmas, fungal hyphae presence was first
+summarized by flower treatment. Bagging represents a physical barrier
+limiting contact with insect vectors, and therefore provides a natural
+contrast for assessing environmentally mediated fungal exposure.
+
+Fungal colonization was scored as a binary trait based on CLSM
+observations, indicating the presence or absence of hyphae on the stigma
+surface. Proportions were calculated within each `flower_treatment` to
+visualize relative frequencies of fungal colonization.
 
 ```{r fungal_colonization_by_flower_treatment, echo=FALSE, warning=FALSE, message=FALSE}
 # ---- Fungal colonization by flower treatment (CLSM, dAB-only subset implicitly via NA filtering) ----
@@ -1388,8 +1502,7 @@ microscopy_df |>
                 legend.position = "bottom"
                 )
 
-ggsave(
-  filename = "results/fungal_stigma_colonization_by_flower_treatment.png",
+ggsave(filename = here::here("results", "figures", "fungal_stigma_colonization_by_flower_treatment.png"),
   plot = last_plot(),
   width = 7,
   height = 4,
@@ -1397,8 +1510,11 @@ ggsave(
 )
 ```
 
-To formally test whether flower treatment is associated with fungal colonization while accounting for non-independence among flowers sampled from the same tree, a generalized linear mixed-effects model (GLMM) with a binomial error distribution was fitted. Tree identity was included as a random intercept to control for repeated sampling within trees.
-
+To formally test whether flower treatment is associated with fungal
+colonization while accounting for non-independence among flowers sampled
+from the same tree, a generalized linear mixed-effects model (GLMM) with
+a binomial error distribution was fitted. Tree identity was included as
+a random intercept to control for repeated sampling within trees.
 
 ```{r glmm_hyphae_by_flower_treatment, echo=FALSE}
 # ---- GLMM for fungal hyphae presence by flower treatment ----
@@ -1412,9 +1528,16 @@ glmm_hyphae_flower_treatment <- lme4::glmer(
 
 summary(glmm_hyphae_flower_treatment)
 ```
-To explore whether fungal hyphae presence exhibits additional structure across farms and management types, hyphae colonization occurrence was further summarized by `farm_id`. These visualizations are intended to provide descriptive insight into how fungal colonization varies across farms and management types.The limited sampling and limited number of farms per management category makes formal inference impossible.
 
-NB! The sampling size for some farms (i.e. `ib`) is smaller compared to pollination analysis because only dAB stained samples were analysed.
+To explore whether fungal hyphae presence exhibits additional structure
+across farms and management types, hyphae colonization occurrence was
+further summarized by `farm_id`. These visualizations are intended to
+provide descriptive insight into how fungal colonization varies across
+farms and management types.The limited sampling and limited number of
+farms per management category makes formal inference impossible.
+
+NB! The sampling size for some farms (i.e. `ib`) is smaller compared to
+pollination analysis because only dAB stained samples were analysed.
 
 ```{r hyphae_presence_by_farm_both_flower_treatments, echo=FALSE, warning=FALSE, message=FALSE}
 # ---- Fungal colonization by farm and management type (both bagged and unbagged flowers) ----
@@ -1484,15 +1607,20 @@ microscopy_df |>
                 axis.text.x       = element_text(margin = margin(t = 5))
                 )
 
-ggsave(
-  filename = "results/fungal_stigma_colonization_across_farm_all_treatments.png",
+ggsave(filename = here::here("results", "figures", "fungal_stigma_colonization_across_farm_all_treatments.png"),
   plot = last_plot(),
   width = 7,
   height = 4,
   dpi = 300
 )
 ```
-Because `bagged_flower` class has much lower fraction of flowers with fungal hyphae on stigma, patterns of fungal colonization were additionally visualized within `unbagged_flower` class only. This subset allows a more direct comparison among farms and management types under natural conditions, while avoiding satistical conclusions due to insufficient sampling effort.
+
+Because `bagged_flower` class has much lower fraction of flowers with
+fungal hyphae on stigma, patterns of fungal colonization were
+additionally visualized within `unbagged_flower` class only. This subset
+allows a more direct comparison among farms and management types under
+natural conditions, while avoiding satistical conclusions due to
+insufficient sampling effort.
 
 ```{r hyphae_presence_by_farm_only_open_flower_treatment, echo=FALSE, warning=FALSE, message=FALSE}
 # ---- Fungal colonization by farm and management type (unbagged flowers only) ----
@@ -1565,8 +1693,7 @@ microscopy_df |>
                 axis.text.x       = element_text(margin = margin(t = 5))
                 )
 
-ggsave(
-  filename = "results/fungal_stigma_colonization_across_farms_unbagged_only.png",
+ggsave(filename = here::here("results", "figures", "fungal_stigma_colonization_across_farms_unbagged_only.png"),
   plot = last_plot(),
   width = 7,
   height = 4,
@@ -1574,9 +1701,17 @@ ggsave(
 )
 ```
 
-Given that both pollen deposition and fungal colonization depend on exposure to the external environment and insect vectors, fungal presence was further examined in relation to pollination status to assess whether these two processes are directly associated or merely co-structured by `flower_treatment`.
+Given that both pollen deposition and fungal colonization depend on
+exposure to the external environment and insect vectors, fungal presence
+was further examined in relation to pollination status to assess whether
+these two processes are directly associated or merely co-structured by
+`flower_treatment`.
 
-Fungal hyphae presence was next summarized by pollination status as detected by CLSM. Fungal hyphae were slightly more frequently detected on pollinated stigmas. This visualization illustrates the apparent co-occurrence of pollen and fungal structures on stigmas, but does not account for experimental or hierarchical structure.
+Fungal hyphae presence was next summarized by pollination status as
+detected by CLSM. Fungal hyphae were slightly more frequently detected
+on pollinated stigmas. This visualization illustrates the apparent
+co-occurrence of pollen and fungal structures on stigmas, but does not
+account for experimental or hierarchical structure.
 
 ```{r hyphae_by_pollination_status_stacked, echo=FALSE, warning=FALSE, message=FALSE}
 
@@ -1639,15 +1774,18 @@ microscopy_df |>
                 legend.position = "bottom"
                 )
 
-ggsave(
-  filename = "results/fungal_stigma_colonization_by_pollination.png",
+ggsave(filename = here::here("results", "figures", "fungal_stigma_colonization_by_pollination.png"),
   plot = last_plot(),
   width = 7,
   height = 4,
   dpi = 300
 )
 ```
-To test whether fungal colonization is associated with pollination status while accounting for repeated sampling within trees, a GLMM was fitted with pollination status as the sole fixed effect and tree identity as a random intercept.
+
+To test whether fungal colonization is associated with pollination
+status while accounting for repeated sampling within trees, a GLMM was
+fitted with pollination status as the sole fixed effect and tree
+identity as a random intercept.
 
 ```{r}
 # H0: Fungal hyphae presence is independent of pollination status.
@@ -1666,7 +1804,12 @@ glmm_hyphae_pollination <- glmer(
 summary(glmm_hyphae_pollination)
 ```
 
-Because pollination status and flower treatment are not independent unbagged flowers are more likely to receive pollenвЂ”a second model was fitted including both pollination status and flower treatment as fixed effects. This model allows disentangling the direct association between fungal colonization and pollen presence from their shared dependence on flower openness.
+Because pollination status and flower treatment are not independent
+unbagged flowers are more likely to receive pollenвЂ”a second model was
+fitted including both pollination status and flower treatment as fixed
+effects. This model allows disentangling the direct association between
+fungal colonization and pollen presence from their shared dependence on
+flower openness.
 
 ```{r}
 glmm_hyphae_pollination_flower_treatment <- glmer(
@@ -1684,7 +1827,12 @@ summary(glmm_hyphae_pollination_flower_treatment)
 
 ```
 
-Together, these models indicate that the fungal hyphae presence and pollination status is largely explained by flower treatment. Once `flower_treatment` is accounted for, pollination status itself does not independently predict fungal colonization. This suggests that both pollen deposition and fungal colonization are primarily structured by access to the external environment rather than being associated.
+Together, these models indicate that the fungal hyphae presence and
+pollination status is largely explained by flower treatment. Once
+`flower_treatment` is accounted for, pollination status itself does not
+independently predict fungal colonization. This suggests that both
+pollen deposition and fungal colonization are primarily structured by
+access to the external environment rather than being associated.
 
 ```{r}
 glmm_hyphae_pollination_flower_treatment_open <- glmer(
@@ -1702,4 +1850,3 @@ glmm_hyphae_pollination_flower_treatment_open <- glmer(
 summary(glmm_hyphae_pollination_flower_treatment_open)
 
 ```
-
