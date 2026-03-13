@@ -75,7 +75,7 @@ metadata <- read_xlsx(
                 )
         )
 
-# Build phyloseq metadata table (sample_data-class) based on dataframe tiblle 
+# Build phyloseq metadata table (sample_data-class) based on dataframe tibblle 
 sample_metadata_16S <- sample_data(metadata)
 
 # 2) ASV feature table with counts (QIIME2 DADA2 output)
@@ -224,6 +224,10 @@ phyloseq_16S_bacteria_biosamples <- subset_samples(
         )
 )
 
+################################################################################
+############### Saving resulting phyloseq objects (RDS & BIOM) #################
+################################################################################
+
 dir.create(here("results", "rds"), showWarnings = FALSE, recursive = TRUE)
 
 saveRDS(
@@ -234,7 +238,7 @@ saveRDS(
 
 system("wmic computersystem get totalphysicalmemory", intern = TRUE)
 
-# ---- Export cleaned tables as BIOM for gamma_diversity_metrics project ----
+# Export cleaned tables as BIOM for gamma_diversity_metrics project ----
 
 .taxon_string <- function(tax_matrix) {
         apply(tax_matrix, 1, function(row) {
