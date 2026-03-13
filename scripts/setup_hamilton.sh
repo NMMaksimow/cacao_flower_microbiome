@@ -4,15 +4,20 @@
 # Run this ONCE after first login to configure R personal library
 # and install required packages.
 #
-# Usage (from project root):
+# Usage (from project root — run directly, NOT via sbatch):
 #   bash scripts/setup_hamilton.sh
 ################################################################################
+
+if [[ -n "$SLURM_JOB_ID" ]]; then
+    echo "ERROR: run this script directly with 'bash', not via sbatch"
+    exit 1
+fi
 
 echo "=== Hamilton HPC: one-time R setup ==="
 echo "Date: $(date)"
 
 # ---- 1. Load R module ----
-module load r/4.4.3
+module load r/4.5.2
 
 # ---- 2. Create personal R library ----
 mkdir -p ~/R/library

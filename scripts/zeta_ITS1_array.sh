@@ -24,7 +24,7 @@ echo "Host:  $(hostname)"
 echo "JobID: ${SLURM_JOB_ID}, TaskID: ${SLURM_ARRAY_TASK_ID}"
 
 # Load R module
-module load r/4.4.3
+module load r/4.5.2
 
 # Create tmp output directory if it doesn't exist
 mkdir -p results/rds/zeta_tmp
