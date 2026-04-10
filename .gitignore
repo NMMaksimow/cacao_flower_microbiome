@@ -24,12 +24,19 @@ sra_upload/
 *.tar
 *.tar.gz
 
+# Wemheuer dataset (PRJNA594470)
+# metadata.tsv and runinfo.csv are tracked; raw FASTQ and logs are not
+data_wemheuer/*.fastq.gz
+qiime2_wemheuer/logs/
+
 # QIIME2 artifacts and exports
 *.qza
 *.qzv
 *.biom
 qiime2/export/
 qiime2/taxonomy/
+qiime2_wemheuer/export/
+qiime2_wemheuer/taxonomy/
 
 # Large databases
 qiime2/databases/
