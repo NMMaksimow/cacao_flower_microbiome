@@ -17,7 +17,7 @@ primer_16s_rev: "GACTACHVGGGTATCTAATCC"
 
 # ITS2: ITS3_KYO2 / ITS4  (nested PCR 2nd round — only these are in reads)
 # ITS1-F_KYO2 from round 1 is NOT present in sequencing reads
-primer_its2_fwd: "GATGAAGAACGYAGYRAА"    # ITS3_KYO2 (after Nextera adapter)
+primer_its2_fwd: "GATGAAGAACGYAGYRAA"    # ITS3_KYO2 — all ASCII Latin characters
 primer_its2_rev: "TCCTCCGCTTATTGATATGC"  # ITS4
 
 # ── Trimmed output directories (mirroring CFM qiime2/import/primer_trimmed/) ──
