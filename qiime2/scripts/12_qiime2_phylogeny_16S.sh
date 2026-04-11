@@ -4,7 +4,7 @@
 #SBATCH --mem=32G
 #SBATCH -c 16
 #SBATCH -n 1
-#SBATCH -t 02:00:00
+#SBATCH -t 04:00:00
 #SBATCH --output=logs/12_qiime2_phylogeny_16S.out
 #SBATCH --error=logs/12_qiime2_phylogeny_16S.err
 #SBATCH --mail-type=FAIL
@@ -14,7 +14,7 @@
 # Input:  qiime2/denoise/CFM_16S_dada2_repseqs.qza
 # Output: qiime2/phylogeny/CFM_16S_rooted_tree.qza  (+ intermediates)
 #
-# Note: ITS1 data is intentionally excluded — ITS is too variable for reliable
+# Note: ITS1 data is intentionally excluded — ITS1 marker is too variable for reliable
 # phylogenetics and UniFrac / Faith's PD are not meaningful for fungi.
 
 echo "Starting 16S phylogenetic tree construction"
