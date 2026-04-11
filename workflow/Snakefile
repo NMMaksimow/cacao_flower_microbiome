@@ -1,172 +1,536 @@
+# =============================================================================
+# Cacao Flower Microbiome — QIIME2 amplicon pipeline
+# =============================================================================
+# Starts from primer-trimmed, demultiplexed FASTQs described by a manifest.
+# Steps: import → DADA2 → NB taxonomy → phylogeny (16S only) → export
+#
+# Usage (dry-run first):
+#   snakemake -n --snakefile workflow/Snakefile
+#
+# Submit to SLURM (from project root on cluster):
+#   snakemake --snakefile workflow/Snakefile \
+#     --executor cluster-generic \
+#     --cluster-generic-submit-cmd \
+#       "sbatch -p {resources.partition} \
+#               --mem={resources.mem_mb}M \
+#               -c {resources.cpus} \
+#               -t {resources.runtime} \
+#               --gres=tmp:{resources.tmp_gb}G \
+#               -o {log[0]}.slurm.out \
+#               -e {log[0]}.slurm.err \
+#               --mail-type=FAIL" \
+#     --jobs 6 --latency-wait 60
+#
+# For older Snakemake (<8) replace --executor cluster-generic with:
+#   --cluster "sbatch -p {resources.partition} ..."
+# =============================================================================
+
 configfile: "workflow/config.yaml"
 
-import os
+# ── Resolve config values ─────────────────────────────────────────────────────
+DATASET       = config["dataset"]
+MANIFEST_16S  = config["manifest_16s"]
+MANIFEST_ITS1 = config.get("manifest_its1", "")
+DB_DIR        = config["db_dir"]
+DENOISE_DIR   = config["denoise_dir"]
+TAXONOMY_DIR  = config["taxonomy_dir"]
+PHYLO_DIR     = config["phylo_dir"]
+EXPORT_DIR    = config["export_dir"]
 
+SILVA_CLASSIFIER = config["silva_classifier"]
+UNITE_CLASSIFIER = config.get("unite_classifier", "")
 
-RAW_TAR = config.get("raw_tar", "data/raw_data/X204SC25042477-Z01-F001.tar")
-EXTRACT_DONE = config.get("extract_done", "data/raw_data/.extracted.done")
+DO_ITS1 = bool(MANIFEST_ITS1 and UNITE_CLASSIFIER)
 
+# ── Primer trimming (optional) ────────────────────────────────────────────────
+# Only active when raw_fastq_dir + primers are defined in config (e.g. Wemheuer).
+# For CFM these keys are absent → trim rules are never triggered.
+RAW_FASTQ_DIR  = config.get("raw_fastq_dir", "")
+TRIMMED_DIR    = config.get("trimmed_dir", "")
+PRIMER_16S_FWD = config.get("primer_16s_fwd", "")
+PRIMER_16S_REV = config.get("primer_16s_rev", "")
+PRIMER_ITS_FWD = config.get("primer_its1_fwd", "")
+PRIMER_ITS_REV = config.get("primer_its1_rev", "")
+DO_TRIM        = bool(RAW_FASTQ_DIR and TRIMMED_DIR and PRIMER_16S_FWD)
+
+# Collect SRR sample IDs from raw fastq dir (when trimming is needed)
+if DO_TRIM:
+    import glob, re, csv
+    _all_r1 = glob.glob(f"{RAW_FASTQ_DIR}/SRR*_1.fastq.gz")
+    ALL_SRRS = sorted(re.sub(r"_1\.fastq\.gz$", "", os.path.basename(f)) for f in _all_r1)
+    # Split by amplicon using runinfo.csv LibraryName prefix
+    _srr2lib = {}
+    _runinfo = os.path.join(RAW_FASTQ_DIR, "runinfo.csv")
+    if os.path.exists(_runinfo):
+        with open(_runinfo) as _fh:
+            for _row in csv.DictReader(_fh):
+                _srr2lib[_row["Run"].strip()] = _row["LibraryName"].strip()
+    BAC_SRRS = [s for s in ALL_SRRS if _srr2lib.get(s, "").startswith("Bac")]
+    FUN_SRRS = [s for s in ALL_SRRS if _srr2lib.get(s, "").startswith("Fun")]
+
+# ── Target outputs ─────────────────────────────────────────────────────────────
+def all_targets():
+    targets = [
+        f"{EXPORT_DIR}/{DATASET}_16S_dada2_table/feature-table.biom",
+        f"{EXPORT_DIR}/{DATASET}_16S_dada2_repseqs/dna-sequences.fasta",
+        f"{EXPORT_DIR}/{DATASET}_16S_taxonomy/taxonomy.tsv",
+        f"{EXPORT_DIR}/{DATASET}_16S_rooted_tree/tree.nwk",
+    ]
+    if DO_ITS1:
+        targets += [
+            f"{EXPORT_DIR}/{DATASET}_ITS1_dada2_table/feature-table.biom",
+            f"{EXPORT_DIR}/{DATASET}_ITS1_dada2_repseqs/dna-sequences.fasta",
+            f"{EXPORT_DIR}/{DATASET}_ITS1_taxonomy/taxonomy.tsv",
+        ]
+    if DO_TRIM:
+        targets += [f"{TRIMMED_DIR}/.done_16s", f"{TRIMMED_DIR}/.done_its1"]
+    return targets
 
 rule all:
-    input:
-        # Final exports used by downstream R scripts
-        "qiime2/export/CFM_16S_dada2_table/feature-table.biom",
-        "qiime2/export/CFM_16S_dada2_repseqs/dna-sequences.fasta",
-        "qiime2/export/CFM_16S_taxonomy_diverse_weighted/taxonomy.tsv",
-        "qiime2/export/CFM_ITS1_dada2_table/feature-table.biom",
-        "qiime2/export/CFM_ITS1_dada2_repseqs/dna-sequences.fasta",
-        "qiime2/export/CFM_ITS1_taxonomy/taxonomy.tsv",
+    input: all_targets()
 
 
-rule extract_raw_tar:
+# =============================================================================
+# 0. PRIMER TRIMMING  (only for datasets with raw SRA reads, e.g. Wemheuer)
+# =============================================================================
+
+rule trim_primers_16s:
+    """Cutadapt: remove Nextera adapters + 16S primers from all Bac_* samples."""
     input:
-        RAW_TAR
+        expand(f"{RAW_FASTQ_DIR}/{{srr}}_1.fastq.gz", srr=BAC_SRRS) if DO_TRIM else [],
     output:
-        touch(EXTRACT_DONE)
+        touch(f"{TRIMMED_DIR}/.done_16s"),
     log:
-        "logs/snakemake_extract_raw.log"
+        f"logs/snakemake_{DATASET}_trim_primers_16s.log",
+    resources:
+        partition = "shared",
+        mem_mb    = 8_000,
+        cpus      = 8,
+        runtime   = "04:00:00",
+        tmp_gb    = 20,
     shell:
         r"""
         set -euo pipefail
-        mkdir -p data/raw_data
-        tar -xf {input} -C data/raw_data > {log} 2>&1
+        module load cutadapt || true   # adjust module name for your cluster
+
+        mkdir -p {TRIMMED_DIR}
+
+        for srr in {BAC_SRRS}; do
+            r1={RAW_FASTQ_DIR}/${{srr}}_1.fastq.gz
+            r2={RAW_FASTQ_DIR}/${{srr}}_2.fastq.gz
+            o1={TRIMMED_DIR}/${{srr}}_1.trimmed.fastq.gz
+            o2={TRIMMED_DIR}/${{srr}}_2.trimmed.fastq.gz
+
+            cutadapt \
+                -g {PRIMER_16S_FWD} \
+                -G {PRIMER_16S_REV} \
+                --discard-untrimmed \
+                --minimum-length 50 \
+                --maximum-length 600 \
+                -j {resources.cpus} \
+                -o $o1 -p $o2 \
+                $r1 $r2 \
+                >> {log} 2>&1
+
+            echo "Done: $srr" >> {log}
+        done
         """
 
 
-rule qiime2_preprocess_fastq:
-    """
-    Lane merge -> adapter trim -> mapping files -> Stacks demultiplex -> primer trim.
-    Produces primer-trimmed per-sample FASTQs used by the QIIME2 manifest import step.
-    """
+rule trim_primers_its1:
+    """Cutadapt: remove Nextera adapters + ITS3_KYO2/ITS4 primers from all Fun_* samples."""
     input:
-        EXTRACT_DONE,
-        "qiime2/import/demux/stacks_sample_mapping_all_sublibraries.txt",
+        expand(f"{RAW_FASTQ_DIR}/{{srr}}_1.fastq.gz", srr=FUN_SRRS) if DO_TRIM else [],
     output:
-        touch("qiime2/import/primer_trimmed/.done")
+        touch(f"{TRIMMED_DIR}/.done_its1"),
     log:
-        "logs/snakemake_qiime2_preprocess_fastq.log"
+        f"logs/snakemake_{DATASET}_trim_primers_its1.log",
+    resources:
+        partition = "shared",
+        mem_mb    = 8_000,
+        cpus      = 8,
+        runtime   = "04:00:00",
+        tmp_gb    = 20,
     shell:
         r"""
         set -euo pipefail
-        bash qiime2/scripts/01_lane_merging_PE.sh >> {log} 2>&1
-        bash qiime2/scripts/02_adapter_trimming_cutadapt.sh >> {log} 2>&1
-        python3 qiime2/scripts/03_creating_separate_stacks_mapping_files.py >> {log} 2>&1
-        bash qiime2/scripts/04_demultiplex_sublib_to_samples_stacks.sh >> {log} 2>&1
-        bash qiime2/scripts/05_primer_trimming_cutadapt.sh >> {log} 2>&1
+        module load cutadapt || true
+
+        mkdir -p {TRIMMED_DIR}
+
+        for srr in {FUN_SRRS}; do
+            r1={RAW_FASTQ_DIR}/${{srr}}_1.fastq.gz
+            r2={RAW_FASTQ_DIR}/${{srr}}_2.fastq.gz
+            o1={TRIMMED_DIR}/${{srr}}_1.trimmed.fastq.gz
+            o2={TRIMMED_DIR}/${{srr}}_2.trimmed.fastq.gz
+
+            cutadapt \
+                -g {PRIMER_ITS_FWD} \
+                -G {PRIMER_ITS_REV} \
+                --discard-untrimmed \
+                --minimum-length 50 \
+                --maximum-length 600 \
+                -j {resources.cpus} \
+                -o $o1 -p $o2 \
+                $r1 $r2 \
+                >> {log} 2>&1
+
+            echo "Done: $srr" >> {log}
+        done
         """
 
 
-rule qiime2_import_and_denoise:
-    """
-    Imports primer-trimmed reads to QIIME2 and runs DADA2.
+# =============================================================================
+# 1. QIIME2 IMPORT
+# =============================================================================
 
-    If you applied the cmt53/cmtPC correction historically, keep `apply_16s_manifest_correction: true`
-    to reproduce the final 16S table used for export.
-    """
+rule import_16s:
+    """Import primer-trimmed 16S paired-end FASTQs from manifest."""
     input:
-        "qiime2/import/primer_trimmed/.done"
+        manifest = MANIFEST_16S,
     output:
-        # Imports
-        "qiime2/denoise/CFM_16S_PE_import.qza",
-        "qiime2/denoise/CFM_ITS1_PE_import.qza",
-        # DADA2
-        "qiime2/denoise/CFM_16S_dada2_table.qza",
-        "qiime2/denoise/CFM_16S_dada2_repseqs.qza",
-        "qiime2/denoise/CFM_ITS1_dada2_table.qza",
-        "qiime2/denoise/CFM_ITS1_dada2_repseqs.qza",
+        qza = f"{DENOISE_DIR}/{DATASET}_16S_PE_import.qza",
+        qzv = f"{DENOISE_DIR}/{DATASET}_16S_PE_import_QC.qzv",
     log:
-        "logs/snakemake_qiime2_import_and_denoise.log"
-    params:
-        apply_16s_manifest_correction=lambda wc: bool(config.get("apply_16s_manifest_correction", True)),
+        f"logs/snakemake_{DATASET}_import_16s.log",
+    resources:
+        partition = "shared",
+        mem_mb    = 16_000,   # 16 G — import is IO-bound, not memory-bound
+        cpus      = 4,
+        runtime   = "02:00:00",
+        tmp_gb    = 20,
     shell:
         r"""
         set -euo pipefail
-        bash qiime2/scripts/06a_qiime2_import.sh >> {log} 2>&1
-        bash qiime2/scripts/07a_qiime2_dada2_denoising.sh >> {log} 2>&1
+        module load bioinformatics qiime2/2024.10amplicon
 
-        if [[ "{params.apply_16s_manifest_correction}" == "True" ]]; then
-          bash qiime2/scripts/06b_qiime2_import_16S_corrected_manifest.sh >> {log} 2>&1
-          bash qiime2/scripts/07b_qiime2_dada2_denoising_16S_corrected.sh >> {log} 2>&1
-        fi
+        mkdir -p {DENOISE_DIR}
+
+        qiime tools import \
+            --type 'SampleData[PairedEndSequencesWithQuality]' \
+            --input-path {input.manifest} \
+            --output-path {output.qza} \
+            --input-format PairedEndFastqManifestPhred33V2 \
+            >> {log} 2>&1
+
+        qiime demux summarize \
+            --i-data {output.qza} \
+            --o-visualization {output.qzv} \
+            >> {log} 2>&1
         """
 
 
-rule qiime2_taxonomy_and_filtering:
-    """
-    Taxonomy assignment and filtering steps used in QIIME2.
-
-    Notes:
-    - `08d` is retained for SILVA classifier comparison; it can fail for some classifiers and still
-      complete for others (see historical logs).
-    - Database artifacts (.qza classifiers) are NOT stored in this repo; provide them under `qiime2/databases/`.
-    """
+rule import_its1:
+    """Import primer-trimmed ITS1 paired-end FASTQs from manifest."""
     input:
-        "qiime2/denoise/CFM_16S_dada2_repseqs.qza",
-        "qiime2/denoise/CFM_ITS1_dada2_repseqs.qza",
-        "qiime2/denoise/CFM_16S_dada2_table.qza",
-        "qiime2/denoise/CFM_ITS1_dada2_table.qza",
-        "data/cfm_qiime2_metadata.txt",
+        manifest = MANIFEST_ITS1,
     output:
-        # Core taxonomies used downstream
-        "qiime2/taxonomy/CFM_ITS1_taxonomy.qza",
-        "qiime2/taxonomy/CFM_16S_taxonomy.qza",
-        # Export expects this name for 16S
-        "qiime2/taxonomy/CFM_16S_taxonomy_diverse-weighted.qza",
-        # Filtered tables (used by rarefaction/filter diagnostics)
-        "qiime2/filtered/CFM_16S_filtered_chloro_mito_singl_lowprev3.qza",
-        "qiime2/filtered/CFM_ITS1_filtered_fungi_only_singl_lowprev3.qza",
+        qza = f"{DENOISE_DIR}/{DATASET}_ITS1_PE_import.qza",
+        qzv = f"{DENOISE_DIR}/{DATASET}_ITS1_PE_import_QC.qzv",
     log:
-        "logs/snakemake_qiime2_taxonomy_and_filtering.log"
+        f"logs/snakemake_{DATASET}_import_its1.log",
+    resources:
+        partition = "shared",
+        mem_mb    = 16_000,
+        cpus      = 4,
+        runtime   = "02:00:00",
+        tmp_gb    = 20,
     shell:
         r"""
         set -euo pipefail
-        bash qiime2/scripts/08b_qiime2_taxonomy_classification.sh >> {log} 2>&1
-        bash qiime2/scripts/08d_qiime2_taxonomy_classification_silva_comparison.sh >> {log} 2>&1
-        bash qiime2/scripts/09_qiime2_filter_datasets.sh >> {log} 2>&1
-        bash qiime2/scripts/09a_qiime2_barplots_for_filtered_data.sh >> {log} 2>&1
+        module load bioinformatics qiime2/2024.10amplicon
+
+        mkdir -p {DENOISE_DIR}
+
+        qiime tools import \
+            --type 'SampleData[PairedEndSequencesWithQuality]' \
+            --input-path {input.manifest} \
+            --output-path {output.qza} \
+            --input-format PairedEndFastqManifestPhred33V2 \
+            >> {log} 2>&1
+
+        qiime demux summarize \
+            --i-data {output.qza} \
+            --o-visualization {output.qzv} \
+            >> {log} 2>&1
         """
 
 
-rule qiime2_alpha_rarefaction:
+# =============================================================================
+# 2. DADA2 DENOISING  (16S and ITS1 run independently)
+# =============================================================================
+# Timing from CFM logs:
+#   16S:  08:33 → 11:42  (~3h 09m, 64G, 16 CPUs)
+#   ITS1: 11:45 → 13:15  (~1h 30m, 64G, 16 CPUs)
+# Requesting 12h to give headroom for larger/more complex datasets.
+
+rule dada2_16s:
+    """DADA2 paired-end denoising for 16S."""
     input:
-        "qiime2/filtered/CFM_16S_filtered_chloro_mito_singl_lowprev3.qza",
-        "qiime2/filtered/CFM_ITS1_filtered_fungi_only_singl_lowprev3.qza",
-        "qiime2/denoise/CFM_16S_dada2_table.qza",
-        "qiime2/denoise/CFM_ITS1_dada2_table.qza",
-        "data/cfm_qiime2_metadata.txt",
+        f"{DENOISE_DIR}/{DATASET}_16S_PE_import.qza",
     output:
-        "qiime2/rarefaction/CFM_16S_unfiltered_alpha_rarefaction.qzv",
-        "qiime2/rarefaction/CFM_ITS1_unfiltered_alpha_rarefaction.qzv",
-        "qiime2/rarefaction/CFM_16S_filtered_chloro_mito_singl_lowprev3_alpha_rarefaction.qzv",
-        "qiime2/rarefaction/CFM_ITS1_filtered_fungi_only_singl_lowprev3_alpha_rarefaction.qzv",
+        table   = f"{DENOISE_DIR}/{DATASET}_16S_dada2_table.qza",
+        repseqs = f"{DENOISE_DIR}/{DATASET}_16S_dada2_repseqs.qza",
+        stats   = f"{DENOISE_DIR}/{DATASET}_16S_dada2_stats.qza",
     log:
-        "logs/snakemake_qiime2_alpha_rarefaction.log"
+        f"logs/snakemake_{DATASET}_dada2_16s.log",
+    resources:
+        partition = "shared",
+        mem_mb    = 65_536,   # 64 G
+        cpus      = 16,
+        runtime   = "12:00:00",
+        tmp_gb    = 50,
     shell:
         r"""
         set -euo pipefail
-        bash qiime2/scripts/10_qiime2_alpha_rarefaction.sh >> {log} 2>&1
+        module load bioinformatics qiime2/2024.10amplicon
+
+        qiime dada2 denoise-paired \
+            --i-demultiplexed-seqs {input} \
+            --p-trunc-len-f 0 \
+            --p-trunc-len-r 0 \
+            --p-trim-left-f 0 \
+            --p-trim-left-r 0 \
+            --p-max-ee-f 2.0 \
+            --p-max-ee-r 2.0 \
+            --p-min-overlap 12 \
+            --p-chimera-method consensus \
+            --p-n-threads {resources.cpus} \
+            --o-table {output.table} \
+            --o-representative-sequences {output.repseqs} \
+            --o-denoising-stats {output.stats} \
+            --verbose \
+            >> {log} 2>&1
         """
 
 
-rule qiime2_export:
+rule dada2_its1:
+    """DADA2 paired-end denoising for ITS1."""
     input:
-        "qiime2/denoise/CFM_16S_dada2_table.qza",
-        "qiime2/denoise/CFM_16S_dada2_repseqs.qza",
-        "qiime2/denoise/CFM_ITS1_dada2_table.qza",
-        "qiime2/denoise/CFM_ITS1_dada2_repseqs.qza",
-        "qiime2/taxonomy/CFM_16S_taxonomy_diverse-weighted.qza",
-        "qiime2/taxonomy/CFM_ITS1_taxonomy.qza",
+        f"{DENOISE_DIR}/{DATASET}_ITS1_PE_import.qza",
     output:
-        "qiime2/export/CFM_16S_dada2_table/feature-table.biom",
-        "qiime2/export/CFM_16S_dada2_repseqs/dna-sequences.fasta",
-        "qiime2/export/CFM_16S_taxonomy_diverse_weighted/taxonomy.tsv",
-        "qiime2/export/CFM_ITS1_dada2_table/feature-table.biom",
-        "qiime2/export/CFM_ITS1_dada2_repseqs/dna-sequences.fasta",
-        "qiime2/export/CFM_ITS1_taxonomy/taxonomy.tsv",
+        table   = f"{DENOISE_DIR}/{DATASET}_ITS1_dada2_table.qza",
+        repseqs = f"{DENOISE_DIR}/{DATASET}_ITS1_dada2_repseqs.qza",
+        stats   = f"{DENOISE_DIR}/{DATASET}_ITS1_dada2_stats.qza",
     log:
-        "logs/snakemake_qiime2_export.log"
+        f"logs/snakemake_{DATASET}_dada2_its1.log",
+    resources:
+        partition = "shared",
+        mem_mb    = 65_536,   # 64 G
+        cpus      = 16,
+        runtime   = "06:00:00",  # ITS1 historically ~1.5h; 6h is safe
+        tmp_gb    = 50,
     shell:
         r"""
         set -euo pipefail
-        bash qiime2/scripts/11_qiime2_export.sh >> {log} 2>&1
+        module load bioinformatics qiime2/2024.10amplicon
+
+        qiime dada2 denoise-paired \
+            --i-demultiplexed-seqs {input} \
+            --p-trunc-len-f 0 \
+            --p-trunc-len-r 0 \
+            --p-trim-left-f 0 \
+            --p-trim-left-r 0 \
+            --p-max-ee-f 2.0 \
+            --p-max-ee-r 2.0 \
+            --p-min-overlap 12 \
+            --p-chimera-method consensus \
+            --p-n-threads {resources.cpus} \
+            --o-table {output.table} \
+            --o-representative-sequences {output.repseqs} \
+            --o-denoising-stats {output.stats} \
+            --verbose \
+            >> {log} 2>&1
+        """
+
+
+# =============================================================================
+# 3. TAXONOMIC CLASSIFICATION  (bigmem — NB classifier is RAM-intensive)
+# =============================================================================
+# Timing from CFM logs (bigmem, 500G, 16 CPUs):
+#   16S:  20:50 → 21:41  (~51 min)   — SILVA 138 diverse-weighted
+#   ITS1: 21:43 → 23:52  (~2h 09m)  — UNITE v10 dynamic (545 MB classifier)
+# Worker memory warnings appeared in .err — 500G was sufficient but tight.
+
+rule taxonomy_16s:
+    """Naive Bayes classification for 16S (SILVA 138 diverse-weighted)."""
+    input:
+        repseqs    = f"{DENOISE_DIR}/{DATASET}_16S_dada2_repseqs.qza",
+        classifier = SILVA_CLASSIFIER,
+    output:
+        taxonomy = f"{TAXONOMY_DIR}/{DATASET}_16S_taxonomy.qza",
+    log:
+        f"logs/snakemake_{DATASET}_taxonomy_16s.log",
+    resources:
+        partition = "bigmem",
+        mem_mb    = 512_000,  # 500 G — SILVA NB classifier peaks here
+        cpus      = 16,
+        runtime   = "04:00:00",
+        tmp_gb    = 100,
+    shell:
+        r"""
+        set -euo pipefail
+        module load bioinformatics qiime2/2024.10amplicon
+
+        mkdir -p {TAXONOMY_DIR}
+
+        qiime feature-classifier classify-sklearn \
+            --i-classifier {input.classifier} \
+            --i-reads {input.repseqs} \
+            --p-n-jobs {resources.cpus} \
+            --o-classification {output.taxonomy} \
+            --verbose \
+            >> {log} 2>&1
+        """
+
+
+rule taxonomy_its1:
+    """Naive Bayes classification for ITS1 (UNITE v10 dynamic)."""
+    input:
+        repseqs    = f"{DENOISE_DIR}/{DATASET}_ITS1_dada2_repseqs.qza",
+        classifier = UNITE_CLASSIFIER,
+    output:
+        taxonomy = f"{TAXONOMY_DIR}/{DATASET}_ITS1_taxonomy.qza",
+    log:
+        f"logs/snakemake_{DATASET}_taxonomy_its1.log",
+    resources:
+        partition = "bigmem",
+        mem_mb    = 512_000,  # 500 G — UNITE classifier also large
+        cpus      = 16,
+        runtime   = "06:00:00",  # ITS1 historically ~2h 09m; 6h is safe
+        tmp_gb    = 100,
+    shell:
+        r"""
+        set -euo pipefail
+        module load bioinformatics qiime2/2024.10amplicon
+
+        mkdir -p {TAXONOMY_DIR}
+
+        qiime feature-classifier classify-sklearn \
+            --i-classifier {input.classifier} \
+            --i-reads {input.repseqs} \
+            --p-n-jobs {resources.cpus} \
+            --o-classification {output.taxonomy} \
+            --verbose \
+            >> {log} 2>&1
+        """
+
+
+# =============================================================================
+# 4. PHYLOGENETIC TREE  (16S only — ITS1 too variable for phylogenetics)
+# =============================================================================
+# Timing: ~2-4h for 25k ASVs (16 CPUs, 32G)
+
+rule phylogeny_16s:
+    """MAFFT alignment + FastTree rooted tree for 16S ASVs."""
+    input:
+        f"{DENOISE_DIR}/{DATASET}_16S_dada2_repseqs.qza",
+    output:
+        alignment        = f"{PHYLO_DIR}/{DATASET}_16S_aligned_repseqs.qza",
+        masked_alignment = f"{PHYLO_DIR}/{DATASET}_16S_masked_aligned_repseqs.qza",
+        unrooted_tree    = f"{PHYLO_DIR}/{DATASET}_16S_unrooted_tree.qza",
+        rooted_tree      = f"{PHYLO_DIR}/{DATASET}_16S_rooted_tree.qza",
+        exported_tree    = f"{EXPORT_DIR}/{DATASET}_16S_rooted_tree/tree.nwk",
+    log:
+        f"logs/snakemake_{DATASET}_phylogeny_16s.log",
+    resources:
+        partition = "shared",
+        mem_mb    = 32_768,   # 32 G
+        cpus      = 16,
+        runtime   = "04:00:00",
+        tmp_gb    = 20,
+    shell:
+        r"""
+        set -euo pipefail
+        module load bioinformatics qiime2/2024.10amplicon
+
+        mkdir -p {PHYLO_DIR}
+        mkdir -p {EXPORT_DIR}/{DATASET}_16S_rooted_tree
+
+        qiime phylogeny align-to-tree-mafft-fasttree \
+            --i-sequences {input} \
+            --o-alignment {output.alignment} \
+            --o-masked-alignment {output.masked_alignment} \
+            --o-tree {output.unrooted_tree} \
+            --o-rooted-tree {output.rooted_tree} \
+            --p-n-threads {resources.cpus} \
+            --verbose \
+            >> {log} 2>&1
+
+        qiime tools export \
+            --input-path {output.rooted_tree} \
+            --output-path {EXPORT_DIR}/{DATASET}_16S_rooted_tree \
+            >> {log} 2>&1
+        """
+
+
+# =============================================================================
+# 5. EXPORT  (BIOM + FASTA + taxonomy TSV → consumed by R scripts)
+# =============================================================================
+
+rule export_16s:
+    """Export 16S feature table, repseqs, and taxonomy to plain formats."""
+    input:
+        table    = f"{DENOISE_DIR}/{DATASET}_16S_dada2_table.qza",
+        repseqs  = f"{DENOISE_DIR}/{DATASET}_16S_dada2_repseqs.qza",
+        taxonomy = f"{TAXONOMY_DIR}/{DATASET}_16S_taxonomy.qza",
+    output:
+        biom     = f"{EXPORT_DIR}/{DATASET}_16S_dada2_table/feature-table.biom",
+        fasta    = f"{EXPORT_DIR}/{DATASET}_16S_dada2_repseqs/dna-sequences.fasta",
+        tax_tsv  = f"{EXPORT_DIR}/{DATASET}_16S_taxonomy/taxonomy.tsv",
+    log:
+        f"logs/snakemake_{DATASET}_export_16s.log",
+    resources:
+        partition = "shared",
+        mem_mb    = 8_000,
+        cpus      = 2,
+        runtime   = "01:00:00",
+        tmp_gb    = 10,
+    shell:
+        r"""
+        set -euo pipefail
+        module load bioinformatics qiime2/2024.10amplicon
+
+        qiime tools export --input-path {input.table} \
+            --output-path {EXPORT_DIR}/{DATASET}_16S_dada2_table >> {log} 2>&1
+
+        qiime tools export --input-path {input.repseqs} \
+            --output-path {EXPORT_DIR}/{DATASET}_16S_dada2_repseqs >> {log} 2>&1
+
+        qiime tools export --input-path {input.taxonomy} \
+            --output-path {EXPORT_DIR}/{DATASET}_16S_taxonomy >> {log} 2>&1
+        """
+
+
+rule export_its1:
+    """Export ITS1 feature table, repseqs, and taxonomy to plain formats."""
+    input:
+        table    = f"{DENOISE_DIR}/{DATASET}_ITS1_dada2_table.qza",
+        repseqs  = f"{DENOISE_DIR}/{DATASET}_ITS1_dada2_repseqs.qza",
+        taxonomy = f"{TAXONOMY_DIR}/{DATASET}_ITS1_taxonomy.qza",
+    output:
+        biom     = f"{EXPORT_DIR}/{DATASET}_ITS1_dada2_table/feature-table.biom",
+        fasta    = f"{EXPORT_DIR}/{DATASET}_ITS1_dada2_repseqs/dna-sequences.fasta",
+        tax_tsv  = f"{EXPORT_DIR}/{DATASET}_ITS1_taxonomy/taxonomy.tsv",
+    log:
+        f"logs/snakemake_{DATASET}_export_its1.log",
+    resources:
+        partition = "shared",
+        mem_mb    = 8_000,
+        cpus      = 2,
+        runtime   = "01:00:00",
+        tmp_gb    = 10,
+    shell:
+        r"""
+        set -euo pipefail
+        module load bioinformatics qiime2/2024.10amplicon
+
+        qiime tools export --input-path {input.table} \
+            --output-path {EXPORT_DIR}/{DATASET}_ITS1_dada2_table >> {log} 2>&1
+
+        qiime tools export --input-path {input.repseqs} \
+            --output-path {EXPORT_DIR}/{DATASET}_ITS1_dada2_repseqs >> {log} 2>&1
+
+        qiime tools export --input-path {input.taxonomy} \
+            --output-path {EXPORT_DIR}/{DATASET}_ITS1_taxonomy >> {log} 2>&1
         """
