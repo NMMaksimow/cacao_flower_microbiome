@@ -13,7 +13,7 @@ raw_fastq_dir: "data_wemheuer/raw_data"
 # ── Primers ───────────────────────────────────────────────────────────────────
 # 16S V3-V4: S-D-Bact-0341-b-S-17 / S-D-Bact-0785-a-A-21
 primer_16s_fwd: "CCTACGGGNGGCWGCAG"
-primer_16s_rev: "GACTACHVGGGTNTCTAATCC"
+primer_16s_rev: "GACTACHVGGGTATCTAATCC"
 
 # ITS2: ITS3_KYO2 / ITS4  (nested PCR 2nd round — only these are in reads)
 # ITS1-F_KYO2 from round 1 is NOT present in sequencing reads
