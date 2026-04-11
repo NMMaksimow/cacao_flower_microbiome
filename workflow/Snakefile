@@ -7,22 +7,27 @@
 # Usage (dry-run first):
 #   snakemake -n --snakefile workflow/Snakefile
 #
-# Submit to SLURM (from project root on cluster):
+# Submit to SLURM — Snakemake 7 (--cluster):
 #   snakemake --snakefile workflow/Snakefile \
-#     --executor cluster-generic \
-#     --cluster-generic-submit-cmd \
-#       "sbatch -p {resources.partition} \
-#               --mem={resources.mem_mb}M \
-#               -c {resources.cpus} \
-#               -t {resources.runtime} \
-#               --gres=tmp:{resources.tmp_gb}G \
-#               -o {log[0]}.slurm.out \
-#               -e {log[0]}.slurm.err \
-#               --mail-type=FAIL" \
+#     --configfile workflow/config.yaml \
+#     --cluster "sbatch -p {resources.partition} \
+#                       --mem={resources.mem_mb}M \
+#                       -c {resources.cpus} \
+#                       -t {resources.runtime} \
+#                       --gres=tmp:{resources.tmp_gb}G \
+#                       -o logs/{rule}.slurm.out \
+#                       -e logs/{rule}.slurm.err \
+#                       --mail-type=FAIL" \
 #     --jobs 6 --latency-wait 60
 #
-# For older Snakemake (<8) replace --executor cluster-generic with:
-#   --cluster "sbatch -p {resources.partition} ..."
+# Snakemake 8+ uses --executor cluster-generic --cluster-generic-submit-cmd instead.
+#
+# To run only trimming (before manifests exist):
+#   snakemake --snakefile workflow/Snakefile \
+#     --configfile workflow/config_wemheuer.yaml \
+#     "qiime2_wemheuer/import/primer_trimmed/16S/.done" \
+#     "qiime2_wemheuer/import/primer_trimmed/ITS2/.done" \
+#     --cluster "sbatch ..." --jobs 2 --latency-wait 60
 # =============================================================================
 
 configfile: "workflow/config.yaml"
