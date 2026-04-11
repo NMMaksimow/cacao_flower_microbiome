@@ -307,6 +307,8 @@ rule dada2_16s:
         r"""
         set -euo pipefail
         module load bioinformatics qiime2/2024.10amplicon
+        # unset R library paths that may conflict with qiime2's bundled dada2
+        unset R_LIBS R_LIBS_USER R_LIBS_SITE
 
         qiime dada2 denoise-paired \
             --i-demultiplexed-seqs {input} \
@@ -347,6 +349,8 @@ rule dada2_its1:
         r"""
         set -euo pipefail
         module load bioinformatics qiime2/2024.10amplicon
+        # unset R library paths that may conflict with qiime2's bundled dada2
+        unset R_LIBS R_LIBS_USER R_LIBS_SITE
 
         qiime dada2 denoise-paired \
             --i-demultiplexed-seqs {input} \
