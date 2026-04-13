@@ -9,7 +9,7 @@
 #
 # Submit to SLURM — Snakemake 7 (--cluster):
 #   snakemake --snakefile workflow/Snakefile \
-#     --configfile workflow/config.yaml \
+#     --configfile workflow/config_CFM.yaml \   # or config_wemheuer.yaml / config_schmidt.yaml
 #     --cluster "sbatch -p {resources.partition} \
 #                       --mem={resources.mem_mb}M \
 #                       -c {resources.cpus} \
@@ -30,7 +30,9 @@
 #     --cluster "sbatch ..." --jobs 2 --latency-wait 60
 # =============================================================================
 
-configfile: "workflow/config.yaml"
+# Default config — overridden by --configfile on the command line.
+# Always pass --configfile explicitly when reanalysing other datasets.
+configfile: "workflow/config_CFM.yaml"
 
 # ── Resolve config values ─────────────────────────────────────────────────────
 DATASET       = config["dataset"]
@@ -51,7 +53,27 @@ UNITE_CLASSIFIER = config.get("unite_classifier", "")
 # (e.g. Wemheuer 2020: ITS3_KYO2 / ITS4 primers).
 ITS_LABEL = config.get("its_label", "ITS1")
 
+# ── DADA2 truncation parameters (dataset-specific) ────────────────────────────
+# Defaults: 0 = no truncation (fine for CFM 2×250bp V4 high-quality reads).
+# For 2×300bp datasets set in config (16S and ITS may differ — check QC .qzv).
+DADA2_TRUNC_F     = config.get("dada2_trunc_len_f", 0)
+DADA2_TRUNC_R     = config.get("dada2_trunc_len_r", 0)
+DADA2_MAX_EE_F    = config.get("dada2_max_ee_f", 2.0)
+DADA2_MAX_EE_R    = config.get("dada2_max_ee_r", 2.0)
+# ITS-specific overrides (fall back to 16S values if not set)
+DADA2_TRUNC_F_ITS = config.get("dada2_trunc_len_f_its", DADA2_TRUNC_F)
+DADA2_TRUNC_R_ITS = config.get("dada2_trunc_len_r_its", DADA2_TRUNC_R)
+DADA2_MAX_EE_F_ITS = config.get("dada2_max_ee_f_its", DADA2_MAX_EE_F)
+DADA2_MAX_EE_R_ITS = config.get("dada2_max_ee_r_its", DADA2_MAX_EE_R)
+
 DO_ITS1 = bool(MANIFEST_ITS1 and UNITE_CLASSIFIER)
+
+# ── ITS OTU clustering (post-DADA2 vsearch de-novo) ──────────────────────────
+# ITS amplicons have intragenomic polymorphism → one organism → multiple ASVs.
+# 97% OTU clustering collapses this noise and gives a more reliable phylogeny
+# for downstream PhILR analysis. Outputs exported alongside DADA2 ASV files.
+ITS_OTU_PERC  = config.get("its_otu_perc_identity", 0.97)
+ITS_OTU_LABEL = f"otu{int(ITS_OTU_PERC * 100)}"   # e.g. "otu97"
 
 # ── Primer trimming (optional) ────────────────────────────────────────────────
 # Only active when raw_fastq_dir + primers are defined in config (e.g. Wemheuer).
@@ -85,6 +107,11 @@ if DO_TRIM:
 # ── Target outputs ─────────────────────────────────────────────────────────────
 def all_targets():
     targets = [
+        # DADA2 visualisations — 16S
+        f"{DENOISE_DIR}/{DATASET}_16S_dada2_stats_summary.qzv",
+        f"{DENOISE_DIR}/{DATASET}_16S_dada2_table_summary.qzv",
+        f"{DENOISE_DIR}/{DATASET}_16S_dada2_repseqs_summary.qzv",
+        # downstream
         f"{EXPORT_DIR}/{DATASET}_16S_dada2_table/feature-table.biom",
         f"{EXPORT_DIR}/{DATASET}_16S_dada2_repseqs/dna-sequences.fasta",
         f"{EXPORT_DIR}/{DATASET}_16S_taxonomy/taxonomy.tsv",
@@ -92,9 +119,18 @@ def all_targets():
     ]
     if DO_ITS1:
         targets += [
+            # DADA2 visualisations — ITS
+            f"{DENOISE_DIR}/{DATASET}_{ITS_LABEL}_dada2_stats_summary.qzv",
+            f"{DENOISE_DIR}/{DATASET}_{ITS_LABEL}_dada2_table_summary.qzv",
+            f"{DENOISE_DIR}/{DATASET}_{ITS_LABEL}_dada2_repseqs_summary.qzv",
+            # downstream — ASV level
             f"{EXPORT_DIR}/{DATASET}_{ITS_LABEL}_dada2_table/feature-table.biom",
             f"{EXPORT_DIR}/{DATASET}_{ITS_LABEL}_dada2_repseqs/dna-sequences.fasta",
             f"{EXPORT_DIR}/{DATASET}_{ITS_LABEL}_taxonomy/taxonomy.tsv",
+            # downstream — OTU level (vsearch de-novo clustering)
+            f"{EXPORT_DIR}/{DATASET}_{ITS_LABEL}_{ITS_OTU_LABEL}_table/feature-table.biom",
+            f"{EXPORT_DIR}/{DATASET}_{ITS_LABEL}_{ITS_OTU_LABEL}_repseqs/dna-sequences.fasta",
+            f"{EXPORT_DIR}/{DATASET}_{ITS_LABEL}_{ITS_OTU_LABEL}_taxonomy/taxonomy.tsv",
         ]
     if DO_TRIM:
         targets += [
@@ -226,6 +262,7 @@ rule import_16s:
         r"""
         set -euo pipefail
         module load bioinformatics qiime2/2024.10amplicon
+        export TMPDIR=/nobackup/jcnx71/tmp
 
         mkdir -p {DENOISE_DIR}
 
@@ -262,6 +299,7 @@ rule import_its1:
         r"""
         set -euo pipefail
         module load bioinformatics qiime2/2024.10amplicon
+        export TMPDIR=/nobackup/jcnx71/tmp
 
         mkdir -p {DENOISE_DIR}
 
@@ -307,15 +345,16 @@ rule dada2_16s:
         r"""
         set -euo pipefail
         module load bioinformatics qiime2/2024.10amplicon
+        export TMPDIR=/nobackup/jcnx71/tmp
 
         qiime dada2 denoise-paired \
             --i-demultiplexed-seqs {input} \
-            --p-trunc-len-f 0 \
-            --p-trunc-len-r 0 \
+            --p-trunc-len-f {DADA2_TRUNC_F} \
+            --p-trunc-len-r {DADA2_TRUNC_R} \
             --p-trim-left-f 0 \
             --p-trim-left-r 0 \
-            --p-max-ee-f 2.0 \
-            --p-max-ee-r 2.0 \
+            --p-max-ee-f {DADA2_MAX_EE_F} \
+            --p-max-ee-r {DADA2_MAX_EE_R} \
             --p-min-overlap 12 \
             --p-chimera-method consensus \
             --p-n-threads {resources.cpus} \
@@ -347,15 +386,16 @@ rule dada2_its1:
         r"""
         set -euo pipefail
         module load bioinformatics qiime2/2024.10amplicon
+        export TMPDIR=/nobackup/jcnx71/tmp
 
         qiime dada2 denoise-paired \
             --i-demultiplexed-seqs {input} \
-            --p-trunc-len-f 0 \
-            --p-trunc-len-r 0 \
+            --p-trunc-len-f {DADA2_TRUNC_F_ITS} \
+            --p-trunc-len-r {DADA2_TRUNC_R_ITS} \
             --p-trim-left-f 0 \
             --p-trim-left-r 0 \
-            --p-max-ee-f 2.0 \
-            --p-max-ee-r 2.0 \
+            --p-max-ee-f {DADA2_MAX_EE_F_ITS} \
+            --p-max-ee-r {DADA2_MAX_EE_R_ITS} \
             --p-min-overlap 12 \
             --p-chimera-method consensus \
             --p-n-threads {resources.cpus} \
@@ -363,6 +403,90 @@ rule dada2_its1:
             --o-representative-sequences {output.repseqs} \
             --o-denoising-stats {output.stats} \
             --verbose \
+            >> {log} 2>&1
+        """
+
+
+# =============================================================================
+# 2b. DADA2 VISUALISATIONS  (run in parallel with taxonomy — lightweight)
+# =============================================================================
+
+rule visualize_dada2_16s:
+    """Summarise DADA2 stats, feature table, and rep-seqs for 16S."""
+    input:
+        stats   = f"{DENOISE_DIR}/{DATASET}_16S_dada2_stats.qza",
+        table   = f"{DENOISE_DIR}/{DATASET}_16S_dada2_table.qza",
+        repseqs = f"{DENOISE_DIR}/{DATASET}_16S_dada2_repseqs.qza",
+    output:
+        stats_qzv   = f"{DENOISE_DIR}/{DATASET}_16S_dada2_stats_summary.qzv",
+        table_qzv   = f"{DENOISE_DIR}/{DATASET}_16S_dada2_table_summary.qzv",
+        repseqs_qzv = f"{DENOISE_DIR}/{DATASET}_16S_dada2_repseqs_summary.qzv",
+    log:
+        f"logs/snakemake_{DATASET}_visualize_dada2_16s.log",
+    resources:
+        partition = "shared",
+        mem_mb    = 4_000,
+        cpus      = 2,
+        runtime   = "00:30:00",
+        tmp_gb    = 5,
+    shell:
+        r"""
+        set -euo pipefail
+        module load bioinformatics qiime2/2024.10amplicon
+
+        qiime metadata tabulate \
+            --m-input-file {input.stats} \
+            --o-visualization {output.stats_qzv} \
+            >> {log} 2>&1
+
+        qiime feature-table summarize \
+            --i-table {input.table} \
+            --o-visualization {output.table_qzv} \
+            >> {log} 2>&1
+
+        qiime feature-table tabulate-seqs \
+            --i-data {input.repseqs} \
+            --o-visualization {output.repseqs_qzv} \
+            >> {log} 2>&1
+        """
+
+
+rule visualize_dada2_its1:
+    """Summarise DADA2 stats, feature table, and rep-seqs for ITS1/ITS2."""
+    input:
+        stats   = f"{DENOISE_DIR}/{DATASET}_{ITS_LABEL}_dada2_stats.qza",
+        table   = f"{DENOISE_DIR}/{DATASET}_{ITS_LABEL}_dada2_table.qza",
+        repseqs = f"{DENOISE_DIR}/{DATASET}_{ITS_LABEL}_dada2_repseqs.qza",
+    output:
+        stats_qzv   = f"{DENOISE_DIR}/{DATASET}_{ITS_LABEL}_dada2_stats_summary.qzv",
+        table_qzv   = f"{DENOISE_DIR}/{DATASET}_{ITS_LABEL}_dada2_table_summary.qzv",
+        repseqs_qzv = f"{DENOISE_DIR}/{DATASET}_{ITS_LABEL}_dada2_repseqs_summary.qzv",
+    log:
+        f"logs/snakemake_{DATASET}_visualize_dada2_its1.log",
+    resources:
+        partition = "shared",
+        mem_mb    = 4_000,
+        cpus      = 2,
+        runtime   = "00:30:00",
+        tmp_gb    = 5,
+    shell:
+        r"""
+        set -euo pipefail
+        module load bioinformatics qiime2/2024.10amplicon
+
+        qiime metadata tabulate \
+            --m-input-file {input.stats} \
+            --o-visualization {output.stats_qzv} \
+            >> {log} 2>&1
+
+        qiime feature-table summarize \
+            --i-table {input.table} \
+            --o-visualization {output.table_qzv} \
+            >> {log} 2>&1
+
+        qiime feature-table tabulate-seqs \
+            --i-data {input.repseqs} \
+            --o-visualization {output.repseqs_qzv} \
             >> {log} 2>&1
         """
 
@@ -376,12 +500,16 @@ rule dada2_its1:
 # Worker memory warnings appeared in .err — 500G was sufficient but tight.
 
 rule taxonomy_16s:
-    """Naive Bayes classification for 16S (SILVA 138 diverse-weighted)."""
+    """Naive Bayes classification for 16S (SILVA 138 diverse-weighted).
+    Taxonomy TSV is exported immediately after classification so it is
+    available for R scripts without waiting for the full export_16s rule.
+    """
     input:
         repseqs    = f"{DENOISE_DIR}/{DATASET}_16S_dada2_repseqs.qza",
         classifier = SILVA_CLASSIFIER,
     output:
         taxonomy = f"{TAXONOMY_DIR}/{DATASET}_16S_taxonomy.qza",
+        tax_tsv  = f"{EXPORT_DIR}/{DATASET}_16S_taxonomy/taxonomy.tsv",
     log:
         f"logs/snakemake_{DATASET}_taxonomy_16s.log",
     resources:
@@ -394,8 +522,9 @@ rule taxonomy_16s:
         r"""
         set -euo pipefail
         module load bioinformatics qiime2/2024.10amplicon
+        export TMPDIR=/nobackup/jcnx71/tmp
 
-        mkdir -p {TAXONOMY_DIR}
+        mkdir -p {TAXONOMY_DIR} {EXPORT_DIR}/{DATASET}_16S_taxonomy
 
         qiime feature-classifier classify-sklearn \
             --i-classifier {input.classifier} \
@@ -404,37 +533,56 @@ rule taxonomy_16s:
             --o-classification {output.taxonomy} \
             --verbose \
             >> {log} 2>&1
+
+        qiime tools export \
+            --input-path {output.taxonomy} \
+            --output-path {EXPORT_DIR}/{DATASET}_16S_taxonomy \
+            >> {log} 2>&1
         """
 
 
 rule taxonomy_its1:
-    """Naive Bayes classification for ITS1/ITS2 (UNITE v10 dynamic)."""
+    """Naive Bayes classification for ITS1/ITS2 (UNITE v10 dynamic).
+
+    NOTE: --p-n-jobs 1 — UNITE classifier is 545MB; each sklearn worker loads
+    its own copy into memory. With n-jobs=16, workers get OOM-killed and joblib
+    logs "A worker stopped while some jobs were given to the executor" (seen in
+    Wemheuer and Schmidt runs). Single-threaded is slower (~3-4h) but reliable.
+    120GB is sufficient for 1 worker; avoids monopolising a 500GB bigmem node.
+    Taxonomy TSV is exported immediately after classification.
+    """
     input:
         repseqs    = f"{DENOISE_DIR}/{DATASET}_{ITS_LABEL}_dada2_repseqs.qza",
         classifier = UNITE_CLASSIFIER,
     output:
         taxonomy = f"{TAXONOMY_DIR}/{DATASET}_{ITS_LABEL}_taxonomy.qza",
+        tax_tsv  = f"{EXPORT_DIR}/{DATASET}_{ITS_LABEL}_taxonomy/taxonomy.tsv",
     log:
         f"logs/snakemake_{DATASET}_taxonomy_its1.log",
     resources:
         partition = "bigmem",
-        mem_mb    = 512_000,  # 500 G — UNITE classifier also large
-        cpus      = 16,
-        runtime   = "06:00:00",  # ITS1 historically ~2h 09m; 6h is safe
-        tmp_gb    = 100,
+        mem_mb    = 120_000,
+        cpus      = 1,
+        runtime   = "06:00:00",
     shell:
         r"""
         set -euo pipefail
         module load bioinformatics qiime2/2024.10amplicon
+        export TMPDIR=/nobackup/jcnx71/tmp
 
-        mkdir -p {TAXONOMY_DIR}
+        mkdir -p {TAXONOMY_DIR} {EXPORT_DIR}/{DATASET}_{ITS_LABEL}_taxonomy
 
         qiime feature-classifier classify-sklearn \
             --i-classifier {input.classifier} \
             --i-reads {input.repseqs} \
-            --p-n-jobs {resources.cpus} \
+            --p-n-jobs 1 \
             --o-classification {output.taxonomy} \
             --verbose \
+            >> {log} 2>&1
+
+        qiime tools export \
+            --input-path {output.taxonomy} \
+            --output-path {EXPORT_DIR}/{DATASET}_{ITS_LABEL}_taxonomy \
             >> {log} 2>&1
         """
 
@@ -466,6 +614,7 @@ rule phylogeny_16s:
         r"""
         set -euo pipefail
         module load bioinformatics qiime2/2024.10amplicon
+        export TMPDIR=/nobackup/jcnx71/tmp
 
         mkdir -p {PHYLO_DIR}
         mkdir -p {EXPORT_DIR}/{DATASET}_16S_rooted_tree
@@ -492,15 +641,18 @@ rule phylogeny_16s:
 # =============================================================================
 
 rule export_16s:
-    """Export 16S feature table, repseqs, and taxonomy to plain formats."""
+    """Export 16S feature table and repseqs to plain formats.
+    Taxonomy TSV is already produced by taxonomy_16s — listed here as input
+    only to express the dependency and keep all export outputs together.
+    """
     input:
         table    = f"{DENOISE_DIR}/{DATASET}_16S_dada2_table.qza",
         repseqs  = f"{DENOISE_DIR}/{DATASET}_16S_dada2_repseqs.qza",
         taxonomy = f"{TAXONOMY_DIR}/{DATASET}_16S_taxonomy.qza",
+        tax_tsv  = f"{EXPORT_DIR}/{DATASET}_16S_taxonomy/taxonomy.tsv",
     output:
         biom     = f"{EXPORT_DIR}/{DATASET}_16S_dada2_table/feature-table.biom",
         fasta    = f"{EXPORT_DIR}/{DATASET}_16S_dada2_repseqs/dna-sequences.fasta",
-        tax_tsv  = f"{EXPORT_DIR}/{DATASET}_16S_taxonomy/taxonomy.tsv",
     log:
         f"logs/snakemake_{DATASET}_export_16s.log",
     resources:
@@ -513,28 +665,29 @@ rule export_16s:
         r"""
         set -euo pipefail
         module load bioinformatics qiime2/2024.10amplicon
+        export TMPDIR=/nobackup/jcnx71/tmp
 
         qiime tools export --input-path {input.table} \
             --output-path {EXPORT_DIR}/{DATASET}_16S_dada2_table >> {log} 2>&1
 
         qiime tools export --input-path {input.repseqs} \
             --output-path {EXPORT_DIR}/{DATASET}_16S_dada2_repseqs >> {log} 2>&1
-
-        qiime tools export --input-path {input.taxonomy} \
-            --output-path {EXPORT_DIR}/{DATASET}_16S_taxonomy >> {log} 2>&1
         """
 
 
 rule export_its1:
-    """Export ITS1/ITS2 feature table, repseqs, and taxonomy to plain formats."""
+    """Export ITS1/ITS2 feature table and repseqs to plain formats.
+    Taxonomy TSV is already produced by taxonomy_its1 — listed here as input
+    only to express the dependency and keep all export outputs together.
+    """
     input:
         table    = f"{DENOISE_DIR}/{DATASET}_{ITS_LABEL}_dada2_table.qza",
         repseqs  = f"{DENOISE_DIR}/{DATASET}_{ITS_LABEL}_dada2_repseqs.qza",
         taxonomy = f"{TAXONOMY_DIR}/{DATASET}_{ITS_LABEL}_taxonomy.qza",
+        tax_tsv  = f"{EXPORT_DIR}/{DATASET}_{ITS_LABEL}_taxonomy/taxonomy.tsv",
     output:
         biom     = f"{EXPORT_DIR}/{DATASET}_{ITS_LABEL}_dada2_table/feature-table.biom",
         fasta    = f"{EXPORT_DIR}/{DATASET}_{ITS_LABEL}_dada2_repseqs/dna-sequences.fasta",
-        tax_tsv  = f"{EXPORT_DIR}/{DATASET}_{ITS_LABEL}_taxonomy/taxonomy.tsv",
     log:
         f"logs/snakemake_{DATASET}_export_its1.log",
     resources:
@@ -547,13 +700,147 @@ rule export_its1:
         r"""
         set -euo pipefail
         module load bioinformatics qiime2/2024.10amplicon
+        export TMPDIR=/nobackup/jcnx71/tmp
 
         qiime tools export --input-path {input.table} \
             --output-path {EXPORT_DIR}/{DATASET}_{ITS_LABEL}_dada2_table >> {log} 2>&1
 
         qiime tools export --input-path {input.repseqs} \
             --output-path {EXPORT_DIR}/{DATASET}_{ITS_LABEL}_dada2_repseqs >> {log} 2>&1
+        """
 
-        qiime tools export --input-path {input.taxonomy} \
-            --output-path {EXPORT_DIR}/{DATASET}_{ITS_LABEL}_taxonomy >> {log} 2>&1
+
+# =============================================================================
+# 6. ITS OTU CLUSTERING  (vsearch de-novo, post-DADA2)
+# =============================================================================
+# ITS amplicons have intragenomic length polymorphism → one fungal strain can
+# produce 2-5 distinct ASVs. De-novo OTU clustering at 97% collapses this
+# noise. Outputs are used for:
+#   - PhILR analysis (09b_ITS1_philr.R): smaller, more reliable tree
+#   - OTU-level diversity comparisons across datasets
+#
+# Rule graph: dada2_its1 → cluster_its1_otus → taxonomy_its1_otu → export_its1_otu
+
+
+rule cluster_its1_otus:
+    """vsearch de-novo OTU clustering of ITS1/ITS2 DADA2 ASVs."""
+    input:
+        table   = f"{DENOISE_DIR}/{DATASET}_{ITS_LABEL}_dada2_table.qza",
+        repseqs = f"{DENOISE_DIR}/{DATASET}_{ITS_LABEL}_dada2_repseqs.qza",
+    output:
+        table   = f"{DENOISE_DIR}/{DATASET}_{ITS_LABEL}_{ITS_OTU_LABEL}_table.qza",
+        repseqs = f"{DENOISE_DIR}/{DATASET}_{ITS_LABEL}_{ITS_OTU_LABEL}_repseqs.qza",
+    log:
+        f"logs/snakemake_{DATASET}_cluster_its1_{ITS_OTU_LABEL}.log",
+    resources:
+        partition = "shared",
+        mem_mb    = 16_000,
+        cpus      = 8,
+        runtime   = "02:00:00",
+    shell:
+        r"""
+        set -euo pipefail
+        module load bioinformatics qiime2/2024.10amplicon
+        export TMPDIR=/nobackup/jcnx71/tmp
+
+        echo "vsearch OTU clustering at {ITS_OTU_PERC} identity"
+        echo "Input ASV table:   {input.table}"
+        echo "Input ASV repseqs: {input.repseqs}"
+        echo "Date: $(date)"
+
+        qiime vsearch cluster-features-de-novo \
+            --i-table   {input.table} \
+            --i-sequences {input.repseqs} \
+            --p-perc-identity {ITS_OTU_PERC} \
+            --p-threads {resources.cpus} \
+            --o-clustered-table     {output.table} \
+            --o-clustered-sequences {output.repseqs} \
+            --verbose \
+            >> {log} 2>&1
+
+        echo "Done: $(date)" >> {log}
+        """
+
+
+rule taxonomy_its1_otu:
+    """Naive Bayes classification of ITS OTU representative sequences.
+
+    NOTE: --p-n-jobs 1 (not 8) — UNITE classifier is 545MB; each sklearn
+    worker loads its own copy. 8 workers × ~15GB = OOM on 64GB bigmem.
+    Single-threaded classification is slower (~1-2h) but reliable.
+    Taxonomy TSV is exported immediately after classification.
+    """
+    input:
+        repseqs    = f"{DENOISE_DIR}/{DATASET}_{ITS_LABEL}_{ITS_OTU_LABEL}_repseqs.qza",
+        classifier = UNITE_CLASSIFIER,
+    output:
+        taxonomy = f"{TAXONOMY_DIR}/{DATASET}_{ITS_LABEL}_{ITS_OTU_LABEL}_taxonomy.qza",
+        tax_tsv  = f"{EXPORT_DIR}/{DATASET}_{ITS_LABEL}_{ITS_OTU_LABEL}_taxonomy/taxonomy.tsv",
+    log:
+        f"logs/snakemake_{DATASET}_taxonomy_its1_{ITS_OTU_LABEL}.log",
+    resources:
+        partition = "bigmem",
+        mem_mb    = 120_000,
+        cpus      = 1,
+        runtime   = "04:00:00",
+    shell:
+        r"""
+        set -euo pipefail
+        module load bioinformatics qiime2/2024.10amplicon
+        export TMPDIR=/nobackup/jcnx71/tmp
+
+        echo "NB taxonomy on {ITS_OTU_LABEL} repseqs (single-threaded)"
+        echo "Date: $(date)"
+
+        mkdir -p {TAXONOMY_DIR} {EXPORT_DIR}/{DATASET}_{ITS_LABEL}_{ITS_OTU_LABEL}_taxonomy
+
+        qiime feature-classifier classify-sklearn \
+            --i-classifier  {input.classifier} \
+            --i-reads       {input.repseqs} \
+            --p-n-jobs 1 \
+            --o-classification {output.taxonomy} \
+            --verbose \
+            >> {log} 2>&1
+
+        qiime tools export \
+            --input-path {output.taxonomy} \
+            --output-path {EXPORT_DIR}/{DATASET}_{ITS_LABEL}_{ITS_OTU_LABEL}_taxonomy \
+            >> {log} 2>&1
+
+        echo "Done: $(date)" >> {log}
+        """
+
+
+rule export_its1_otu:
+    """Export ITS OTU table and repseqs to plain formats.
+    Taxonomy TSV is already produced by taxonomy_its1_otu — listed here as input.
+    """
+    input:
+        table    = f"{DENOISE_DIR}/{DATASET}_{ITS_LABEL}_{ITS_OTU_LABEL}_table.qza",
+        repseqs  = f"{DENOISE_DIR}/{DATASET}_{ITS_LABEL}_{ITS_OTU_LABEL}_repseqs.qza",
+        taxonomy = f"{TAXONOMY_DIR}/{DATASET}_{ITS_LABEL}_{ITS_OTU_LABEL}_taxonomy.qza",
+        tax_tsv  = f"{EXPORT_DIR}/{DATASET}_{ITS_LABEL}_{ITS_OTU_LABEL}_taxonomy/taxonomy.tsv",
+    output:
+        biom    = f"{EXPORT_DIR}/{DATASET}_{ITS_LABEL}_{ITS_OTU_LABEL}_table/feature-table.biom",
+        fasta   = f"{EXPORT_DIR}/{DATASET}_{ITS_LABEL}_{ITS_OTU_LABEL}_repseqs/dna-sequences.fasta",
+    log:
+        f"logs/snakemake_{DATASET}_export_its1_{ITS_OTU_LABEL}.log",
+    resources:
+        partition = "shared",
+        mem_mb    = 8_000,
+        cpus      = 2,
+        runtime   = "01:00:00",
+    shell:
+        r"""
+        set -euo pipefail
+        module load bioinformatics qiime2/2024.10amplicon
+        export TMPDIR=/nobackup/jcnx71/tmp
+
+        qiime tools export --input-path {input.table} \
+            --output-path {EXPORT_DIR}/{DATASET}_{ITS_LABEL}_{ITS_OTU_LABEL}_table \
+            >> {log} 2>&1
+
+        qiime tools export --input-path {input.repseqs} \
+            --output-path {EXPORT_DIR}/{DATASET}_{ITS_LABEL}_{ITS_OTU_LABEL}_repseqs \
+            >> {log} 2>&1
         """
