@@ -568,6 +568,7 @@ rule taxonomy_its1:
         mem_mb    = 120_000,
         cpus      = 1,
         runtime   = "06:00:00",
+        tmp_gb    = 50,
     shell:
         r"""
         set -euo pipefail
@@ -787,6 +788,7 @@ rule taxonomy_its1_otu:
         mem_mb    = 120_000,
         cpus      = 1,
         runtime   = "04:00:00",
+        tmp_gb    = 50,
     shell:
         r"""
         set -euo pipefail
