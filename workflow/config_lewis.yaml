@@ -48,8 +48,8 @@ primer_its2_rev: "GCTGCGTTCTTCATCGATGC"    # ITS2  (20 bp)
 # Starting values — adjust after inspecting demux QC plots:
 #   qiime demux summarize → check where Q30 drops on forward / reverse
 # With 2×250 reads: forward quality stays high, reverse drops ~150–180 bp.
-dada2_trunc_len_f: 230
-dada2_trunc_len_r: 160
+dada2_trunc_len_f: 0   # set after inspecting CPM_lewis_16S_PE_import_QC.qzv
+dada2_trunc_len_r: 0   # set after inspecting CPM_lewis_16S_PE_import_QC.qzv
 dada2_max_ee_f: 2.0
 dada2_max_ee_r: 2.0
 
