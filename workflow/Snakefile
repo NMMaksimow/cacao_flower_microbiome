@@ -101,8 +101,12 @@ if DO_TRIM:
         with open(_runinfo) as _fh:
             for _row in csv.DictReader(_fh):
                 _srr2lib[_row["Run"].strip()] = _row["LibraryName"].strip()
-    BAC_SRRS = [s for s in ALL_SRRS if _srr2lib.get(s, "").startswith("Bac")]
-    FUN_SRRS = [s for s in ALL_SRRS if _srr2lib.get(s, "").startswith("Fun")]
+    # lib_16s_pattern / lib_its_pattern: configurable prefix for splitting runs.
+    # Wemheuer: "Bac" / "Fun" (default).  Lewis: "16S" / "ITS".
+    _16s_pat = config.get("lib_16s_pattern", "Bac")
+    _its_pat = config.get("lib_its_pattern", "Fun")
+    BAC_SRRS = [s for s in ALL_SRRS if _16s_pat in _srr2lib.get(s, "")]
+    FUN_SRRS = [s for s in ALL_SRRS if _its_pat in _srr2lib.get(s, "")]
 
 # ── Target outputs ─────────────────────────────────────────────────────────────
 def all_targets():
