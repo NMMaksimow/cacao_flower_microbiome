@@ -742,6 +742,7 @@ rule cluster_its1_otus:
         mem_mb    = 16_000,
         cpus      = 8,
         runtime   = "02:00:00",
+        tmp_gb    = 20,
     shell:
         r"""
         set -euo pipefail
@@ -836,6 +837,7 @@ rule export_its1_otu:
         mem_mb    = 8_000,
         cpus      = 2,
         runtime   = "01:00:00",
+        tmp_gb    = 10,
     shell:
         r"""
         set -euo pipefail
