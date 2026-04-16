@@ -12,9 +12,10 @@ manifest_16s:  "qiime2_lewis/import/manifest_16S.tsv"
 manifest_its1: "qiime2_lewis/import/manifest_ITS1.tsv"
 
 # ── Pre-trained classifiers — same databases as CFM ──────────────────────────
-db_dir:           "qiime2/databases"
-silva_classifier: "qiime2/databases/SILVA/silva-138-99-nb-diverse-weighted-classifier.qza"
-unite_classifier: "qiime2/databases/UNITE/unite_eukaryotes_dynamic_classifier.qza"
+db_dir:                        "qiime2/databases"
+silva_classifier:              "qiime2/databases/SILVA/silva-138-99-nb-diverse-weighted-classifier.qza"
+silva_plant_corpus_classifier: "qiime2/databases/SILVA/silva138.1_plant-corpus_weighted_classifier.qza"
+unite_classifier:              "qiime2/databases/UNITE/unite_eukaryotes_dynamic_classifier.qza"
 
 # ── Primers ───────────────────────────────────────────────────────────────────
 # 16S V4: Earth Microbiome Project standard primers (same as CFM)

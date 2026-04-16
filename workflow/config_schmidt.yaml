@@ -1,0 +1,61 @@
+# =============================================================================
+# Schmidt et al. 2023 reanalysis — Theobroma cacao phyllosphere, Florida USA
+# PRJNA925518
+# Amplicons: 16S V4 (515F/806R original) + ITS1 (ITS1F/ITS2)
+# Platform: Illumina NovaSeq 6000, 2×250 bp
+# =============================================================================
+
+dataset: "CLE_schmidt"
+its_label: "ITS1"
+
+# ── Raw FASTQs ────────────────────────────────────────────────────────────────
+# Reads are already adapter- and primer-trimmed by the sequencing center
+# (deposited to SRA at ~225 bp). No cutadapt step needed.
+raw_fastq_dir: "data_schmidt/raw_data"
+
+# ── No primer trimming for Schmidt ───────────────────────────────────────────
+# Keys below are intentionally absent — Snakemake trim rules require
+# raw_fastq_dir + primers to be defined (DO_TRIM = False when absent).
+
+# ── Manifests ─────────────────────────────────────────────────────────────────
+manifest_16s:  "qiime2_schmidt/import/manifest_16S.tsv"
+manifest_its1: "qiime2_schmidt/import/manifest_ITS1.tsv"
+
+# ── Pre-trained classifiers (.qza) — same as CFM and Wemheuer ────────────────
+# SILVA 138 (released 2020): 99% OTU sequences, full-length 16S rRNA
+#   Naive Bayes classifier, diverse-weighted (optimized for plant-associated
+#   microbiomes). Trained on 515F/806R region — exact match to Schmidt primers.
+#
+# UNITE (dynamic threshold): eukaryotes release (fungi + other eukaryotes).
+#   Dynamic species hypothesis threshold. Trained on ITS1F/ITS2 — exact match
+#   to Schmidt ITS1 primers (ITS1F/ITS2).
+db_dir:                        "qiime2/databases"
+silva_classifier:              "qiime2/databases/SILVA/silva-138-99-nb-diverse-weighted-classifier.qza"
+silva_plant_corpus_classifier: "qiime2/databases/SILVA/silva138.1_plant-corpus_weighted_classifier.qza"
+unite_classifier:              "qiime2/databases/UNITE/unite_eukaryotes_dynamic_classifier.qza"
+
+# ── DADA2 parameters — 16S V4 (515F/806R, ~253 bp amplicon) ──────────────────
+# From Schmidt et al. 2023 methods: maxN=0, maxEE=c(2,2), truncQ=2
+# No truncation — reads are already ~225 bp, full amplicon fits within 2×225 bp
+# Post-DADA2 length filter: keep ASVs 250–256 bp (per paper)
+dada2_trunc_len_f: 0
+dada2_trunc_len_r: 0
+dada2_max_ee_f: 2.0
+dada2_max_ee_r: 2.0
+dada2_trunc_q: 2
+
+# ── ITS OTU clustering ────────────────────────────────────────────────────────
+its_otu_perc_identity: 0.97
+
+# ── DADA2 parameters — ITS1 (ITS1F/ITS2, variable length) ────────────────────
+# Variable-length amplicons — no truncation, relaxed maxEE
+dada2_trunc_len_f_its: 0
+dada2_trunc_len_r_its: 0
+dada2_max_ee_f_its: 5.0
+dada2_max_ee_r_its: 5.0
+
+# ── Output directories ────────────────────────────────────────────────────────
+denoise_dir:  "qiime2_schmidt/denoise"
+taxonomy_dir: "qiime2_schmidt/taxonomy"
+phylo_dir:    "qiime2_schmidt/phylogeny"
+export_dir:   "qiime2_schmidt/export"

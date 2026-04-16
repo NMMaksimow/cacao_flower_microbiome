@@ -28,10 +28,40 @@ trimmed_its2_dir: "qiime2_wemheuer/import/primer_trimmed/ITS2"
 manifest_16s:  "qiime2_wemheuer/import/manifest_16S.tsv"
 manifest_its2: "qiime2_wemheuer/import/manifest_ITS2.tsv"
 
-# ── Same classifiers as CFM (trained on full-length sequences) ────────────────
+# ── Pre-trained classifiers (.qza) — same as CFM ─────────────────────────────
+# SILVA 138 (released 2020): 99% OTU sequences, full-length 16S rRNA
+#   Naive Bayes classifier, diverse-weighted (optimized for plant-associated
+#   microbiomes). Trained on 515F/806R region; 341F/785R amplicons cover a
+#   longer region but the same classifier is used (cross-primer NB is standard).
+#
+# UNITE (dynamic threshold): eukaryotes release (fungi + other eukaryotes).
+#   Dynamic species hypothesis threshold. Trained on ITS1F/ITS2; applied here
+#   to ITS2 (ITS3_KYO2/ITS4) — same region, compatible.
 db_dir: "qiime2/databases"
-silva_classifier: "qiime2/databases/SILVA/silva-138-99-nb-diverse-weighted-classifier.qza"
-unite_classifier: "qiime2/databases/UNITE/unite_eukaryotes_dynamic_classifier.qza"
+silva_classifier:              "qiime2/databases/SILVA/silva-138-99-nb-diverse-weighted-classifier.qza"
+silva_plant_corpus_classifier: "qiime2/databases/SILVA/silva138.1_plant-corpus_weighted_classifier.qza"
+unite_classifier:              "qiime2/databases/UNITE/unite_eukaryotes_dynamic_classifier.qza"
+
+# ── DADA2 truncation — 16S V3-V4 (341F/785R, ~420bp after primer trimming) ───
+# Overlap = 260 + 199 - 420 = 39bp  ✓
+# Chosen from QC plot: last base where Q drops below 25
+dada2_trunc_len_f: 260
+dada2_trunc_len_r: 199
+dada2_max_ee_f: 2.0
+dada2_max_ee_r: 2.0
+
+# ── ITS OTU clustering ────────────────────────────────────────────────────────
+its_otu_perc_identity: 0.97
+
+# ── DADA2 truncation — ITS2 (ITS3_KYO2/ITS4, variable length) ────────────────
+# ITS amplicons are variable length — fixed truncation causes DADA2 to crash
+# (short amplicons get dropped, longer ones collapse to identical sequences → SIGSEGV)
+# Standard approach for ITS: no truncation, relax maxEE to 5.0 so enough reads
+# pass the filter for DADA2 to learn error rates (QIIME2 ITS tutorial default)
+dada2_trunc_len_f_its: 0
+dada2_trunc_len_r_its: 0
+dada2_max_ee_f_its: 5.0
+dada2_max_ee_r_its: 5.0
 
 # ── Output directories ────────────────────────────────────────────────────────
 denoise_dir:  "qiime2_wemheuer/denoise"

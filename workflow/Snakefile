@@ -44,8 +44,13 @@ TAXONOMY_DIR  = config["taxonomy_dir"]
 PHYLO_DIR     = config["phylo_dir"]
 EXPORT_DIR    = config["export_dir"]
 
-SILVA_CLASSIFIER = config["silva_classifier"]
-UNITE_CLASSIFIER = config.get("unite_classifier", "")
+SILVA_CLASSIFIER              = config["silva_classifier"]
+UNITE_CLASSIFIER              = config.get("unite_classifier", "")
+SILVA_PLANT_CORPUS_CLASSIFIER = config.get("silva_plant_corpus_classifier", "")
+
+# True when plant-corpus classifier path is provided in config.
+# Triggers taxonomy_16s_plant_corpus rule and adds its export to all_targets().
+DO_PLANT_CORPUS = bool(SILVA_PLANT_CORPUS_CLASSIFIER)
 
 # ITS amplicon label used in output filenames.
 # Defaults to "ITS1" (correct for CFM V-ITS1 amplicon).
@@ -121,6 +126,10 @@ def all_targets():
         f"{EXPORT_DIR}/{DATASET}_16S_taxonomy/taxonomy.tsv",
         f"{EXPORT_DIR}/{DATASET}_16S_rooted_tree/tree.nwk",
     ]
+    if DO_PLANT_CORPUS:
+        targets += [
+            f"{EXPORT_DIR}/{DATASET}_16S_taxonomy_plant_corpus/taxonomy.tsv",
+        ]
     if DO_ITS1:
         targets += [
             # DADA2 visualisations — ITS
@@ -543,6 +552,57 @@ rule taxonomy_16s:
             --output-path {EXPORT_DIR}/{DATASET}_16S_taxonomy \
             >> {log} 2>&1
         """
+
+
+if DO_PLANT_CORPUS:
+    rule taxonomy_16s_plant_corpus:
+        """SILVA 138.1 plant-corpus weighted NB classifier for 16S.
+        Classifier trained with weights derived from plant-associated metagenomes
+        (plant-corpus), alternative to the diverse-weighted classifier used in
+        the main pipeline. Run in parallel with taxonomy_16s for comparison.
+        Output exported immediately to taxonomy_plant_corpus/taxonomy.tsv.
+        """
+        input:
+            repseqs    = f"{DENOISE_DIR}/{DATASET}_16S_dada2_repseqs.qza",
+            classifier = SILVA_PLANT_CORPUS_CLASSIFIER,
+        output:
+            taxonomy = f"{TAXONOMY_DIR}/{DATASET}_16S_taxonomy_plant_corpus.qza",
+            tax_tsv  = f"{EXPORT_DIR}/{DATASET}_16S_taxonomy_plant_corpus/taxonomy.tsv",
+        log:
+            f"logs/snakemake_{DATASET}_taxonomy_16s_plant_corpus.log",
+        resources:
+            partition = "bigmem",
+            mem_mb    = 512_000,  # 500 G — same as diverse-weighted classifier
+            cpus      = 16,
+            runtime   = "04:00:00",
+            tmp_gb    = 100,
+        shell:
+            r"""
+            set -euo pipefail
+            module load bioinformatics qiime2/2024.10amplicon
+            export TMPDIR=/nobackup/jcnx71/tmp
+
+            echo "plant-corpus NB classification — {DATASET} 16S"
+            echo "Classifier: {input.classifier}"
+            echo "Date: $(date)"
+
+            mkdir -p {TAXONOMY_DIR} {EXPORT_DIR}/{DATASET}_16S_taxonomy_plant_corpus
+
+            qiime feature-classifier classify-sklearn \
+                --i-classifier {input.classifier} \
+                --i-reads {input.repseqs} \
+                --p-n-jobs {resources.cpus} \
+                --o-classification {output.taxonomy} \
+                --verbose \
+                >> {log} 2>&1
+
+            qiime tools export \
+                --input-path {output.taxonomy} \
+                --output-path {EXPORT_DIR}/{DATASET}_16S_taxonomy_plant_corpus \
+                >> {log} 2>&1
+
+            echo "Done: $(date)" >> {log}
+            """
 
 
 rule taxonomy_its1:

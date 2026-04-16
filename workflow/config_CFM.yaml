@@ -1,0 +1,70 @@
+# =============================================================================
+# Cocoa Flower Microbiome (CFM) — original study sequencing data
+# Theobroma cacao, Ghanna — flower microbiome
+# Platform: Illumina NovaSeq, 2×250 bp
+# Amplicons: 16S V4 (515F/806R) + ITS1 (ITS1F/ITS2)
+# =============================================================================
+
+dataset: "CFM"
+its_label: "ITS1"
+
+# ── Raw FASTQs & primer trimming ──────────────────────────────────────────────
+# CFM reads were demultiplexed with Stacks, then primer-trimmed with cutadapt.
+# Trimmed reads are referenced via manifests below; no cutadapt step in pipeline.
+#
+# Primers used (cutadapt 4.9):
+#   16S  515F: GTGYCAGCMGCCGCGGTAA   (Parada et al. 2016)
+#   16S  806R: GGACTACNVGGGTWTCTAAT  (Apprill et al. 2015)
+#   ITS1 ITS1F: CTTGGTCATTTAGAGGAAGTAA
+#   ITS1 ITS2:  GCTGCGTTCTTCATCGATGC
+# cutadapt options: --minimum-length 50 --maximum-length 300
+
+# ── Input manifests (TSV, PairedEndFastqManifestPhred33V2 format) ─────────────
+manifest_16s:  "qiime2/import/manifest_16S.tsv"
+manifest_its1: "qiime2/import/manifest_ITS1.tsv"
+
+# ── Pre-trained classifiers (.qza) ───────────────────────────────────────────
+# SILVA 138 (released 2020): 99% OTU sequences, full-length 16S rRNA
+#   Naive Bayes classifier, diverse-weighted (optimized for plant-associated
+#   microbiomes; down-weights over-represented lineages). Trained on 515F/806R
+#   region. qiime feature-classifier fit-classifier-naive-bayes with
+#   --p-weighting-scheme diverse.
+#
+# UNITE (dynamic threshold): eukaryotes release (fungi + other eukaryotes).
+#   Dynamic species hypothesis threshold (not fixed 97%/99%). Trained on
+#   ITS1F/ITS2 region with qiime feature-classifier fit-classifier-naive-bayes.
+db_dir: "qiime2/databases"
+silva_classifier: "qiime2/databases/SILVA/silva-138-99-nb-diverse-weighted-classifier.qza"
+unite_classifier: "qiime2/databases/UNITE/unite_eukaryotes_dynamic_classifier.qza"
+
+# ── DADA2 parameters — 16S V4 (515F/806R, ~253 bp amplicon) ──────────────────
+# MiSeq 2×250 bp reads; after primer trimming ~230 bp.
+# No truncation — full-length reads, high quality throughout.
+# maxEE=2.0 standard stringency; trunc_q=2 (QIIME2 default, hardcoded in rule).
+# Verified in logs/07_dada2_denoising.out + logs/07b_dada2_denoising_16S_corrected.out
+dada2_trunc_len_f: 0
+dada2_trunc_len_r: 0
+dada2_max_ee_f: 2.0
+dada2_max_ee_r: 2.0
+
+# ── ITS OTU clustering (vsearch de-novo, post-DADA2) ─────────────────────────
+# 97% identity — standard for ITS community ecology; collapses intragenomic
+# ITS length polymorphism (one organism → multiple ASVs → one OTU).
+# OTU repseqs used for de-novo phylogeny in PhILR analysis (09b_ITS1_philr.R).
+its_otu_perc_identity: 0.97
+
+# ── DADA2 parameters — ITS1 (ITS1F/ITS2, variable length ~200-500 bp) ────────
+# Variable-length amplicons — no truncation (required for ITS).
+# Same maxEE as 16S — MiSeq reads are high quality.
+# Note: S. cerevisiae ITS1 (~479 bp) may be lost due to insufficient overlap
+# with 2×250 bp reads (only ~21 bp overlap), but all other fungal taxa retained.
+dada2_trunc_len_f_its: 0
+dada2_trunc_len_r_its: 0
+dada2_max_ee_f_its: 2.0
+dada2_max_ee_r_its: 2.0
+
+# ── Output directories ────────────────────────────────────────────────────────
+denoise_dir:  "qiime2/denoise"
+taxonomy_dir: "qiime2/taxonomy"
+phylo_dir:    "qiime2/phylogeny"
+export_dir:   "qiime2/export"

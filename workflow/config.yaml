@@ -5,7 +5,7 @@
 # =============================================================================
 
 # Short prefix used in all output filenames (e.g. "CFM", "WEMHEUER")
-dataset: "CFM"
+dataset: "CFM" # Cocoa Flower Microbiome
 
 # ── Input manifests (TSV, PairedEndFastqManifestPhred33V2 format) ─────────────
 # Paths must be absolute or relative to the project root.
