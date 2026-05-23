@@ -25,9 +25,14 @@ sra_upload/
 *.tar.gz
 
 # Wemheuer dataset (PRJNA594470)
-# metadata.tsv and runinfo.csv are tracked; raw FASTQ and logs are not
+# metadata.tsv and runinfo.csv are tracked; raw FASTQ, supplementary zip and logs are not
 data_wemheuer/*.fastq.gz
+data_wemheuer/raw_data/
+data_wemheuer/microorganisms-08-00405-s001.zip
 qiime2_wemheuer/logs/
+
+# Rendered Rmd outputs (HTML)
+scripts/*.html
 
 # QIIME2 artifacts and exports
 *.qza

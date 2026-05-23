@@ -1,0 +1,23 @@
+name: cfm_analysis
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  # Jupyter
+  - jupyterlab
+  - ipykernel
+  # Core data science
+  - numpy
+  - pandas
+  - scipy
+  - scikit-learn
+  - matplotlib
+  - seaborn
+  # Microbiome-specific
+  - biom-format
+  - scikit-bio
+  # UMAP ordination
+  - umap-learn
