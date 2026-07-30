@@ -70,3 +70,8 @@ results/*.png
 results/*.svg
 results/*.pdf
 results/rds
+
+# Exploratory analysis notebooks and R scripts
+notebooks/exploratory/
+scripts/exploratory/
+
