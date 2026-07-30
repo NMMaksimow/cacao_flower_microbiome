@@ -1,9 +1,6 @@
 # ---- Packages ----
 library(here)
-library(tidyverse)
 library(phyloseq)
-library(patchwork)
-library(scales)
 
 # ---- Load intermediate objects (saved by 01a) ----
 # ps_16S_raw      <- readRDS(here("results", "rds", "ps_16S_raw.rds"))
@@ -95,28 +92,6 @@ goods_df <- data.frame(
 write.csv(goods_df,
           here("results", "tables", "05a_16S_goods_coverage.csv"),
           row.names = FALSE)
-
-# binwidth = 0.01 → one bin per percentage-point; adjust if distribution is too compressed
-p_hist <- ggplot(goods_df, aes(x = goods_coverage, fill = sample_type)) +
-        geom_histogram(binwidth = 0.01, colour = "white", linewidth = 0.2) +
-        scale_fill_manual(values = pal, name = "Sample type") +
-        scale_x_continuous(labels = scales::percent_format(accuracy = 1)) +
-        labs(x = "Good's coverage", y = "Number of samples") +
-        theme_bw()
-
-# angle = 20 to avoid label overlap for "bagged_flower" / "unbagged_flower"
-p_box <- ggplot(goods_df, aes(x = sample_type, y = goods_coverage, fill = sample_type)) +
-        geom_boxplot(show.legend = FALSE) +
-        scale_fill_manual(values = pal) +
-        scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
-        labs(x = "Sample type", y = "Good's coverage") +
-        theme_bw() +
-        theme(axis.text.x = element_text(angle = 20, hjust = 1))
-
-p_goods <- p_hist | p_box
-
-ggsave(here("results", "figures", "05a_16S_goods_coverage.png"),
-       plot = p_goods, width = 10, height = 5, dpi = 300)
 
 message("05a done")
 
