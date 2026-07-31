@@ -14,6 +14,12 @@ MGMT <- c(
 # Canonical bagged/unbagged palette matching 20a_16S_pcoa_by_farms.R and 20b_ITS1_pcoa_by_farms.R
 COLS <- c(bagged_flower = "#4C72B0", unbagged_flower = "#DD8452")
 
+# Rarefaction depths used in 07a/07b alpha diversity analysis
+DEPTH_16S_SHALLOW  <- 2000
+DEPTH_16S_DEEP     <- 10000
+DEPTH_ITS1_SHALLOW <- 5000
+DEPTH_ITS1_DEEP    <- 15000
+
 # ---- Load data ----
 ps_16S  <- readRDS(here("results", "rds", "ps_16S_bacteria_biosamples.rds"))
 ps_ITS1 <- readRDS(here("results", "rds", "ps_ITS1_fungi_biosamples.rds"))
@@ -93,6 +99,8 @@ for (farm in FARM_LEVELS) {
                 ylim  = ylim_16S,   # shared y-limit across all 16S panels
                 main  = paste0(farm, " | ", MGMT[farm])
         )
+        # vertical lines at the two rarefaction depths used in 07a alpha diversity
+        abline(v = c(DEPTH_16S_SHALLOW, DEPTH_16S_DEEP), lty = 2, col = "grey40", lwd = 0.8)
 }
 
 # ---- Row 2: ITS1 ----
@@ -114,6 +122,8 @@ for (farm in FARM_LEVELS) {
                 xlim  = xlim_ITS1,  # shared x-limit across all ITS1 panels
                 ylim  = ylim_ITS1   # shared y-limit across all ITS1 panels
         )
+        # vertical lines at the two rarefaction depths used in 07b alpha diversity
+        abline(v = c(DEPTH_ITS1_SHALLOW, DEPTH_ITS1_DEEP), lty = 2, col = "grey40", lwd = 0.8)
 }
 
 # ---- Row labels in outer left margin ----
