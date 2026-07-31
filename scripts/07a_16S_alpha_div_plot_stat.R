@@ -586,34 +586,12 @@ performance::check_singularity(lmm_faithpd_treatment_10k)
 #### 7c. Statistical models: CLSM subsets — 2k #################################
 ################################################################################
 
-# is_pollination_clsm: binary pollination status (unbagged flowers only)
-# Named objects — reused in section 8c marginal means plot.
-lmm_shannon_pollination_2k <- alpha_summary_2k |>
-    filter(sample_type == "unbagged_flower", !is.na(is_pollination_clsm)) |>
-    mutate(is_pollination_clsm = factor(is_pollination_clsm)) |>
-    lmer(Shannon_median ~ is_pollination_clsm + (1 | farm_id / tree_id), data = _)
-summary(lmm_shannon_pollination_2k)
-
-lmm_invsimpson_pollination_2k <- alpha_summary_2k |>
-    filter(sample_type == "unbagged_flower", !is.na(is_pollination_clsm)) |>
-    mutate(is_pollination_clsm = factor(is_pollination_clsm)) |>
-    lmer(InvSimpson_median ~ is_pollination_clsm + (1 | farm_id / tree_id), data = _)
-summary(lmm_invsimpson_pollination_2k)
-
-lmm_bergerparker_pollination_2k <- alpha_summary_2k |>
-    filter(sample_type == "unbagged_flower", !is.na(is_pollination_clsm)) |>
-    mutate(is_pollination_clsm = factor(is_pollination_clsm)) |>
-    lmer(BergerParker_median ~ is_pollination_clsm + (1 | farm_id / tree_id), data = _)
-summary(lmm_bergerparker_pollination_2k)
-
-lmm_faithpd_pollination_2k <- alpha_summary_2k |>
-    filter(sample_type == "unbagged_flower", !is.na(is_pollination_clsm)) |>
-    mutate(is_pollination_clsm = factor(is_pollination_clsm)) |>
-    lmer(FaithPD_median ~ is_pollination_clsm + (1 | farm_id / tree_id), data = _)
-summary(lmm_faithpd_pollination_2k)
-
-# pi_clsm 3-class: none (0), weak (0 < x < 40), strong (≥ 40)
-# NB: strong class n ≈ 15 — CIs will be wide
+# pi_clsm 3-class: none (0), weak (1-39), strong (>= 40)
+# Threshold >= 40 is the nearest integer to 43 pollen grains/stigma,
+# the level corresponding to 50% of maximum fruit set (Falque et al. 1995).
+# Binary is_pollination_clsm was removed: any detectable pollen conflates
+# accidental/wind/self-deposition with insect-mediated pollination.
+# NB: strong class n ~15 after 2k rarefaction — CIs are wide.
 alpha_summary_2k |>
     filter(sample_type == "unbagged_flower", !is.na(pi_clsm)) |>
     mutate(pi_class = factor(
@@ -682,26 +660,12 @@ alpha_summary_2k |>
 #### 7c. Statistical models: CLSM subsets — 10k ################################
 ################################################################################
 
-alpha_summary_10k |>
-    filter(sample_type == "unbagged_flower", !is.na(is_pollination_clsm)) |>
-    lmer(Shannon_median ~ is_pollination_clsm + (1 | farm_id / tree_id), data = _) |>
-    summary()
-
-alpha_summary_10k |>
-    filter(sample_type == "unbagged_flower", !is.na(is_pollination_clsm)) |>
-    lmer(InvSimpson_median ~ is_pollination_clsm + (1 | farm_id / tree_id), data = _) |>
-    summary()
-
-alpha_summary_10k |>
-    filter(sample_type == "unbagged_flower", !is.na(is_pollination_clsm)) |>
-    lmer(BergerParker_median ~ is_pollination_clsm + (1 | farm_id / tree_id), data = _) |>
-    summary()
-
-alpha_summary_10k |>
-    filter(sample_type == "unbagged_flower", !is.na(is_pollination_clsm)) |>
-    lmer(FaithPD_median ~ is_pollination_clsm + (1 | farm_id / tree_id), data = _) |>
-    summary()
-
+# pi_clsm 3-class: none (0), weak (1-39), strong (>= 40)
+# Threshold >= 40 is the nearest integer to 43 pollen grains/stigma,
+# the level corresponding to 50% of maximum fruit set (Falque et al. 1995).
+# Binary is_pollination_clsm was removed: any detectable pollen conflates
+# accidental/wind/self-deposition with insect-mediated pollination.
+# NB: strong class n ~15 after 10k rarefaction — CIs are wide.
 alpha_summary_10k |>
     filter(sample_type == "unbagged_flower", !is.na(pi_clsm)) |>
     mutate(pi_class = factor(
@@ -799,24 +763,6 @@ p_treat_10k <- (p_obs_treat_10k | p_sha_treat_10k | p_inv_treat_10k | p_bp_treat
     )
 
 ################################################################################
-#### 8c. Marginal means: is_pollination_clsm (unbagged only) — 2k ##############
-################################################################################
-
-p_sha_pol_2k <- plot_marginal(lmm_shannon_pollination_2k,     "is_pollination_clsm", "Shannon H")
-p_inv_pol_2k <- plot_marginal(lmm_invsimpson_pollination_2k,  "is_pollination_clsm", "InvSimpson")
-p_bp_pol_2k  <- plot_marginal(lmm_bergerparker_pollination_2k,"is_pollination_clsm", "Berger-Parker")
-p_fpd_pol_2k <- plot_marginal(lmm_faithpd_pollination_2k,     "is_pollination_clsm", "Faith's PD")
-
-p_pol_2k <- (p_sha_pol_2k | p_inv_pol_2k | p_bp_pol_2k | p_fpd_pol_2k) +
-    plot_annotation(
-        title    = "Marginal means ± 95% CI: pollination status (unbagged flowers only) — 2k rarefaction",
-        subtitle = "is_pollination_clsm: flower-level binary pollination status from CLSM"
-    )
-
-ggsave(here("results", "figures", "07a_2k_marginal_means_pollination.png"),
-       plot = p_pol_2k, width = 14, height = 5, dpi = 300)
-
-################################################################################
 #### 9_icc. Within-tree ICC — are flowers from the same tree more similar? #####
 #### Intercept-only LMM with (1 | tree_id) across all farms combined. ##########
 #### ICC_adjusted = var(tree) / (var(tree) + var(residual)) ####################
@@ -912,24 +858,6 @@ lmm_farm_df_2k <- expand.grid(
 
 write_csv(lmm_farm_df_2k, here("results", "tables", "07a_2k_lmm_per_farm.csv"))
 
-# Farm order: (unbagged − bagged) Shannon H delta at flower level, largest delta first
-farm_order_lmm_2k <- alpha_summary_2k |>
-    group_by(farm_id, sample_type) |>
-    summarise(shannon_med = median(Shannon_median, na.rm = TRUE), .groups = "drop") |>
-    pivot_wider(names_from = sample_type, values_from = shannon_med) |>
-    mutate(delta = unbagged_flower - bagged_flower) |>
-    arrange(desc(delta)) |>
-    pull(farm_id)
-
-# X-axis labels: "farm_id\nmanagement_type" in delta-Shannon order
-farm_mgmt_lut_lmm_2k <- alpha_summary_2k |>
-    distinct(farm_id, management_type) |> deframe()
-farm_x_labels_lmm_2k <- setNames(
-    paste0(farm_order_lmm_2k, "\n",
-           gsub("_", "\n", farm_mgmt_lut_lmm_2k[farm_order_lmm_2k])),
-    farm_order_lmm_2k
-)
-
 # Star y-position: 5% above max flower-level value per farm × metric
 star_pos_lmm_2k <- alpha_summary_2k |>
     pivot_longer(cols = all_of(METRICS_LMM_FARM), names_to = "metric", values_to = "value") |>
@@ -942,7 +870,7 @@ lmm_stars_2k <- lmm_farm_df_2k |>
 
 # Boxplot of raw flower-level data with LMM significance stars
 p_lmm_farm_2k <- alpha_summary_2k |>
-    mutate(farm_id = factor(farm_id, levels = farm_order_lmm_2k)) |>
+    mutate(farm_id = factor(farm_id, levels = FARM_LEVELS)) |>
     pivot_longer(cols = all_of(METRICS_LMM_FARM), names_to = "metric", values_to = "value") |>
     mutate(metric = factor(metric, levels = METRICS_LMM_FARM, labels = METRIC_LABELS_LMM)) |>
     ggplot(aes(x = farm_id, y = value, fill = sample_type)) +
@@ -964,7 +892,7 @@ p_lmm_farm_2k <- alpha_summary_2k |>
         geom_text(
             data = lmm_stars_2k |>
                 mutate(
-                    farm_id = factor(farm, levels = farm_order_lmm_2k),
+                    farm_id = factor(farm, levels = FARM_LEVELS),
                     metric  = factor(metric, levels = METRICS_LMM_FARM,
                                      labels = METRIC_LABELS_LMM)
                 ),
@@ -979,15 +907,13 @@ p_lmm_farm_2k <- alpha_summary_2k |>
     facet_wrap2(~ metric, scales = "free_y", ncol = 5) +
     scale_fill_manual(values = SAMPLE_TYPE_COLOURS, labels = SAMPLE_TYPE_LABELS) +
     scale_colour_manual(values = SAMPLE_TYPE_COLOURS, labels = SAMPLE_TYPE_LABELS) +
-    # two-line tick labels: farm_id on first line, management_type on second
-    scale_x_discrete(labels = farm_x_labels_lmm_2k) +
+    scale_x_discrete() +
     theme_bw() +
     theme(
         legend.position  = "bottom",
         strip.background = element_rect(fill = "grey90"),
         strip.text       = element_text(face = "bold"),
-        # lineheight compresses the two-line tick labels
-        axis.text.x      = element_text(size = 8, lineheight = 0.85)
+        axis.text.x      = element_text(size = 8)
     ) +
     labs(
         title    = "Bacterial alpha diversity — per-farm LMM (bagged vs unbagged) — 2k rarefaction",
@@ -1043,22 +969,6 @@ lmm_farm_df_10k <- expand.grid(
 
 write_csv(lmm_farm_df_10k, here("results", "tables", "07a_10k_lmm_per_farm.csv"))
 
-farm_order_lmm_10k <- alpha_summary_10k |>
-    group_by(farm_id, sample_type) |>
-    summarise(shannon_med = median(Shannon_median, na.rm = TRUE), .groups = "drop") |>
-    pivot_wider(names_from = sample_type, values_from = shannon_med) |>
-    mutate(delta = unbagged_flower - bagged_flower) |>
-    arrange(desc(delta)) |>
-    pull(farm_id)
-
-farm_mgmt_lut_lmm_10k <- alpha_summary_10k |>
-    distinct(farm_id, management_type) |> deframe()
-farm_x_labels_lmm_10k <- setNames(
-    paste0(farm_order_lmm_10k, "\n",
-           gsub("_", "\n", farm_mgmt_lut_lmm_10k[farm_order_lmm_10k])),
-    farm_order_lmm_10k
-)
-
 star_pos_lmm_10k <- alpha_summary_10k |>
     pivot_longer(cols = all_of(METRICS_LMM_FARM), names_to = "metric", values_to = "value") |>
     group_by(farm_id, metric) |>
@@ -1069,7 +979,7 @@ lmm_stars_10k <- lmm_farm_df_10k |>
     left_join(star_pos_lmm_10k, by = c("farm" = "farm_id", "metric"))
 
 p_lmm_farm_10k <- alpha_summary_10k |>
-    mutate(farm_id = factor(farm_id, levels = farm_order_lmm_10k)) |>
+    mutate(farm_id = factor(farm_id, levels = FARM_LEVELS)) |>
     pivot_longer(cols = all_of(METRICS_LMM_FARM), names_to = "metric", values_to = "value") |>
     mutate(metric = factor(metric, levels = METRICS_LMM_FARM, labels = METRIC_LABELS_LMM)) |>
     ggplot(aes(x = farm_id, y = value, fill = sample_type)) +
@@ -1082,7 +992,7 @@ p_lmm_farm_10k <- alpha_summary_10k |>
     (if (nrow(lmm_stars_10k) > 0)
         geom_text(
             data = lmm_stars_10k |>
-                mutate(farm_id = factor(farm, levels = farm_order_lmm_10k),
+                mutate(farm_id = factor(farm, levels = FARM_LEVELS),
                        metric  = factor(metric, levels = METRICS_LMM_FARM,
                                         labels = METRIC_LABELS_LMM)),
             aes(x = farm_id, y = star_y, label = stars),
@@ -1093,7 +1003,7 @@ p_lmm_farm_10k <- alpha_summary_10k |>
     facet_wrap2(~ metric, scales = "free_y", ncol = 5) +
     scale_fill_manual(values = SAMPLE_TYPE_COLOURS, labels = SAMPLE_TYPE_LABELS) +
     scale_colour_manual(values = SAMPLE_TYPE_COLOURS, labels = SAMPLE_TYPE_LABELS) +
-    scale_x_discrete(labels = farm_x_labels_lmm_10k) +
+    scale_x_discrete() +
     theme_bw() +
     theme(legend.position  = "bottom",
           strip.background = element_rect(fill = "grey90"),
