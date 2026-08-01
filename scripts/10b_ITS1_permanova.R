@@ -45,10 +45,18 @@ results_perm_farm <- lapply(FARM_LEVELS, \(farm) {
     d_mat  <- as.matrix(dist_list[[dname]])
     d_farm <- as.dist(d_mat[farm_idx, farm_idx])
     set.seed(42)
-    res <- adonis2(d_farm ~ sample_type,
-                   data         = meta_farm,
-                   by           = "terms",
-                   permutations = how(nperm = N_PERM, blocks = meta_farm$tree_id))
+    res <- tryCatch(
+      adonis2(d_farm ~ sample_type,
+              data         = meta_farm,
+              by           = "terms",
+              permutations = how(nperm = N_PERM, blocks = meta_farm$tree_id)),
+      error = function(e) {
+        message(sprintf("PERMANOVA error %s x %s (%d samples, %d complete trees): %s",
+                        farm, dname, nrow(meta_farm), trees_ok, conditionMessage(e)))
+        NULL
+      }
+    )
+    if (is.null(res)) return(NULL)
     as.data.frame(res) |>
       rownames_to_column("term") |>
       filter(term == "sample_type") |>
@@ -83,17 +91,23 @@ results_permdisp_farm <- lapply(FARM_LEVELS, \(farm) {
     }
     d_mat  <- as.matrix(dist_list[[dname]])
     d_farm <- as.dist(d_mat[farm_idx, farm_idx])
-    bd    <- betadisper(d_farm, meta_farm$sample_type)
-    ptest <- permutest(bd, permutations = how(nperm = N_PERM,
-                                              blocks = meta_farm$tree_id))
-    data.frame(
-      farm     = farm,
-      distance = dname,
-      F_value  = ptest$tab[["F"]][1],
-      p_value  = ptest$tab[["Pr(>F)"]][1],
-      df_group = ptest$tab[["Df"]][1],
-      df_resid = ptest$tab[["Df"]][2]
-    )
+    tryCatch({
+      bd    <- betadisper(d_farm, meta_farm$sample_type)
+      ptest <- permutest(bd, permutations = how(nperm = N_PERM,
+                                                blocks = meta_farm$tree_id))
+      data.frame(
+        farm     = farm,
+        distance = dname,
+        F_value  = ptest$tab[["F"]][1],
+        p_value  = ptest$tab[["Pr(>F)"]][1],
+        df_group = ptest$tab[["Df"]][1],
+        df_resid = ptest$tab[["Df"]][2]
+      )
+    }, error = function(e) {
+      message(sprintf("PERMDISP error %s x %s (%d samples, %d complete trees): %s",
+                      farm, dname, nrow(meta_farm), trees_ok, conditionMessage(e)))
+      NULL
+    })
   }) |> bind_rows()
 }) |> bind_rows()
 
