@@ -30,6 +30,18 @@ results_perm_farm <- lapply(FARM_LEVELS, \(farm) {
     meta_d    <- meta_list[[dname]]
     farm_idx  <- which(!is.na(meta_d$farm_id) & meta_d$farm_id == farm)
     meta_farm <- meta_d[farm_idx, ]
+    # Require >= 2 trees with both sample types for blocked permutations to be feasible.
+    # Rarefaction may leave some farms with 0 or 1 complete trees → skip.
+    trees_ok <- meta_farm |>
+      group_by(tree_id) |>
+      summarise(n_types = n_distinct(sample_type), .groups = "drop") |>
+      filter(n_types == 2) |>
+      nrow()
+    if (trees_ok < 2) {
+      message(sprintf("skip %s x %s: only %d trees with both sample types",
+                      farm, dname, trees_ok))
+      return(NULL)
+    }
     d_mat  <- as.matrix(dist_list[[dname]])
     d_farm <- as.dist(d_mat[farm_idx, farm_idx])
     set.seed(42)
@@ -57,6 +69,18 @@ results_permdisp_farm <- lapply(FARM_LEVELS, \(farm) {
     meta_d    <- meta_list[[dname]]
     farm_idx  <- which(!is.na(meta_d$farm_id) & meta_d$farm_id == farm)
     meta_farm <- meta_d[farm_idx, ]
+    # Require >= 2 trees with both sample types for blocked permutations to be feasible.
+    # Rarefaction may leave some farms with 0 or 1 complete trees → skip.
+    trees_ok <- meta_farm |>
+      group_by(tree_id) |>
+      summarise(n_types = n_distinct(sample_type), .groups = "drop") |>
+      filter(n_types == 2) |>
+      nrow()
+    if (trees_ok < 2) {
+      message(sprintf("skip %s x %s: only %d trees with both sample types",
+                      farm, dname, trees_ok))
+      return(NULL)
+    }
     d_mat  <- as.matrix(dist_list[[dname]])
     d_farm <- as.dist(d_mat[farm_idx, farm_idx])
     bd    <- betadisper(d_farm, meta_farm$sample_type)
