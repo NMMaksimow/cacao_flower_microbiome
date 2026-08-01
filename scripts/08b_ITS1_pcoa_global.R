@@ -187,7 +187,7 @@ for (i in seq_along(DIST_LEVELS)) {
         at = y_ndc, las = 0, cex = 0.65, line = 2)
 }
 
-mtext("Global PCoA — ITS1 OTU97 fungi | prev >= 10% | BC/Jaccard rarefied 5k reads",
+mtext("Global PCoA — ITS1 OTU97 fungi | prev >= 10% | BC/Jaccard rarefied 15k reads",
       outer = TRUE, cex = 1.0, line = 1, side = 3)
 
 dev.off()

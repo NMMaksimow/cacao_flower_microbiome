@@ -200,7 +200,7 @@ for (i in seq_along(DIST_LEVELS)) {
         at = y_ndc, las = 0, cex = 0.65, line = 2)
 }
 
-mtext("Global PCoA — 16S ASV bacteria | prev >= 10% | BC/UniFrac/Jaccard rarefied 2k reads",
+mtext("Global PCoA — 16S ASV bacteria | prev >= 10% | BC/UniFrac/Jaccard rarefied 10k reads",
       outer = TRUE, cex = 1.0, line = 1, side = 3)
 
 dev.off()
