@@ -1,5 +1,8 @@
 # ---- 0. Parameters -------------------------------------------------------
-# Distance metrics in canonical order (matches 20b_ITS1_pcoa_by_farms.R)
+PREV_THRESHOLD <- 0.10    # prevalence filter: features in >= 10% of all biosamples
+RAREFY_DEPTH   <- 15000L  # rarefaction depth for depth-sensitive metrics (BC, Jaccard)
+
+# Distance metrics in canonical order (matches 09b_ITS1_pcoa_by_farm.R)
 # ITS1 has no UniFrac (ITS too variable for reliable phylogenetic inference)
 DIST_LEVELS <- c("aitchison_rCLR", "aitchison_CLR", "bray_curtis", "jaccard")
 
@@ -17,11 +20,11 @@ COLOR_VARS <- c(
 )
 
 VAR_LABELS <- c(
-  sample_type              = "Sample type",
-  farm_id                  = "Farm",
-  management_type          = "Management",
-  is_pollination_clsm      = "Pollination (CLSM)",
-  is_germination           = "Germination",
+  sample_type               = "Sample type",
+  farm_id                   = "Farm",
+  management_type           = "Management",
+  is_pollination_clsm       = "Pollination (CLSM)",
+  is_germination            = "Germination",
   fungal_colonization_score = "Fungal colonization score"
 )
 
@@ -64,21 +67,103 @@ PALETTES <- list(
 # ---- 1. Libraries --------------------------------------------------------
 library(here)
 library(tidyverse)
-library(vegan)  # capscale(), scores(), ordiplot(), ordiellipse()
+library(phyloseq)
+library(vegan)          # capscale(), vegdist(), scores(), ordiplot(), ordiellipse()
+library(zCompositions)  # cmultRepl() for multiplicative zero replacement (CLR pipeline)
 
-# ---- 2. Load data --------------------------------------------------------
-dist_list <- readRDS(here("results", "rds", "19b_ITS1_dist_list.rds"))
-meta_list <- readRDS(here("results", "rds", "19b_ITS1_meta_list.rds"))
+# ---- 2. Load & filter ----------------------------------------------------
+ps <- readRDS(here("results", "rds", "ps_ITS1_otu97_fungi_biosamples.rds")) |>
+  subset_samples(sample_type %in% c("bagged_flower", "unbagged_flower"))
 
-missing_dist <- setdiff(DIST_LEVELS, names(dist_list))
-if (length(missing_dist) > 0) {
-  stop(sprintf(
-    "dist_list missing: %s — re-run 19b_ITS1_beta_perm.R",
-    paste(missing_dist, collapse = ", ")
-  ))
-}
+# Global prevalence filter: keep features present in >= 10% of all biosamples.
+# Mirrors filter_counts(counts_raw, 0.10) from notebooks/01b_its1_pca_by_farm.ipynb.
+ps_prev <- ps |>
+  (\(x) prune_taxa(
+    rowSums(otu_table(x) > 0) / nsamples(x) >= PREV_THRESHOLD, x
+  ))()
 
-# ---- 3. Global PCoA — all 294 samples across all distance metrics --------
+cat(sprintf("After prevalence filter: %d OTUs x %d samples\n",
+            ntaxa(ps_prev), nsamples(ps_prev)))
+
+# ---- 3. Distance matrices ------------------------------------------------
+otu_mat <- as(otu_table(ps_prev), "matrix")          # features x samples
+if (!taxa_are_rows(ps_prev)) otu_mat <- t(otu_mat)
+otu_t   <- t(otu_mat)                                 # samples x features
+
+# Create meta before distances so we can use its rownames as the canonical
+# sample ID source — sample_data() preserves the original Excel IDs reliably.
+meta    <- as(sample_data(ps_prev), "data.frame")
+rownames(otu_t) <- rownames(meta)
+
+# Robust Aitchison distance: rCLR + Euclidean, WITHOUT matrix completion.
+# vegan >= 2.6-2 implements rCLR natively (geometric mean from non-zero values only;
+# zeros receive 0). This differs from full RPCA (deicode, Python notebooks):
+# deicode applies OptSpace matrix completion before rCLR. Use vegan rCLR for
+# PERMANOVA — matrix completion is not designed for distance-matrix-based testing.
+dist_ait <- vegdist(otu_t, method = "robust.aitchison")
+# vegdist(robust.aitchison) sets Labels = "1","2",... instead of sample IDs
+# (internal rCLR C routine strips rownames). Force correct Labels.
+attr(dist_ait, "Labels") <- rownames(meta)
+
+# CLR with multiplicative replacement (Martin-Fernandez et al. 2003).
+# cmultRepl replaces zeros while preserving compositional totals (CZM method).
+# decostand(method="clr") is safe here because cmultRepl has already removed all zeros.
+otu_t_mr     <- zCompositions::cmultRepl(otu_t, label = 0, method = "CZM",
+                                          output = "p-counts", z.delete = FALSE)
+clr_mat      <- vegan::decostand(otu_t_mr, method = "clr")  # log(x) - mean(log(x)) per row
+dist_ait_clr <- dist(clr_mat)
+# dist() already sets Labels = rownames(clr_mat); no manual override needed
+
+# Rarefaction for depth-sensitive metrics.
+# Rationale: unbagged flowers have systematically more reads than bagged across all farms
+# (confirmed in 04b depth boxplots). Without rarefaction, depth confounds the bagged vs
+# unbagged comparison for Bray-Curtis and Jaccard.
+# Aitchison metrics above are inherently depth-robust and stay non-rarefied.
+# ITS1 uses 15000 reads, consistent with alpha diversity rarefaction depth; ITS1 libraries are deeper than 16S.
+set.seed(42)
+ps_rare <- suppressMessages(
+  phyloseq::rarefy_even_depth(ps_prev, sample.size = RAREFY_DEPTH,
+                               rngseed = 42L, replace = FALSE,
+                               trimOTUs = TRUE, verbose = FALSE)
+)
+cat(sprintf("After rarefaction to %d reads: %d samples remaining (dropped %d)\n",
+            RAREFY_DEPTH, nsamples(ps_rare),
+            nsamples(ps_prev) - nsamples(ps_rare)))
+
+meta_rare  <- as(sample_data(ps_rare), "data.frame")
+otu_t_rare <- as(otu_table(ps_rare), "matrix") |>
+  (\(m) if (taxa_are_rows(ps_rare)) t(m) else m)()
+rownames(otu_t_rare) <- rownames(meta_rare)
+
+# Bray-Curtis on rarefied counts (abundance-weighted)
+dist_bc  <- vegdist(otu_t_rare, method = "bray")
+attr(dist_bc,  "Labels") <- rownames(meta_rare)
+
+# Jaccard on rarefied presence/absence (binary)
+dist_jac <- vegdist(otu_t_rare, method = "jaccard", binary = TRUE)
+attr(dist_jac, "Labels") <- rownames(meta_rare)
+
+dist_list <- list(
+  aitchison_rCLR = dist_ait,      # non-rarefied: robust rCLR (zeros as missing)
+  aitchison_CLR  = dist_ait_clr,  # non-rarefied: CLR + multiplicative zero replacement
+  bray_curtis    = dist_bc,        # rarefied 15k: abundance-weighted dissimilarity
+  jaccard        = dist_jac        # rarefied 15k: binary presence/absence
+)
+
+# meta_list maps each distance key to the correct metadata frame for that distance.
+# Rarefied distances use meta_rare (samples that survived rarefaction); non-rarefied
+# distances use meta (all biological samples after prevalence filter).
+meta_list <- list(
+  aitchison_rCLR = meta,
+  aitchison_CLR  = meta,
+  bray_curtis    = meta_rare,
+  jaccard        = meta_rare
+)
+
+saveRDS(dist_list, here("results", "rds", "ITS1_otu97_dist_list.rds"))
+saveRDS(meta_list, here("results", "rds", "ITS1_otu97_meta_list.rds"))
+
+# ---- 4. Global PCoA — all samples across all distance metrics ------------
 # Layout: rows = distance metrics, columns = coloring variables.
 # Algorithm:
 #   - capscale(d ~ 1) computed ONCE per distance on the full matrix
@@ -92,7 +177,7 @@ dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
 n_rows <- length(DIST_LEVELS)
 n_cols <- length(COLOR_VARS)
 
-# Figure: 4 distances × 6 colour variables
+# Figure: 4 distances x 6 colour variables
 # Panel width ~4.2 in, panel height ~3.8 in + margins
 # oma[2] = 5 lines: left outer margin for vertical distance-metric row labels
 # oma[3] = 2.5 lines: top for overall title
@@ -120,12 +205,12 @@ for (dname in DIST_LEVELS) {
 
   for (col_var in COLOR_VARS) {
 
-    # mar[1] (bottom): inter-row whitespace — increase (e.g. 2.5 → 4) for more spacing
+    # mar[1] (bottom): inter-row whitespace — increase (e.g. 2.5 -> 4) for more spacing
     # mgp: axis title at 1.5 lines, tick labels at 0.5 lines
     mar_top <- if (dname == DIST_LEVELS[1]) 2.2 else 0.5
     par(mar = c(2.5, 2.5, mar_top, 0.5), mgp = c(1.5, 0.5, 0))
 
-    # Map metadata values to colours; NA → NA_COL (grey)
+    # Map metadata values to colours; NA -> NA_COL (grey)
     raw_vals <- as.character(meta_d[[col_var]])
     # Logical columns (TRUE/FALSE) must be recoded to "1"/"0" to match palette keys
     if (col_var %in% LOGICAL_VARS) {
@@ -158,10 +243,10 @@ for (dname in DIST_LEVELS) {
     }
 
     # Points drawn last (on top of ellipses)
-    # cex: point size — increase (e.g. 0.55 → 0.8) if samples overlap too little
+    # cex: point size — increase (e.g. 0.55 -> 0.8) if samples overlap too little
     points(sc, pch = 16, cex = 0.55, col = point_cols)
 
-    # Group centroids — pch = 4 (x-cross), same approach as 20a/20b
+    # Group centroids — pch = 4 (x-cross), same approach as 09b_ITS1_pcoa_by_farm.R
     # tapply groups sample indices by raw_vals; colMeans gives the centroid coordinates.
     # valid_idx excludes "NA_group" so NA samples never produce a spurious centroid.
     if (col_var %in% ELLIPSE_VARS) {
@@ -177,7 +262,7 @@ for (dname in DIST_LEVELS) {
 }
 
 # ---- Row labels (left outer margin) ----------------------------------------
-# NDC positioning: same approach as 20b_ITS1_pcoa_by_farms.R
+# NDC positioning: same approach as 09b_ITS1_pcoa_by_farm.R
 omi_h   <- par("omi")
 din_h   <- par("din")[2]
 inner_h <- din_h - omi_h[1] - omi_h[3]

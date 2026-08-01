@@ -1,125 +1,24 @@
 # ---- 0. Parameters -------------------------------------------------------
-PREV_THRESHOLD <- 0.10   # global prevalence filter: ≥10% of biosamples = ≥29 of 294
-N_PERM         <- 999
-FARM_LEVELS    <- c("ib", "vr", "sa", "kk", "mt", "vi", "yb")
-RAREFY_DEPTH   <- 10000L  # rarefaction depth for depth-sensitive metrics (BC, Jaccard, UniFrac)
+N_PERM      <- 999
+FARM_LEVELS <- c("ib", "vr", "sa", "kk", "mt", "vi", "yb")
 # Canonical metric order (top → bottom in figures): non-rarefied Aitchison first,
 # then abundance-weighted rarefied, then binary rarefied.
-DIST_LEVELS    <- c("aitchison_rCLR", "aitchison_CLR",
-                    "bray_curtis", "unifrac_w", "jaccard", "unifrac_u")
+DIST_LEVELS <- c("aitchison_rCLR", "aitchison_CLR",
+                 "bray_curtis", "unifrac_w", "jaccard", "unifrac_u")
 
 # ---- 1. Libraries --------------------------------------------------------
 library(here)
 library(tidyverse)
-library(phyloseq)
 library(vegan)
-library(permute)       # how() for blocked permutations; preserves term names in adonis2
-library(zCompositions) # cmultRepl() for multiplicative zero replacement (CLR pipeline)
+library(permute)   # how() for blocked permutations; preserves term names in adonis2
 
-# ---- 2. Load & filter ----------------------------------------------------
-ps <- readRDS(here("results", "rds", "ps_16S_bacteria_biosamples.rds")) |>
-  subset_samples(sample_type %in% c("bagged_flower", "unbagged_flower"))
+# ---- 2. Load distance matrices -------------------------------------------
+# Computed and saved by 08a_16S_pcoa_global.R.
+# Re-run 08a if these files are missing or outdated.
+dist_list <- readRDS(here("results", "rds", "16S_dist_list.rds"))
+meta_list <- readRDS(here("results", "rds", "16S_meta_list.rds"))
 
-# Global prevalence filter: keep features present in ≥10% of all biosamples.
-# Mirrors filter_counts(counts_raw, 0.10) from notebooks/01a_16s_pca_by_farm.ipynb.
-ps_prev <- ps |>
-  (\(x) prune_taxa(
-    rowSums(otu_table(x) > 0) / nsamples(x) >= PREV_THRESHOLD, x
-  ))()
-
-cat(sprintf("After prevalence filter: %d ASVs × %d samples\n",
-            ntaxa(ps_prev), nsamples(ps_prev)))
-
-# ---- 3. Distance matrices ------------------------------------------------
-otu_mat <- as(otu_table(ps_prev), "matrix")          # features x samples
-if (!taxa_are_rows(ps_prev)) otu_mat <- t(otu_mat)
-otu_t   <- t(otu_mat)                                 # samples x features
-
-# Create meta before distances so we can use its rownames as the canonical
-# sample ID source — sample_data() preserves the original Excel IDs reliably.
-meta    <- as(sample_data(ps_prev), "data.frame")
-rownames(otu_t) <- rownames(meta)
-
-# Robust Aitchison distance: rCLR + Euclidean, WITHOUT matrix completion.
-# vegan >= 2.6-2 implements rCLR natively (geometric mean from non-zero values only;
-# zeros receive 0). This differs from full RPCA (deicode, Python notebooks):
-# deicode applies OptSpace matrix completion before rCLR. Use vegan rCLR for
-# PERMANOVA — matrix completion is not designed for distance-matrix-based testing.
-dist_ait <- vegdist(otu_t, method = "robust.aitchison")
-# vegdist(robust.aitchison) sets Labels = "1","2",... instead of sample IDs
-# (internal rCLR C routine strips rownames). Force correct Labels on all three.
-attr(dist_ait, "Labels") <- rownames(meta)
-
-# CLR with multiplicative replacement (Martín-Fernández et al. 2003).
-# cmultRepl replaces zeros while preserving compositional totals (CZM method).
-# decostand(method="clr") is safe here because cmultRepl has already removed all zeros.
-otu_t_mr     <- zCompositions::cmultRepl(otu_t, label = 0, method = "CZM",
-                                          output = "p-counts", z.delete = FALSE)
-clr_mat      <- vegan::decostand(otu_t_mr, method = "clr")  # log(x) - mean(log(x)) per row
-dist_ait_clr <- dist(clr_mat)
-# dist() already sets Labels = rownames(clr_mat); no manual override needed
-
-# Rarefaction for depth-sensitive metrics.
-# Rationale: unbagged flowers have systematically more reads than bagged across all farms
-# (confirmed in 04a depth boxplots). Without rarefaction, depth confounds the bagged vs
-# unbagged comparison for binary (Jaccard, uUniFrac) and count-weighted (BC, wUniFrac) metrics.
-# Aitchison metrics above are inherently depth-robust and stay non-rarefied.
-set.seed(42)
-ps_rare <- suppressMessages(
-  phyloseq::rarefy_even_depth(ps_prev, sample.size = RAREFY_DEPTH,
-                               rngseed = 42L, replace = FALSE,
-                               trimOTUs = TRUE, verbose = FALSE)
-)
-cat(sprintf("After rarefaction to %d reads: %d samples remaining (dropped %d)\n",
-            RAREFY_DEPTH, nsamples(ps_rare),
-            nsamples(ps_prev) - nsamples(ps_rare)))
-
-meta_rare  <- as(sample_data(ps_rare), "data.frame")
-otu_t_rare <- as(otu_table(ps_rare), "matrix") |>
-  (\(m) if (taxa_are_rows(ps_rare)) t(m) else m)()
-rownames(otu_t_rare) <- rownames(meta_rare)
-
-# Bray-Curtis on rarefied counts (abundance-weighted)
-dist_bc  <- vegdist(otu_t_rare, method = "bray")
-attr(dist_bc,  "Labels") <- rownames(meta_rare)
-
-# Jaccard on rarefied presence/absence (binary)
-dist_jac <- vegdist(otu_t_rare, method = "jaccard", binary = TRUE)
-attr(dist_jac, "Labels") <- rownames(meta_rare)
-
-# Weighted UniFrac: abundance-weighted branch lengths (rarefied; tree propagated from ps_prev)
-dist_unifrac_w <- phyloseq::distance(ps_rare, method = "wunifrac")
-attr(dist_unifrac_w, "Labels") <- rownames(meta_rare)
-
-# Unweighted UniFrac: presence/absence-weighted branch lengths (rarefied)
-dist_unifrac_u <- phyloseq::distance(ps_rare, method = "unifrac")
-attr(dist_unifrac_u, "Labels") <- rownames(meta_rare)
-
-dist_list <- list(
-  aitchison_rCLR = dist_ait,      # non-rarefied: robust rCLR (zeros as missing)
-  aitchison_CLR  = dist_ait_clr,  # non-rarefied: CLR + multiplicative zero replacement
-  bray_curtis    = dist_bc,        # rarefied 10k: abundance-weighted dissimilarity
-  unifrac_w      = dist_unifrac_w, # rarefied 10k: phylogenetic, abundance-weighted
-  jaccard        = dist_jac,       # rarefied 10k: binary presence/absence
-  unifrac_u      = dist_unifrac_u  # rarefied 10k: phylogenetic, binary
-)
-
-# meta_list maps each distance key to the correct metadata frame for that distance.
-# Rarefied distances use meta_rare (samples that survived rarefaction); non-rarefied
-# distances use meta (all 294 biological samples after prevalence filter).
-meta_list <- list(
-  aitchison_rCLR = meta,
-  aitchison_CLR  = meta,
-  bray_curtis    = meta_rare,
-  unifrac_w      = meta_rare,
-  jaccard        = meta_rare,
-  unifrac_u      = meta_rare
-)
-
-saveRDS(dist_list, here("results", "rds", "19a_16S_dist_list.rds"))
-saveRDS(meta_list, here("results", "rds", "19a_16S_meta_list.rds"))
-
-# ---- 4. Per-farm PERMANOVA -----------------------------------------------
+# ---- 3. Per-farm PERMANOVA -----------------------------------------------
 # adonis2(d ~ sample_type, by = "terms", permutations = how(blocks = tree_id))
 # blocked permutations: shuffles stay within trees (3 bagged + 3 unbagged per tree).
 # Tests whether bagged/unbagged differ in community composition within each farm.
@@ -145,7 +44,7 @@ results_perm_farm <- lapply(FARM_LEVELS, \(farm) {
   }) |> bind_rows()
 }) |> bind_rows()
 
-# ---- 4b. Per-farm PERMDISP -----------------------------------------------
+# ---- 3b. Per-farm PERMDISP -----------------------------------------------
 # Multivariate homoscedasticity test within each farm.
 # Tests whether bagged/unbagged differ in *spread* around their centroid.
 # If sig: PERMANOVA result for that farm may partly reflect dispersion, not
@@ -174,7 +73,7 @@ results_permdisp_farm <- lapply(FARM_LEVELS, \(farm) {
   }) |> bind_rows()
 }) |> bind_rows()
 
-# ---- 5. Combined PERMANOVA -----------------------------------------------
+# ---- 4. Combined PERMANOVA -----------------------------------------------
 # Model A (additive): farm_id controls between-farm variance; tests overall
 #   sample_type effect after accounting for farm.
 # Model B (interaction): tests whether the sample_type effect is heterogeneous
@@ -206,7 +105,7 @@ results_combined <- lapply(names(dist_list), \(dname) {
   )
 }) |> bind_rows()
 
-# ---- 6. PERMDISP ---------------------------------------------------------
+# ---- 5. PERMDISP ---------------------------------------------------------
 # Multivariate homoscedasticity test (betadisper).
 # Significant PERMANOVA + non-significant PERMDISP → true location shift.
 # Both significant → PERMANOVA result may partly reflect dispersion differences.
@@ -226,7 +125,7 @@ results_permdisp <- lapply(names(dist_list), \(dname) {
   )
 }) |> bind_rows()
 
-# ---- 7. Visualisation ----------------------------------------------------
+# ---- 6. Visualisation ----------------------------------------------------
 dir.create(here("results", "tables"),  showWarnings = FALSE, recursive = TRUE)
 dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
 
@@ -269,7 +168,7 @@ p_farm <- heatmap_data |>
   theme_bw(base_size = 10) +
   theme(axis.text.x = element_text(angle = 30, hjust = 1))
 
-ggsave(here("results", "figures", "19a_16S_perm_farm_heatmap.png"),
+ggsave(here("results", "figures", "10a_16S_perm_farm_heatmap.png"),
        plot = p_farm, width = 9, height = 6, dpi = 300)
 
 # Figure B: combined model R² bar chart (term × distance; facet = model × distance)
@@ -301,21 +200,18 @@ p_comb <- results_combined |>
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 30, hjust = 1))
 
-ggsave(here("results", "figures", "19a_16S_perm_combined_r2.png"),
+ggsave(here("results", "figures", "10a_16S_perm_combined_r2.png"),
        plot = p_comb, width = 15, height = 5, dpi = 300)
 
-# ---- 8. Save outputs -----------------------------------------------------
-dir.create(here("results", "tables"),  showWarnings = FALSE, recursive = TRUE)
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
-
+# ---- 7. Save outputs -----------------------------------------------------
 write_csv(results_perm_farm,
-          here("results", "tables", "19a_16S_permanova_per_farm.csv"))
+          here("results", "tables", "10a_16S_permanova_per_farm.csv"))
 write_csv(results_combined,
-          here("results", "tables", "19a_16S_permanova_combined.csv"))
+          here("results", "tables", "10a_16S_permanova_combined.csv"))
 write_csv(results_permdisp,
-          here("results", "tables", "19a_16S_permdisp.csv"))
+          here("results", "tables", "10a_16S_permdisp.csv"))
 write_csv(results_permdisp_farm,
-          here("results", "tables", "19a_16S_permdisp_per_farm.csv"))
+          here("results", "tables", "10a_16S_permdisp_per_farm.csv"))
 
 cat("\nPERMDISP summary:\n")
 print(results_permdisp)
