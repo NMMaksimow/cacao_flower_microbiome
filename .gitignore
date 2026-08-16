@@ -75,3 +75,6 @@ results/rds
 notebooks/exploratory/
 scripts/exploratory/
 
+# Internal docs: notes, journal, methods drafts — not for public repo
+docs/
+
