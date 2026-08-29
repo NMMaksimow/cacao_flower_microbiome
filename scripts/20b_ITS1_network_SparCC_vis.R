@@ -63,13 +63,16 @@ make_tax_label <- function(physeq, feature_ids) {
 }
 
 net_to_igraph <- function(net_raw, which = 1) {
-        adj     <- if (which == 1) net_raw$adjaMat1 else net_raw$adjaMat2
-        adj_abs <- abs(adj)
+        adj  <- if (which == 1) net_raw$adjaMat1 else net_raw$adjaMat2
+        # NetCoMi stores adjaMat as a NON-NEGATIVE transform of the association, so
+        # the sign of each edge survives only in assoMat. Taking the sign off adjaMat
+        # makes every edge look positive.
+        asso <- if (which == 1) net_raw$assoMat1 else net_raw$assoMat2
         g <- igraph::graph_from_adjacency_matrix(
-                adj_abs, mode = "undirected", weighted = TRUE, diag = FALSE
+                abs(adj), mode = "undirected", weighted = TRUE, diag = FALSE
         )
         el <- igraph::as_edgelist(g, names = FALSE)
-        if (nrow(el) > 0) igraph::E(g)$sign <- adj[el]
+        if (nrow(el) > 0) igraph::E(g)$sign <- asso[el]
         g
 }
 

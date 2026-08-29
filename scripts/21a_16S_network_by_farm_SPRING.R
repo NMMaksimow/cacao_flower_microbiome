@@ -86,16 +86,28 @@ make_tax_label <- function(physeq, feature_ids) {
                 else substr(id, 1, 12)
         }, character(1))
 }
+# Edge set implied by an adjacency matrix. NetCoMi puts 1 on the diagonal
+# (self-association), so it has to be dropped or every taxon counts as an edge and
+# every edge total comes out inflated by half the number of taxa.
+edge_mask <- function(adj) {
+        e <- adj != 0
+        diag(e) <- FALSE
+        e
+}
+
 # Topology metrics from adjacency matrices and netAnalyze global property slots.
 extract_topology <- function(net_raw, net_ana, farm) {
         gp   <- net_ana$globalProps     # nComp1/2, avPath1/2, clustCoef1/2, modularity1/2
         gpl  <- net_ana$globalPropsLCC  # lccSize1/2, lccSizeRel1/2
         cent <- net_ana$centralities    # degree1, degree2 (NetCoMi 1.3.0 API)
 
-        make_row <- function(adj, deg_vec, s, treatment) {
-                n_edges <- sum(adj != 0) / 2
-                n_pos   <- sum(adj > 0)  / 2
-                n_neg   <- sum(adj < 0)  / 2
+        # adjaMat gives the edge set; its entries are non-negative by construction,
+        # so the sign of each association has to come from assoMat.
+        make_row <- function(adj, asso, deg_vec, s, treatment) {
+                edge    <- edge_mask(adj)
+                n_edges <- sum(edge) / 2
+                n_pos   <- sum(edge & asso > 0) / 2
+                n_neg   <- sum(edge & asso < 0) / 2
                 p       <- nrow(adj)
                 max_e   <- p * (p - 1) / 2
                 dplyr::tibble(
@@ -116,8 +128,8 @@ extract_topology <- function(net_raw, net_ana, farm) {
                 )
         }
         dplyr::bind_rows(
-                make_row(net_raw$adjaMat1, cent$degree1, "1", "bagged_flower"),
-                make_row(net_raw$adjaMat2, cent$degree2, "2", "unbagged_flower")
+                make_row(net_raw$adjaMat1, net_raw$assoMat1, cent$degree1, "1", "bagged_flower"),
+                make_row(net_raw$adjaMat2, net_raw$assoMat2, cent$degree2, "2", "unbagged_flower")
         )
 }
 
@@ -145,9 +157,11 @@ extract_hubs <- function(net_ana, farm) {
 # Columns: farm, scope, property, val_bagged, val_unbagged, stat, pval, significant.
 # scope "whole" and "LCC": stat = |val_unbagged - val_bagged|.
 # scope "centrality_overlap" (Jaccard, ARI): val_bagged = similarity statistic, val_unbagged = NA.
-extract_comparison <- function(net_cmp, net_ana, adj1, adj2, farm) {
+extract_comparison <- function(net_cmp, net_ana, net_raw, farm) {
         if (is.null(net_cmp) || is.null(net_ana)) return(NULL)
 
+        adj1  <- net_raw$adjaMat1
+        adj2  <- net_raw$adjaMat2
         gp    <- net_ana$globalProps
         gpl   <- net_ana$globalPropsLCC
         pvg   <- net_cmp$pvalDiffGlobal
@@ -155,12 +169,13 @@ extract_comparison <- function(net_cmp, net_ana, adj1, adj2, farm) {
         lcc_p <- net_cmp$propertiesLCC  # density1/2, vertConnect1/2, edgeConnect1/2, natConnect1/2
 
         make_density <- function(adj) {
-                p <- nrow(adj); n_e <- sum(adj != 0) / 2; max_e <- p * (p - 1) / 2
+                p <- nrow(adj); n_e <- sum(edge_mask(adj)) / 2; max_e <- p * (p - 1) / 2
                 if (max_e > 0) n_e / max_e else NA_real_
         }
-        make_pep <- function(adj) {
-                n_e <- sum(adj != 0) / 2; n_pos <- sum(adj > 0) / 2
-                if (n_e > 0) n_pos / n_e else NA_real_
+        # Sign from assoMat, edge set from adjaMat (see extract_topology).
+        make_pep <- function(adj, asso) {
+                edge <- edge_mask(adj)
+                if (sum(edge) > 0) sum(edge & asso > 0) / sum(edge) else NA_real_
         }
 
         # Slot layout varies: pvalDiffGlobal is a named list for SpiecEasi but a named
@@ -178,9 +193,11 @@ extract_comparison <- function(net_cmp, net_ana, adj1, adj2, farm) {
                 property = c("nComp", "avPath", "clustCoef", "modularity",
                              "vertConnect", "avDiss", "density", "PEP"),
                 val_b    = c(gp$nComp1, gp$avPath1, gp$clustCoef1, gp$modularity1,
-                             gp$vertConnect1, gp$avDiss1, make_density(adj1), make_pep(adj1)),
+                             gp$vertConnect1, gp$avDiss1, make_density(adj1),
+                             make_pep(adj1, net_raw$assoMat1)),
                 val_u    = c(gp$nComp2, gp$avPath2, gp$clustCoef2, gp$modularity2,
-                             gp$vertConnect2, gp$avDiss2, make_density(adj2), make_pep(adj2)),
+                             gp$vertConnect2, gp$avDiss2, make_density(adj2),
+                             make_pep(adj2, net_raw$assoMat2)),
                 pval     = pulln(pvg, c("pvalnComp", "pvalavPath", "pvalClustCoef", "pvalModul",
                                         "pvalVertConnect", "pvalavDiss", "pvalDensity", "pvalPEP"))
         )
@@ -323,8 +340,8 @@ for (farm in FARM_LEVELS) {
                 }
         )
 
-        n_edges1 <- sum(net_raw$adjaMat1 != 0) / 2
-        n_edges2 <- sum(net_raw$adjaMat2 != 0) / 2
+        n_edges1 <- sum(edge_mask(net_raw$adjaMat1)) / 2
+        n_edges2 <- sum(edge_mask(net_raw$adjaMat2)) / 2
 
         net_cmp <- if (!is.null(net_ana) && n_edges1 > 0 && n_edges2 > 0) {
                 cat(sprintf("  netCompare: %s\n",
@@ -373,6 +390,14 @@ cat("  Saved: 21a_network_results.rds\n")
 
 cat("\n── 7. Building topology summary table ───────────────────────────────────\n")
 
+# To rebuild the tables from an existing RDS without redoing netConstruct or
+# netCompare: source Section 0 (parameters, libraries, helpers), then source from
+# here. A no-op when the full script ran in the same session.
+if (!exists("results")) {
+        results <- readRDS(here("results", "rds", "21a_network_results.rds"))
+        cat("  Loaded: 21a_network_results.rds\n")
+}
+
 topology_rows <- lapply(FARM_LEVELS, function(farm) {
         if (is.null(results[[farm]]) || is.null(results[[farm]]$analyzed)) return(NULL)
         tryCatch(extract_topology(results[[farm]]$raw, results[[farm]]$analyzed, farm),
@@ -416,7 +441,7 @@ cmp_rows <- lapply(FARM_LEVELS, function(farm) {
         r <- results[[farm]]
         if (is.null(r) || is.null(r$analyzed) || is.null(r$compared)) return(NULL)
         tryCatch(
-                extract_comparison(r$compared, r$analyzed, r$raw$adjaMat1, r$raw$adjaMat2, farm),
+                extract_comparison(r$compared, r$analyzed, r$raw, farm),
                 error = function(e) {
                         message("  comparison extract failed for ", farm, ": ", conditionMessage(e))
                         NULL
