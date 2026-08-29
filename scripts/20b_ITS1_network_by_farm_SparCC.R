@@ -139,6 +139,16 @@ extract_comparison <- function(net_cmp, net_ana, adj1, adj2, farm) {
                 if (n_e > 0) n_pos / n_e else NA_real_
         }
 
+        # Slot layout varies: pvalDiffGlobal is a named list for SpiecEasi but a named
+        # atomic vector for SparCC/SPRING, and with permTest = FALSE the p-value slots
+        # may be absent altogether. Pull one scalar defensively so a missing slot
+        # becomes NA instead of shortening the vector and breaking the tibble.
+        pull1 <- function(x, nm) {
+                v <- if (is.null(x)) NULL else x[[nm]]
+                if (is.null(v) || length(v) != 1L) NA_real_ else as.numeric(v)
+        }
+        pulln <- function(x, nms) vapply(nms, function(n) pull1(x, n), numeric(1))
+
         whole <- dplyr::tibble(
                 scope    = "whole",
                 property = c("nComp", "avPath", "clustCoef", "modularity",
@@ -147,8 +157,8 @@ extract_comparison <- function(net_cmp, net_ana, adj1, adj2, farm) {
                              gp$vertConnect1, gp$avDiss1, make_density(adj1), make_pep(adj1)),
                 val_u    = c(gp$nComp2, gp$avPath2, gp$clustCoef2, gp$modularity2,
                              gp$vertConnect2, gp$avDiss2, make_density(adj2), make_pep(adj2)),
-                pval     = c(pvg[["pvalnComp"]], pvg[["pvalavPath"]], pvg[["pvalClustCoef"]], pvg[["pvalModul"]],
-                             pvg[["pvalVertConnect"]], pvg[["pvalavDiss"]], pvg[["pvalDensity"]], pvg[["pvalPEP"]])
+                pval     = pulln(pvg, c("pvalnComp", "pvalavPath", "pvalClustCoef", "pvalModul",
+                                        "pvalVertConnect", "pvalavDiss", "pvalDensity", "pvalPEP"))
         )
 
         lcc <- dplyr::tibble(
@@ -161,23 +171,24 @@ extract_comparison <- function(net_cmp, net_ana, adj1, adj2, farm) {
                 val_u    = c(gpl$lccSize2, gpl$lccSizeRel2, lcc_p$density2, gpl$avPath2,
                              gpl$clustCoef2, gpl$modularity2, lcc_p$vertConnect2,
                              lcc_p$edgeConnect2, lcc_p$natConnect2),
-                pval     = c(pvgl[["pvallccSize"]], pvgl[["pvallccSizeRel"]], pvgl[["pvalDensity"]],
-                             pvgl[["pvalavPath"]], pvgl[["pvalClustCoef"]], pvgl[["pvalModul"]],
-                             pvgl[["pvalVertConnect"]], pvgl[["pvalEdgeConnect"]], pvgl[["pvalNatConnect"]])
+                pval     = pulln(pvgl, c("pvallccSize", "pvallccSizeRel", "pvalDensity",
+                                         "pvalavPath", "pvalClustCoef", "pvalModul",
+                                         "pvalVertConnect", "pvalEdgeConnect", "pvalNatConnect"))
         )
 
         overlap <- dplyr::tibble(
                 scope    = "centrality_overlap",
                 property = c("jacc_degree", "jacc_between", "jacc_close",
                              "jacc_eigen", "jacc_hub", "ARI", "ARI_LCC"),
-                val_b    = c(net_cmp$jaccDeg$jacc, net_cmp$jaccBetw$jacc, net_cmp$jaccClose$jacc,
-                             net_cmp$jaccEigen$jacc, net_cmp$jaccHub$jacc,
-                             net_cmp$randInd$value, net_cmp$randIndLCC$value),
+                val_b    = c(pull1(net_cmp$jaccDeg,   "jacc"), pull1(net_cmp$jaccBetw, "jacc"),
+                             pull1(net_cmp$jaccClose, "jacc"), pull1(net_cmp$jaccEigen, "jacc"),
+                             pull1(net_cmp$jaccHub,   "jacc"),
+                             pull1(net_cmp$randInd, "value"), pull1(net_cmp$randIndLCC, "value")),
                 val_u    = NA_real_,
-                pval     = c(net_cmp$jaccDeg$p.greater, net_cmp$jaccBetw$p.greater,
-                             net_cmp$jaccClose$p.greater, net_cmp$jaccEigen$p.greater,
-                             net_cmp$jaccHub$p.greater, net_cmp$randInd$pval,
-                             net_cmp$randIndLCC$pval)
+                pval     = c(pull1(net_cmp$jaccDeg,   "p.greater"), pull1(net_cmp$jaccBetw, "p.greater"),
+                             pull1(net_cmp$jaccClose, "p.greater"), pull1(net_cmp$jaccEigen, "p.greater"),
+                             pull1(net_cmp$jaccHub,   "p.greater"),
+                             pull1(net_cmp$randInd, "pval"), pull1(net_cmp$randIndLCC, "pval"))
         )
 
         dplyr::bind_rows(whole, lcc, overlap) |>
@@ -189,7 +200,7 @@ extract_comparison <- function(net_cmp, net_ana, adj1, adj2, farm) {
                         stat         = dplyr::if_else(!is.na(val_b) & !is.na(val_u),
                                                        abs(val_u - val_b), val_b),
                         pval,
-                        significant  = !is.na(pval) & pval < 0.05
+                        significant  = dplyr::if_else(is.na(pval), NA, pval < 0.05)
                 )
 }
 # ── 3. Global subset ──────────────────────────────────────────────────────────

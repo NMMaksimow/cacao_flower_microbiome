@@ -14,8 +14,12 @@
 ##   - SPARCC_THRESH replaced by SPRING_LAMBDA_N and SPRING_REP_NUM
 ##   - Edges represent partial correlations (conditional dependence), NOT pairwise
 ##
-## Limitation: SPRING is a graphical model and prefers n >> p. With n=21 and
-## p=88-134 genera per farm-group, p > n. Results are exploratory.
+## Limitations:
+##   - SPRING is a graphical model and prefers n >> p. With n=21 and p=88-134
+##     genera per farm-group, p > n. Results are exploratory.
+##   - netCompare's permutation test does not work for SPRING (nearPD fails to
+##     converge on permuted data, on every farm tested), so PERM_TEST is FALSE
+##     and the comparison table carries observed differences without p-values.
 ##
 ## Input:
 ##   results/rds/ps_16S_bacteria_biosamples.rds
@@ -33,7 +37,14 @@
 PREV_THRESH_NET  <- 0.20   # 20% per group; ≥4–5 of 21 samples
 SPRING_LAMBDA_N  <- 15L    # lambda grid size (finer grid = better selection; slower)
 SPRING_REP_NUM   <- 10L    # subsampling replicates for stability selection
-N_PERM        <- 200    # netCompare permutations; min resolvable p = 1/200 = 0.005
+PERM_TEST        <- FALSE  # netCompare permutation test: DISABLED for SPRING.
+                           # It fails on every farm because nearPD() cannot make the
+                           # rank correlation matrix of the permuted data positive
+                           # definite, and the NAs then break a subscripted assignment
+                           # (see logs/network/23_spring_netcompare_diag.txt).
+                           # SPRING is therefore descriptive here: topology and hubs,
+                           # no p-values. SparCC (20) and SpiecEasi (19) carry the stats.
+N_PERM           <- 200    # only used when PERM_TEST is TRUE
 AGGREGATE_GENUS  <- TRUE   # aggregate ASVs to genus level before network construction
 MIN_LIB          <- 500
 FARM_LEVELS      <- c("ib", "vr", "sa", "kk", "mt", "vi", "yb")
@@ -152,6 +163,16 @@ extract_comparison <- function(net_cmp, net_ana, adj1, adj2, farm) {
                 if (n_e > 0) n_pos / n_e else NA_real_
         }
 
+        # Slot layout varies: pvalDiffGlobal is a named list for SpiecEasi but a named
+        # atomic vector for SparCC/SPRING, and with permTest = FALSE the p-value slots
+        # may be absent altogether. Pull one scalar defensively so a missing slot
+        # becomes NA instead of shortening the vector and breaking the tibble.
+        pull1 <- function(x, nm) {
+                v <- if (is.null(x)) NULL else x[[nm]]
+                if (is.null(v) || length(v) != 1L) NA_real_ else as.numeric(v)
+        }
+        pulln <- function(x, nms) vapply(nms, function(n) pull1(x, n), numeric(1))
+
         whole <- dplyr::tibble(
                 scope    = "whole",
                 property = c("nComp", "avPath", "clustCoef", "modularity",
@@ -160,8 +181,8 @@ extract_comparison <- function(net_cmp, net_ana, adj1, adj2, farm) {
                              gp$vertConnect1, gp$avDiss1, make_density(adj1), make_pep(adj1)),
                 val_u    = c(gp$nComp2, gp$avPath2, gp$clustCoef2, gp$modularity2,
                              gp$vertConnect2, gp$avDiss2, make_density(adj2), make_pep(adj2)),
-                pval     = c(pvg[["pvalnComp"]], pvg[["pvalavPath"]], pvg[["pvalClustCoef"]], pvg[["pvalModul"]],
-                             pvg[["pvalVertConnect"]], pvg[["pvalavDiss"]], pvg[["pvalDensity"]], pvg[["pvalPEP"]])
+                pval     = pulln(pvg, c("pvalnComp", "pvalavPath", "pvalClustCoef", "pvalModul",
+                                        "pvalVertConnect", "pvalavDiss", "pvalDensity", "pvalPEP"))
         )
 
         lcc <- dplyr::tibble(
@@ -174,23 +195,24 @@ extract_comparison <- function(net_cmp, net_ana, adj1, adj2, farm) {
                 val_u    = c(gpl$lccSize2, gpl$lccSizeRel2, lcc_p$density2, gpl$avPath2,
                              gpl$clustCoef2, gpl$modularity2, lcc_p$vertConnect2,
                              lcc_p$edgeConnect2, lcc_p$natConnect2),
-                pval     = c(pvgl[["pvallccSize"]], pvgl[["pvallccSizeRel"]], pvgl[["pvalDensity"]],
-                             pvgl[["pvalavPath"]], pvgl[["pvalClustCoef"]], pvgl[["pvalModul"]],
-                             pvgl[["pvalVertConnect"]], pvgl[["pvalEdgeConnect"]], pvgl[["pvalNatConnect"]])
+                pval     = pulln(pvgl, c("pvallccSize", "pvallccSizeRel", "pvalDensity",
+                                         "pvalavPath", "pvalClustCoef", "pvalModul",
+                                         "pvalVertConnect", "pvalEdgeConnect", "pvalNatConnect"))
         )
 
         overlap <- dplyr::tibble(
                 scope    = "centrality_overlap",
                 property = c("jacc_degree", "jacc_between", "jacc_close",
                              "jacc_eigen", "jacc_hub", "ARI", "ARI_LCC"),
-                val_b    = c(net_cmp$jaccDeg$jacc, net_cmp$jaccBetw$jacc, net_cmp$jaccClose$jacc,
-                             net_cmp$jaccEigen$jacc, net_cmp$jaccHub$jacc,
-                             net_cmp$randInd$value, net_cmp$randIndLCC$value),
+                val_b    = c(pull1(net_cmp$jaccDeg,   "jacc"), pull1(net_cmp$jaccBetw, "jacc"),
+                             pull1(net_cmp$jaccClose, "jacc"), pull1(net_cmp$jaccEigen, "jacc"),
+                             pull1(net_cmp$jaccHub,   "jacc"),
+                             pull1(net_cmp$randInd, "value"), pull1(net_cmp$randIndLCC, "value")),
                 val_u    = NA_real_,
-                pval     = c(net_cmp$jaccDeg$p.greater, net_cmp$jaccBetw$p.greater,
-                             net_cmp$jaccClose$p.greater, net_cmp$jaccEigen$p.greater,
-                             net_cmp$jaccHub$p.greater, net_cmp$randInd$pval,
-                             net_cmp$randIndLCC$pval)
+                pval     = c(pull1(net_cmp$jaccDeg,   "p.greater"), pull1(net_cmp$jaccBetw, "p.greater"),
+                             pull1(net_cmp$jaccClose, "p.greater"), pull1(net_cmp$jaccEigen, "p.greater"),
+                             pull1(net_cmp$jaccHub,   "p.greater"),
+                             pull1(net_cmp$randInd, "pval"), pull1(net_cmp$randIndLCC, "pval"))
         )
 
         dplyr::bind_rows(whole, lcc, overlap) |>
@@ -202,7 +224,7 @@ extract_comparison <- function(net_cmp, net_ana, adj1, adj2, farm) {
                         stat         = dplyr::if_else(!is.na(val_b) & !is.na(val_u),
                                                        abs(val_u - val_b), val_b),
                         pval,
-                        significant  = !is.na(pval) & pval < 0.05
+                        significant  = dplyr::if_else(is.na(pval), NA, pval < 0.05)
                 )
 }
 # ── 3. Global subset ──────────────────────────────────────────────────────────
@@ -305,12 +327,14 @@ for (farm in FARM_LEVELS) {
         n_edges2 <- sum(net_raw$adjaMat2 != 0) / 2
 
         net_cmp <- if (!is.null(net_ana) && n_edges1 > 0 && n_edges2 > 0) {
-                cat(sprintf("  netCompare: %d permutations ...\n", N_PERM))
+                cat(sprintf("  netCompare: %s\n",
+                            if (PERM_TEST) sprintf("%d permutations ...", N_PERM)
+                            else           "descriptive only, no permutation test"))
                 flush(stdout())
                 t0 <- Sys.time()
                 cmp <- tryCatch(
                         # cores = 1: parallel workers measured ~2x slower (script 22)
-                        netCompare(net_ana, permTest = TRUE, nPerm = N_PERM,
+                        netCompare(net_ana, permTest = PERM_TEST, nPerm = N_PERM,
                                    cores = 1, verbose = FALSE, seed = 42),
                         error = function(e) {
                                 message("  netCompare failed: ", conditionMessage(e))

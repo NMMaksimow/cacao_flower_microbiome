@@ -272,7 +272,7 @@ cat("\n── 4. Building network panels ─────────────
 
 title_str   <- "16S Bacteria — SPRING co-occurrence networks by farm (bagged vs unbagged)"
 caption_str <- sprintf(
-        "SPRING  |  prevalence >= %.0f%%  |  lambda grid = %d  |  reps = %d  |  hub nodes = black border, italic label",
+        "SPRING  |  prevalence >= %.0f%%  |  lambda grid = %d  |  reps = %d  |  no permutation test  |  hub nodes = black border, italic label",
         100 * PREV_THRESH_NET, SPRING_LAMBDA_N, SPRING_REP_NUM
 )
 
