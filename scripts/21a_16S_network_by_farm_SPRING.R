@@ -21,9 +21,11 @@
 ##   results/rds/ps_16S_bacteria_biosamples.rds
 ## Output:
 ##   results/rds/21a_network_results.rds
-##   results/figures/21a_network_panels.png
 ##   results/tables/21a_network_topology.csv
 ##   results/tables/21a_network_hubs.csv
+##   results/tables/21a_network_comparison.csv
+##
+## Compute only — no figures. Render panels locally with 21a_16S_network_SPRING_vis.R
 ## ============================================================================
 
 # ── 0. Parameters ─────────────────────────────────────────────────────────────
@@ -31,12 +33,10 @@
 PREV_THRESH_NET  <- 0.20   # 20% per group; ≥4–5 of 21 samples
 SPRING_LAMBDA_N  <- 15L    # lambda grid size (finer grid = better selection; slower)
 SPRING_REP_NUM   <- 10L    # subsampling replicates for stability selection
+N_PERM        <- 1000    # netCompare permutations (set to 1000 for publication)
 AGGREGATE_GENUS  <- TRUE   # aggregate ASVs to genus level before network construction
 MIN_LIB          <- 500
 FARM_LEVELS      <- c("ib", "vr", "sa", "kk", "mt", "vi", "yb")
-EDGE_COL_POS     <- "#D6604D"   # warm = positive partial correlation
-EDGE_COL_NEG     <- "#4393C3"   # cool = negative partial correlation
-PHY_NA_COLOUR    <- "grey70"    # colour for nodes with no phylum assignment
 
 # ── 1. Libraries & data ───────────────────────────────────────────────────────
 
@@ -47,10 +47,7 @@ library(here)
 library(tidyverse)
 library(phyloseq)
 library(NetCoMi)
-library(ggraph)
 library(igraph)
-library(patchwork)
-library(ggsci)
 
 "%||%" <- function(a, b) if (!is.null(a)) a else b
 
@@ -78,18 +75,6 @@ make_tax_label <- function(physeq, feature_ids) {
                 else substr(id, 1, 12)
         }, character(1))
 }
-
-net_to_igraph <- function(net_raw, which = 1) {
-        adj     <- if (which == 1) net_raw$adjaMat1 else net_raw$adjaMat2
-        adj_abs <- abs(adj)
-        g <- igraph::graph_from_adjacency_matrix(
-                adj_abs, mode = "undirected", weighted = TRUE, diag = FALSE
-        )
-        el <- igraph::as_edgelist(g, names = FALSE)
-        if (nrow(el) > 0) igraph::E(g)$sign <- adj[el]
-        g
-}
-
 # Topology metrics from adjacency matrices and netAnalyze global property slots.
 extract_topology <- function(net_raw, net_ana, farm) {
         gp   <- net_ana$globalProps     # nComp1/2, avPath1/2, clustCoef1/2, modularity1/2
@@ -175,8 +160,8 @@ extract_comparison <- function(net_cmp, net_ana, adj1, adj2, farm) {
                              gp$vertConnect1, gp$avDiss1, make_density(adj1), make_pep(adj1)),
                 val_u    = c(gp$nComp2, gp$avPath2, gp$clustCoef2, gp$modularity2,
                              gp$vertConnect2, gp$avDiss2, make_density(adj2), make_pep(adj2)),
-                pval     = c(pvg$pvalnComp, pvg$pvalavPath, pvg$pvalClustCoef, pvg$pvalModul,
-                             pvg$pvalVertConnect, pvg$pvalavDiss, pvg$pvalDensity, pvg$pvalPEP)
+                pval     = c(pvg[["pvalnComp"]], pvg[["pvalavPath"]], pvg[["pvalClustCoef"]], pvg[["pvalModul"]],
+                             pvg[["pvalVertConnect"]], pvg[["pvalavDiss"]], pvg[["pvalDensity"]], pvg[["pvalPEP"]])
         )
 
         lcc <- dplyr::tibble(
@@ -189,9 +174,9 @@ extract_comparison <- function(net_cmp, net_ana, adj1, adj2, farm) {
                 val_u    = c(gpl$lccSize2, gpl$lccSizeRel2, lcc_p$density2, gpl$avPath2,
                              gpl$clustCoef2, gpl$modularity2, lcc_p$vertConnect2,
                              lcc_p$edgeConnect2, lcc_p$natConnect2),
-                pval     = c(pvgl$pvallccSize, pvgl$pvallccSizeRel, pvgl$pvalDensity,
-                             pvgl$pvalavPath, pvgl$pvalClustCoef, pvgl$pvalModul,
-                             pvgl$pvalVertConnect, pvgl$pvalEdgeConnect, pvgl$pvalNatConnect)
+                pval     = c(pvgl[["pvallccSize"]], pvgl[["pvallccSizeRel"]], pvgl[["pvalDensity"]],
+                             pvgl[["pvalavPath"]], pvgl[["pvalClustCoef"]], pvgl[["pvalModul"]],
+                             pvgl[["pvalVertConnect"]], pvgl[["pvalEdgeConnect"]], pvgl[["pvalNatConnect"]])
         )
 
         overlap <- dplyr::tibble(
@@ -220,83 +205,6 @@ extract_comparison <- function(net_cmp, net_ana, adj1, adj2, farm) {
                         significant  = !is.na(pval) & pval < 0.05
                 )
 }
-
-plot_net_panel <- function(farm_result, which_net, farm, treatment_label,
-                           layout_algo = "fr", phy_palette) {
-        title <- sprintf("%s — %s", toupper(farm), treatment_label)
-
-        if (is.null(farm_result)) {
-                return(
-                        ggplot() + theme_void(base_size = 8) +
-                                annotate("text", x = 0.5, y = 0.5, hjust = 0.5,
-                                         label = "No network", size = 2.5, colour = "grey50") +
-                                labs(title = title) +
-                                theme(plot.title = element_text(size = 7, face = "bold", hjust = 0.5))
-                )
-        }
-
-        g <- net_to_igraph(farm_result$raw, which = which_net)
-
-        hub_names <- tryCatch(
-                if (which_net == 1) names(farm_result$analyzed$hubs$hubs1)
-                else                names(farm_result$analyzed$hubs$hubs2),
-                error = function(e) character(0)
-        )
-        hub_names <- hub_names %||% character(0)
-
-        tt_raw <- as.data.frame(tax_table(ps_raw))
-        igraph::V(g)$phylum    <- tt_raw[igraph::V(g)$name, "Phylum"]
-        igraph::V(g)$degree    <- igraph::degree(g)
-        igraph::V(g)$is_hub    <- igraph::V(g)$name %in% hub_names
-
-        igraph::V(g)$is_labeled <- igraph::V(g)$is_hub
-        igraph::V(g)$tax_label  <- ifelse(
-                igraph::V(g)$is_hub,
-                make_tax_label(ps_raw, igraph::V(g)$name),
-                ""
-        )
-
-        if (igraph::ecount(g) == 0) {
-                return(
-                        ggraph(g, layout = "circle") +
-                                geom_node_point(aes(size = degree, colour = phylum)) +
-                                scale_colour_manual(values = phy_palette, name = "Phylum",
-                                                    na.value = PHY_NA_COLOUR, guide = "none") +
-                                scale_size(range = c(1, 4), guide = "none") +
-                                labs(title = paste0(title, " (no edges)")) +
-                                theme_graph(base_size = 8) +
-                                theme(plot.title = element_text(size = 7, face = "bold",
-                                                                hjust = 0.5))
-                )
-        }
-
-        set.seed(123)
-
-        ggraph(g, layout = layout_algo) +
-                geom_edge_link(aes(colour = sign > 0),
-                               alpha = 0.55, width = 0.5, show.legend = FALSE) +
-                geom_node_point(aes(size = degree, colour = phylum)) +
-                geom_node_point(aes(filter = is_hub, size = degree),
-                                shape = 21, colour = "black", fill = NA,
-                                stroke = 1.5, show.legend = FALSE) +
-                geom_node_text(aes(filter = is_labeled, label = tax_label),
-                               size = 1.8, repel = TRUE, max.overlaps = 8,
-                               colour = "black", fontface = "italic") +
-                scale_edge_colour_manual(
-                        values = c("TRUE" = EDGE_COL_POS, "FALSE" = EDGE_COL_NEG),
-                        guide  = "none"
-                ) +
-                scale_colour_manual(
-                        values   = phy_palette,
-                        name     = "Phylum",
-                        na.value = PHY_NA_COLOUR
-                ) +
-                scale_size(range = c(1, 4), guide = "none") +
-                labs(title = title) +
-                theme_graph(base_size = 8) +
-                theme(plot.title = element_text(size = 7, face = "bold", hjust = 0.5))
-}
-
 # ── 3. Global subset ──────────────────────────────────────────────────────────
 
 cat("\n── 3. Global subset ─────────────────────────────────────────────────────\n")
@@ -316,16 +224,6 @@ if (AGGREGATE_GENUS) {
         cat(sprintf("  After genus aggregation (NArm=TRUE): %d genera x %d samples\n",
                     ntaxa(ps_bvu), nsamples(ps_bvu)))
 }
-
-# Build a consistent phylum colour palette from all genera retained globally.
-# The same named vector is passed to every plot_net_panel() call so phylum
-# colours are identical across all farms and both treatments.
-# Adjust palette name in pal_d3() call to change the colour scheme.
-tt_bvu   <- as.data.frame(tax_table(ps_bvu))
-all_phy  <- sort(unique(na.omit(as.character(tt_bvu[, "Phylum"]))))
-n_phy    <- length(all_phy)
-phy_cols <- setNames(ggsci::pal_d3("category20")(n_phy), all_phy)
-cat(sprintf("  Phyla in network: %d\n", n_phy))
 
 # ── 4. Per-farm network construction ─────────────────────────────────────────
 
@@ -408,7 +306,8 @@ for (farm in FARM_LEVELS) {
 
         net_cmp <- if (!is.null(net_ana) && n_edges1 > 0 && n_edges2 > 0) {
                 tryCatch(
-                        netCompare(net_ana, permTest = FALSE, verbose = FALSE),
+                        netCompare(net_ana, permTest = TRUE, nPerm = N_PERM,
+                                   verbose = FALSE, seed = 42),
                         error = function(e) {
                                 message("  netCompare failed: ", conditionMessage(e))
                                 NULL
@@ -436,71 +335,6 @@ dir.create(here("results", "tables"),  showWarnings = FALSE, recursive = TRUE)
 
 saveRDS(results, here("results", "rds", "21a_network_results.rds"))
 cat("  Saved: 21a_network_results.rds\n")
-
-# ── 6. Assemble 7 × 2 patchwork ──────────────────────────────────────────────
-
-cat("\n── 6. Building network panels ───────────────────────────────────────────\n")
-
-# To re-run only visualization: source Section 0 (parameters + libraries),
-# ensure ps_raw is in the environment, then source from this section.
-# Both blocks below are no-ops when the full script ran in the same session.
-if (!exists("results")) {
-        results <- readRDS(here("results", "rds", "21a_network_results.rds"))
-        cat("  Loaded: 21a_network_results.rds\n")
-}
-if (!exists("ps_bvu") || !exists("phy_cols")) {
-        ps_bvu <- ps_raw |>
-                subset_samples(sample_type %in% c("bagged_flower", "unbagged_flower")) |>
-                (\(x) prune_samples(sample_sums(x) >= MIN_LIB, x))() |>
-                (\(x) prune_taxa(taxa_sums(x) > 0, x))()
-        if (AGGREGATE_GENUS) ps_bvu <- suppressWarnings(tax_glom(ps_bvu, taxrank = "Genus", NArm = TRUE))
-        tt_vis   <- as.data.frame(tax_table(ps_bvu))
-        all_phy  <- sort(unique(na.omit(as.character(tt_vis[, "Phylum"]))))
-        n_phy    <- length(all_phy)
-        phy_cols <- setNames(ggsci::pal_d3("category20")(n_phy), all_phy)
-        cat(sprintf("  Phyla: %d\n", n_phy))
-}
-
-title_str   <- "16S Bacteria — SPRING co-occurrence networks by farm (bagged vs unbagged)"
-caption_str <- sprintf(
-        "SPRING  |  prevalence >= %.0f%%  |  lambda grid = %d  |  reps = %d  |  hub nodes = black border",
-        100 * PREV_THRESH_NET, SPRING_LAMBDA_N, SPRING_REP_NUM
-)
-
-make_panel_grid <- function(layout_algo) {
-        p_list <- vector("list", 14)
-        for (i in seq_along(FARM_LEVELS)) {
-                farm <- FARM_LEVELS[i]
-                p_list[[i]]     <- plot_net_panel(results[[farm]], 1, farm, "bagged",
-                                                  layout_algo = layout_algo,
-                                                  phy_palette = phy_cols)
-                p_list[[i + 7]] <- plot_net_panel(results[[farm]], 2, farm, "unbagged",
-                                                  layout_algo = layout_algo,
-                                                  phy_palette = phy_cols)
-        }
-        p_fig <- wrap_plots(p_list, nrow = 2, ncol = 7) +
-                plot_layout(guides = "collect") +
-                plot_annotation(
-                        title   = title_str,
-                        caption = caption_str,
-                        theme   = theme(
-                                plot.title   = element_text(size = 11, face = "bold"),
-                                plot.caption = element_text(size = 7,  colour = "grey40")
-                        )
-                )
-        p_fig & theme(legend.position = "right")
-}
-
-fig <- make_panel_grid("fr")
-
-ggsave(
-        here("results", "figures", "21a_network_panels_spring.png"),
-        plot   = fig,
-        width  = 24,
-        height = 14,
-        dpi    = 300
-)
-cat("  Saved: 21a_network_panels_spring.png\n")
 
 # ── 7. Topology summary table ─────────────────────────────────────────────────
 
