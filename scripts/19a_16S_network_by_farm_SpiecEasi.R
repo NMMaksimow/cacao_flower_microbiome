@@ -28,7 +28,7 @@ PREV_THRESH_NET    <- 0.20    # 20% per group; ≥4–5 of 21 samples (stricter 
 MAX_TAXA_NET       <- 30L     # cap per farm before netConstruct; keeps p/n ≤ 1.4 (SpiecEasi-MB needs p < ~2n)
 MIN_LIB            <- 500
 FARM_LEVELS        <- c("ib", "vr", "sa", "kk", "mt", "vi", "yb")
-N_PERM             <- 100     # permutations for netCompare; increase to ≥1000 for publication
+N_PERM             <- 1000    # permutations for netCompare (matches the HPC run)
 SPIEC_NLAMBDA      <- 20      # lambda grid size for SpiecEasi regularisation path
 SPIEC_LAMBDA_RATIO <- 1e-2    # lambda.min / lambda.max ratio
 STARS_THRESH       <- 0.1     # STARS stability threshold (default 0.05 is too strict for n=21)
