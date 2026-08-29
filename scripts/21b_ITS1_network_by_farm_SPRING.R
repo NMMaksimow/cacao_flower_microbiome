@@ -27,7 +27,7 @@
 PREV_THRESH_NET  <- 0.20   # 20% per group; ≥4–5 of 21 samples
 SPRING_LAMBDA_N  <- 15L    # lambda grid size (finer grid = better selection; slower)
 SPRING_REP_NUM   <- 10L    # subsampling replicates for stability selection
-N_PERM        <- 1000    # netCompare permutations (set to 1000 for publication)
+N_PERM        <- 200    # netCompare permutations; min resolvable p = 1/200 = 0.005
 AGGREGATE_GENUS  <- TRUE   # aggregate OTUs to genus level before network construction
 MIN_LIB          <- 500
 FARM_LEVELS      <- c("ib", "vr", "sa", "kk", "mt", "vi", "yb")
@@ -301,14 +301,23 @@ for (farm in FARM_LEVELS) {
         n_edges2 <- sum(net_raw$adjaMat2 != 0) / 2
 
         net_cmp <- if (!is.null(net_ana) && n_edges1 > 0 && n_edges2 > 0) {
-                tryCatch(
+                cat(sprintf("  netCompare: %d permutations ...\n", N_PERM))
+                flush(stdout())
+                t0 <- Sys.time()
+                cmp <- tryCatch(
+                        # cores = 1: parallel workers measured ~2x slower (script 22)
                         netCompare(net_ana, permTest = TRUE, nPerm = N_PERM,
-                                   verbose = FALSE, seed = 42),
+                                   cores = 1, verbose = FALSE, seed = 42),
                         error = function(e) {
                                 message("  netCompare failed: ", conditionMessage(e))
                                 NULL
                         }
                 )
+                cat(sprintf("  netCompare: %s after %.1f min\n",
+                            if (is.null(cmp)) "FAILED" else "done",
+                            as.numeric(difftime(Sys.time(), t0, units = "mins"))))
+                flush(stdout())
+                cmp
         } else {
                 message(sprintf("  Skipping netCompare: edges bagged=%d unbagged=%d",
                                 as.integer(n_edges1), as.integer(n_edges2)))
