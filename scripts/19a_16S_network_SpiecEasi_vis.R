@@ -15,7 +15,7 @@
 # ── 0. Parameters ─────────────────────────────────────────────────────────────
 
 PREV_THRESH_NET <- 0.20    # 20% per group; used in caption only
-N_PERM          <- 1000    # netCompare permutations; used in caption only
+N_PERM          <- 200     # netCompare permutations; must match the compute script
 STARS_THRESH    <- 0.1     # STARS stability threshold; used in caption only
 AGGREGATE_GENUS <- TRUE    # must match the compute script
 MIN_LIB         <- 500
