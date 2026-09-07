@@ -14,6 +14,13 @@
 # Step 5: Remove 16S and ITS1 primer sequences using cutadapt
 # Input: Demultiplexed sample files separated by amplicon
 # Output: Primer-trimmed files ready for QIIME2 import
+#
+# KNOWN ISSUE — documented, deliberately NOT fixed. See the block above the
+# cutadapt call below for the details and the corrected command. In short: the
+# -a/-A read-through options were given the literal opposite primer instead of
+# its reverse complement, so 3' trimming never took effect. The impact was
+# measured and is negligible. This script is left unchanged because it is the
+# record of what produced the deposited data.
 
 echo "Starting primer trimming with cutadapt..."
 echo "Date: $(date)"
@@ -87,6 +94,54 @@ trim_primers() {
     
     # Run cutadapt with paired-end primer trimming
     # Note: --quality-cutoff removed to let QIIME2 handle quality filtering
+    #
+    # ---------------------------------------------------------------------
+    # KNOWN ISSUE (identified 2026-08-30, NOT fixed here — see rationale below)
+    #
+    # -a/-A remove 3' read-through: when the insert is shorter than the read,
+    # R1 continues past the insert into the REVERSE COMPLEMENT of the opposite
+    # primer. They therefore need the reverse complement, not the primer itself.
+    # Below they are given "$rev_primer"/"$fwd_primer" verbatim, so they match
+    # essentially nothing and 3' trimming never happens. From logs/05_primer_trimming.out:
+    #     -g / -G (5', correct):  33,961,963 (16S) and 19,269,011 (ITS1) trims
+    #     -a / -A (3', wrong):    349 / 70 / 120 / 547 trims  -> inert
+    #
+    # Measured impact on the final data (primer present at BOTH ends at once,
+    # the unambiguous signature of a retained read-through overhang):
+    #     16S   13 of 25,035 ASVs  = 0.093% of reads
+    #     ITS1   5 of  5,459 OTUs  = 0.001% of reads
+    # The dominant ITS1 OTU (Hannaella oryzae, 21% of reads) keeps a clean
+    # species-level UNITE assignment and shows no treatment association.
+    #
+    # Deliberately left unchanged: this script is the provenance record for every
+    # downstream result (QIIME2 import -> DADA2 -> taxonomy -> all R analyses).
+    # Editing it without re-running would break the correspondence between code
+    # and results.
+    #
+    # Not affected: the SRA deposit. What was uploaded is the output of step 04
+    # (demultiplexed reads, primers still present), i.e. upstream of this script,
+    # so the public archive is untouched by this issue and anyone reprocessing it
+    # applies their own trimming.
+    #
+    # Corrected form, for any future re-run:
+    #     16S   fwd GTGYCAGCMGCCGCGGTAA     rev GGACTACNVGGGTWTCTAAT
+    #           rev_rc ATTAGAWACCCBNGTAGTCC fwd_rc TTACCGCGGCKGCTGRCAC
+    #     ITS1  fwd CTTGGTCATTTAGAGGAAGTAA  rev GCTGCGTTCTTCATCGATGC
+    #           rev_rc GCATCGATGAAGAACGCAGC fwd_rc TTACTTCCTCTAAATGACCAAG
+    #
+    #     cutadapt -g "$fwd_primer"    -G "$rev_primer" \
+    #              -a "$rev_primer_rc" -A "$fwd_primer_rc" \
+    #              --match-read-wildcards --minimum-length 50 --maximum-length 300 ...
+    #
+    # Separate stringency choices, NOT part of this bug (decide explicitly if
+    # re-running): "^" anchoring on -g/-G, and --discard-untrimmed to drop reads
+    # with no detectable primer (~1% here; already used in the Snakemake rules
+    # for the public datasets).
+    #
+    # A re-run belongs in the Snakemake workflow as a rule feeding import_* via
+    # a .done sentinel, not in another standalone script — this step sitting
+    # outside the workflow is why the error went unnoticed.
+    # ---------------------------------------------------------------------
     cutadapt \
         -g "$fwd_primer" \
         -G "$rev_primer" \
