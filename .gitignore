@@ -24,12 +24,20 @@ sra_upload/
 *.tar
 *.tar.gz
 
-# Wemheuer dataset (PRJNA594470)
-# metadata.tsv and runinfo.csv are tracked; raw FASTQ, supplementary zip and logs are not
-data_wemheuer/*.fastq.gz
-data_wemheuer/raw_data/
-data_wemheuer/microorganisms-08-00405-s001.zip
-qiime2_wemheuer/logs/
+# Re-analysis of published datasets (Lewis 2024, Schmidt 2023, Wemheuer 2020)
+# Kept locally but excluded from the repository: the re-analysis is not part of
+# the manuscripts in preparation. Delete these rules to bring it back under git.
+data_lewis/
+data_schmidt/
+data_wemheuer/
+qiime2_lewis/
+qiime2_schmidt/
+qiime2_wemheuer/
+workflow/config_lewis.yaml
+workflow/config_schmidt.yaml
+workflow/config_wemheuer.yaml
+scripts/venn_cross_dataset.R
+scripts/asv_sparsity_cross_dataset.R
 
 # Rendered Rmd outputs (HTML)
 scripts/*.html
@@ -40,8 +48,6 @@ scripts/*.html
 *.biom
 qiime2/export/
 qiime2/taxonomy/
-qiime2_wemheuer/export/
-qiime2_wemheuer/taxonomy/
 
 # Large databases
 qiime2/databases/

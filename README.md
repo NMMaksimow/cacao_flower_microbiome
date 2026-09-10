@@ -28,16 +28,14 @@ This repository contains the bioinformatics analysis pipeline for investigating 
 
 ## 📁 Repository Structure
 
-The project keeps a separate top-level folder per dataset and per pipeline stage. Original CFM data and three re-analysed published datasets coexist; QIIME2 bioinformatics, R statistics and Python notebooks each live in their own area.
+The project keeps a separate top-level folder per pipeline stage: QIIME2 bioinformatics, R statistics and Python notebooks each live in their own area.
 
 | Path | Contents |
 |------|---------|
 | `data/` | CFM metadata, microscopy data, QIIME2 metadata file; raw FASTQ (gitignored, on HPC). |
-| `data_lewis/`, `data_schmidt/`, `data_wemheuer/` | Metadata + SRA `runinfo.csv` for re-analysed public datasets ([Lewis et al. 2024](https://doi.org/10.1094/PHYTOFR-08-23-0104-R), [Schmidt et al. 2023](https://doi.org/10.1128/msphere.00013-23), [Wemheuer et al. 2020](https://doi.org/10.3390/microorganisms8030405)). |
-| `qiime2/` | QIIME2 pipeline for CFM original data: `scripts/`, `import/`, `denoise/`, `taxonomy/`, `taxonomy_nb_classifier_comparison/`, `filtered/`, `phylogeny/`, `rarefaction/`, `export/`, `databases/` (SILVA, UNITE). |
-| `qiime2_lewis/`, `qiime2_schmidt/`, `qiime2_wemheuer/` | QIIME2 artefacts for re-analyses (`import/`, `denoise/`, `taxonomy/`, `phylogeny/`, `export/`, `scripts/`) — produced by the Snakemake workflow. |
-| `workflow/` | Snakemake workflow (`Snakefile`) and per-dataset configs (`config_CFM.yaml`, `config_lewis.yaml`, `config_schmidt.yaml`, `config_wemheuer.yaml`). Covers import → DADA2 → taxonomy → phylogeny → export. CFM pre-processing (lane merging, adapter/primer trimming, demultiplexing) is handled by standalone scripts in `qiime2/scripts/`. |
-| `scripts/` | R and Python scripts for downstream analysis: decontamination, off-target filtering, diversity, ordinations, ANCOMBC, indicator species, PhILR, cross-dataset comparisons, zeta diversity, microscopy data analysis. |
+| `qiime2/` | QIIME2 pipeline for CFM original data: `scripts/`, `import/`, `denoise/`, `taxonomy/`, `taxonomy_nb_classifier_comparison/`, `phylogeny/`, `export/`, `databases/` (SILVA, UNITE). |
+| `workflow/` | Snakemake workflow (`Snakefile`) and config (`config_CFM.yaml`). Covers import → DADA2 → taxonomy → phylogeny → export. CFM pre-processing (lane merging, adapter/primer trimming, demultiplexing) is handled by standalone scripts in `qiime2/scripts/`. |
+| `scripts/` | R and Python scripts for downstream analysis: decontamination, off-target filtering, diversity, ordinations, ANCOMBC, indicator species, PhILR, zeta diversity, microscopy data analysis. |
 | `notebooks/` | Python (Jupyter) notebooks reading the BIOM feature tables exported by `scripts/01a`/`01b`: global ordinations of CLR-transformed counts (`01_dim_reduction` — PCA, t-SNE, UMAP, NMDS) and within-farm ordinations of bagged vs unbagged flowers per marker (`02a` 16S, `02b` ITS1). Committed without cell outputs; figures are written to `results/figures/`, untracked until data release. |
 | `results/` | Analysis outputs: `biom/` (feature tables), `figures/`, `tables/`, `rds/` (phyloseq intermediates), `zeta/`. |
 | `sra_upload/` | Demultiplexed FASTQ files prepared for NCBI SRA upload + metadata. |
