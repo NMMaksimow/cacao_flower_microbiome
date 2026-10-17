@@ -1,21 +1,36 @@
-#!/usr/bin/env python3
-"""Random Forest analysis of the cacao flower microbiome -- batch version.
+#!/usr/bin/env python
+# coding: utf-8
 
-Generated from notebooks/03_16S_ITS1_RFC.ipynb; edit the notebook, not this file.
+# # 03 — Random Forest: 16S ASV & ITS1 OTU97
+# 
+# CLR-transformed amplicon abundances as features. Every target is modelled on three
+# feature sets in parallel: **ITS1 OTU97**, **16S ASV**, and **Combined** (both concatenated).
+# 
+# | # | Target | Type | Samples | Question |
+# |---|--------|------|---------|----------|
+# | 1 | `farm_id` | 7 classes | all flowers | does the microbiome carry a site signature? |
+# | 2 | `sample_type` | binary | all flowers | bagged vs unbagged — visiting-insect footprint |
+# | 3 | `pollination` | 3 classes | unbagged only | none / weak / strong — pollinator footprint |
+# | 4 | `fungal_colonization` | binary | unbagged only | stigma colonisation score 0 vs 5 |
+# | 5 | `pi_clsm` | **regression** | unbagged only | pollen load as a continuous response |
+# 
+# `management_type` is deliberately **not** a target: each farm has exactly one management
+# type (7 farms x 42 flowers, no overlap), so a model separating management levels is
+# separating farms. It would duplicate target 1 under a different name.
+# 
+# **Evaluation.** Hyperparameters are tuned by nested cross-validation: an inner
+# `GridSearchCV` selects them inside every outer fold, so the reported score is not
+# inflated by the selection itself. Statistical significance comes from a permutation
+# test against shuffled labels, not from a fixed chance line.
+# 
+# Metrics: balanced accuracy, MCC, ROC-AUC (OvR macro), permutation p-value, confusion
+# matrix, calibration; Gini / permutation / SHAP importance.
 
-Run from the notebooks/ directory, which is what the relative paths assume:
-    cd notebooks && python 03_16S_ITS1_RFC.py
+# ## 0. Imports & parameters
 
-Environment variables:
-    RFC_QUICK=1   fast pass for checking the environment (minutes, numbers not usable)
-    RFC_QUICK=0   full run for the manuscript (default)
-"""
-import os
-import matplotlib
-matplotlib.use('Agg')          # no display on a compute node; must precede pyplot
+# In[1]:
 
 
-# ===== cell 0 ==========================================================
 import warnings; warnings.filterwarnings('ignore')
 import hashlib, json, os, re, time
 from pathlib import Path
@@ -62,7 +77,9 @@ FIG_DPI    = 300               # project rule: every figure is saved at 300 dpi
 # ── Run profile ──────────────────────────────────────────────────────────────
 # QUICK=True  : fast pass for developing / debugging the notebook (~25-30 min)
 # QUICK=False : full run whose numbers go into the manuscript (~4 h on 6 cores)
-QUICK = os.environ.get('RFC_QUICK', '0') == '1'
+# Read from RFC_QUICK (1 = quick, default 0 = full) so the batch script can switch
+# profiles without editing; in Jupyter, set QUICK = True by hand for a quick pass.
+QUICK           = os.environ.get('RFC_QUICK', '0') == '1'
 FORCE_RECOMPUTE = False   # True = ignore the cache and recompute everything
 
 RANDOM_STATE = 42
@@ -154,7 +171,43 @@ print(f'Profile: {"QUICK" if QUICK else "FULL"}  |  trees={N_TREES}  '
 print(f'Figures -> {FIG_DIR}')
 print(f'Cache   -> {CACHE_DIR}')
 
-# ===== cell 1 ==========================================================
+
+# ## 1. Load data
+
+# ### 1a. Taxonomy parsing
+# 
+# Rank prefixes (`g__`, `f__`, ...) are **kept**, because the R side of the project keeps
+# them too: the `tax_table` columns feeding the ANCOMBC2 and ISA figures hold values like
+# `f__Bulleribasidiaceae` and `g__Hannaella`. Identical labels let an RF importance bar
+# chart sit next to an ANCOMBC2 volcano plot and be read as one figure.
+# 
+# `deepest_rank` walks up the hierarchy until it finds an informative rank, mirroring
+# `make_tax_label` in `scripts/16a_16S_ancombc2_insect_footprint.R`. It replaces the old
+# `unclassified` bin, which pooled 55 of 303 ITS1 features and 47 of 231 16S features into
+# a single row and consequently topped the genus heatmap.
+# 
+# **One rank per label, not two.** A feature is labelled `g__Cladosporium [7fbb93]` --
+# the deepest rank it was actually assigned to, plus the feature hash. The hash is what
+# separates two features sharing a label; the rank prefix is what says how deep the
+# assignment goes.
+# 
+# Two reference-specific conventions have to be handled for this to be honest:
+# 
+# - **Unplaced ranks are named after the taxon enclosing them.** UNITE writes
+#   `g__Fungi_gen_Incertae_sedis`, SILVA writes `f__Rhizobiales_Incertae_Sedis` (no rank
+#   token, capital S). Stripping the suffix alone invents a genus called *Fungi* and a
+#   family called *Rhizobiales*. Both are caught, and the de-duplication step then drops
+#   the value as a repeat of the rank above it.
+# - **The top rank has two names.** SILVA writes `d__Bacteria`, UNITE writes `k__Fungi`,
+#   and 912 of 25035 16S ASVs are classified no further than that. Both letters are
+#   therefore ranks; no taxonomy string contains both, so their relative order is moot.
+# 
+# `s__` and `sh__` are deliberately not candidates for "deepest": species calls from a
+# short amplicon are unreliable, and the R side stops at genus for the same reason.
+
+# In[2]:
+
+
 # Values that carry no information even when the rank field is populated.
 TAX_SKIP = {'', 'NA', 'nan', 'unidentified', 'uncultured', 'uncultured_bacterium',
             'metagenome', 'Incertae_sedis', 'Incertae_Sedis', 'Unknown_Family',
@@ -248,7 +301,12 @@ counts_16s, tax_16s = load_marker('cfm_16s_bacteria_biosamples', '16S ASV')
 _ex = list(tax_its1.items())[:2]
 print('\nExample labels:', *[f'\n  {v}' for _, v in _ex])
 
-# ===== cell 2 ==========================================================
+
+# ### 1c. Metadata
+
+# In[3]:
+
+
 meta_raw = pd.read_csv(ROOT / 'data' / 'sample_metadata_with_microscopy.txt',
                        sep='\t', index_col=0, dtype=str)
 meta_raw = meta_raw.drop(index='#q2:types', errors='ignore').copy()   # QIIME2 type row
@@ -271,7 +329,32 @@ print(f'{len(meta[~meta.index.isin(INSECT_IDS)]):4d}  after also dropping {INSEC
 print()
 print(meta['sample_type'].value_counts().to_string())
 
-# ===== cell 3 ==========================================================
+
+# ## 2. Feature filtering and transformation
+# 
+# **Prevalence filter (10%) and the transform are computed on all 294 flowers, before
+# any target-specific subsetting.** That is safe for CLR: CLR is a per-sample (per-row)
+# operation, so selecting a subset of samples afterwards does not change the feature
+# values. It also keeps every target in the same feature space, and the same space that
+# 08a/08b and the ANCOMBC2 scripts use.
+# 
+# Four transforms are implemented. CLR is the default; the other three are used by the
+# sensitivity panel further down.
+# 
+# | Transform | What it does | Note |
+# |-----------|--------------|------|
+# | `raw` | untransformed counts | library size stays in the features |
+# | `tss` | counts / library size | removes depth, keeps the compositional constraint |
+# | `clr` | multiplicative zero replacement, then centred log-ratio | **default** |
+# | `rclr` | log of non-zero values minus the row mean of those logs; zeros stay 0 | matches `vegan::vegdist(method='robust.aitchison')` used for the PCoA in 08a/09c |
+# 
+# Random Forest is *not* invariant to these choices. Trees are invariant to monotonic
+# transforms applied per feature, but CLR and TSS divide by a per-sample quantity, which
+# can reorder samples within a feature — and that ordering is exactly what a split uses.
+
+# In[4]:
+
+
 def multiplicative_replacement(mat, delta=None):
     """Replace zeros with a small constant, rescaling the rest to keep row sums.
 
@@ -340,7 +423,10 @@ def build_features(counts_raw, meta_df, tax_dict, how='clr', thresh=PREV_THRESH,
         print(f'{label:10s} {how:5s}: {X.shape[1]:5d} features  {X.shape[0]:3d} samples')
     return X, feats
 
-# ===== cell 4 ==========================================================
+
+# In[5]:
+
+
 X_its1, feat_its1 = build_features(counts_its1, meta, tax_its1, 'clr', label='ITS1 OTU97')
 X_16s,  feat_16s  = build_features(counts_16s,  meta, tax_16s,  'clr', label='16S ASV')
 
@@ -376,7 +462,16 @@ DATASETS = list(FEATURES)
 for _d in FEATURES.values():
     _d['label'] = dict(zip(_d['ids'], _d['feats']))
 
-# ===== cell 5 ==========================================================
+
+# ## 3. Target definitions
+# 
+# Every target is a function `metadata -> y`, so the sample set is derived from the
+# metadata rather than hard-coded. The feature matrix is intersected with `y.index`,
+# which is what makes the unbagged-only targets drop to ~100 samples automatically.
+
+# In[6]:
+
+
 def target_farm_id(m):
     """7 farms, all flowers. Insect-carrying flowers are kept: farm identity is
     unaffected by whether an insect reached the flower."""
@@ -446,7 +541,29 @@ for t in TARGETS:
 counts_df = pd.DataFrame(rows)
 print(counts_df.to_string(index=False))
 
-# ===== cell 6 ==========================================================
+
+# ## 4. Cross-validation machinery
+# 
+# **Two numbers per model, and they must not be confused.**
+# 
+# *Nested CV score* — the outer loop measures performance, the inner `GridSearchCV`
+# picks hyperparameters inside each outer fold. Because selection never sees the outer
+# test fold, this is the unbiased estimate of generalisation. **This is the number that
+# goes into the manuscript.**
+# 
+# *Permutation-test observed score* — `permutation_test_score` runs a single CV with one
+# fixed hyperparameter set and compares it against the same procedure applied to shuffled
+# labels. The p-value is valid precisely because observed and null go through an identical
+# procedure — but that procedure is not the nested one, so the observed score here will
+# differ slightly from the nested-CV score. That is expected, not a discrepancy.
+# 
+# The out-of-fold predictions used for confusion matrices and calibration also use the
+# fixed hyperparameters: a repeated CV predicts each sample several times, whereas a
+# confusion matrix needs exactly one prediction per sample.
+
+# In[7]:
+
+
 def make_clf(**overrides):
     # n_jobs=1: the forest stays single-threaded; parallelism lives in the CV loops
     # around it (see N_JOBS_CV). Nesting both oversubscribes the machine.
@@ -764,7 +881,24 @@ def spearman_scorer(estimator, X, y):
     than R^2 here."""
     return spearmanr(y, estimator.predict(X))[0]
 
-# ===== cell 7 ==========================================================
+
+# ## 5. Fit all classification targets
+# 
+# 4 targets x 3 feature sets. Each combination gets nested CV, out-of-fold predictions,
+# a permutation test, and fold-wise importances.
+# 
+# **Three targets are additionally fitted `within-farm`.** The farm signal dominates this
+# dataset — ITS1 identifies the farm with ROC-AUC 0.965 — and farm is associated with both
+# weak biological targets (Cramér V = 0.485 for `fungal_colonization`, 0.326 for
+# `pollination`). A model could therefore "predict" colonisation by recognising the farm.
+# Subtracting each farm's mean from every feature leaves only within-farm variation, so
+# the pair of results answers how much of the signal was farm-mediated.
+# 
+# `farm_id` is not blocked, for obvious reasons.
+
+# In[8]:
+
+
 # Which targets get a second, farm-blocked fit.
 BLOCKED_TARGETS = ['sample_type', 'pollination', 'fungal_colonization']
 VARIANTS = ['raw', 'within-farm']
@@ -812,7 +946,29 @@ for target in CLF_TARGETS:
             )
 print('\nDone.')
 
-# ===== cell 8 ==========================================================
+
+# ## 6. Target 5 — `pi_clsm` as regression
+# 
+# Thresholding a continuous measurement into classes throws information away and makes
+# the result depend on where the threshold sits. Regressing `pi_clsm` directly avoids
+# both, and uses all 102 measured unbagged flowers.
+# 
+# Primary metric is **Spearman rho** between out-of-fold predictions and observations:
+# `pi_clsm` is zero-inflated (38 of 102 are exactly 0) and right-skewed, so a rank
+# correlation describes the fit more honestly than R². R² and MAE are reported alongside.
+# 
+# This is not an independent confirmation of the 3-class model in section 5 — it is the
+# same data and the same question in a different form. Read the two together.
+# 
+# The `within-farm` variant centers **both** the features and the response by farm, which
+# is the classic within (fixed-effects) estimator. The question becomes: inside one farm,
+# do flowers richer in a given taxon carry more pollen? Since the raw regression already
+# sits at rho ~ 0, there is nothing to lose — and anything that appears after centering
+# would be a far more convincing result than the current one.
+
+# In[9]:
+
+
 REG_RESULTS = {}
 print('=== pi_clsm (regression) ===')
 
@@ -881,7 +1037,17 @@ for variant in VARIANTS:
         print(f'  {ds:9s} rho={rho:.3f}  R2={REG_RESULTS[(ds, variant)]["r2"]:.3f}  '
               f'MAE={REG_RESULTS[(ds, variant)]["mae"]:.1f}  p={perm["pvalue"]:.4f}')
 
-# ===== cell 9 ==========================================================
+
+# ## 7. Summary of all models
+# 
+# `nested_bal_acc` is the headline, unbiased estimate. `perm_observed` comes from the
+# permutation procedure (fixed hyperparameters, single CV) and is only meaningful next
+# to its own p-value — the two columns answer different questions and are not expected
+# to be identical.
+
+# In[10]:
+
+
 rows = []
 for (target, ds, variant), r in RESULTS.items():
     rows.append(dict(
@@ -927,7 +1093,10 @@ for (ds, variant), r in REG_RESULTS.items():
     print(f'  {ds:9s} {variant:12s} n={r["n"]}  Spearman={r["spearman"]:.3f}  '
           f'R2={r["r2"]:.3f}  MAE={r["mae"]:.1f}  p={r["perm"]["pvalue"]:.4f}')
 
-# ===== cell 10 ==========================================================
+
+# In[11]:
+
+
 # ── Heatmap: how far each model gets from chance towards perfect ────────────
 # Colour encodes (bal_acc - chance) / (1 - chance): 0 = chance, 1 = perfect. The cell
 # annotation keeps the raw balanced accuracy so nothing is hidden behind the scaling.
@@ -956,7 +1125,16 @@ fig.savefig(FIG_DIR / f'{FIG_PREFIX}summary_heatmap.png', dpi=FIG_DPI,
             bbox_inches='tight', facecolor='white')
 plt.show()
 
-# ===== cell 11 ==========================================================
+
+# ## 8. Confusion matrices and Gini importance
+# 
+# One figure per target, one column per feature set. Confusion matrices come from the
+# out-of-fold predictions (fixed hyperparameters), so no sample is scored by a model
+# that saw it during training.
+
+# In[12]:
+
+
 def plot_target_panel(target, variant='raw', n_top=N_TOP_IMP):
     """Two rows: confusion matrices on top, top-N Gini importances below.
 
@@ -1009,7 +1187,18 @@ for t in CLF_TARGETS:
     for v in (VARIANTS if t in BLOCKED_TARGETS else ['raw']):
         plot_target_panel(t, v)
 
-# ===== cell 12 ==========================================================
+
+# ## 9. Permutation tests
+# 
+# Each histogram is the distribution of balanced accuracy obtained after shuffling the
+# labels, i.e. what this design, this sample size and this class imbalance produce when
+# there is no signal. The dashed line is the observed score. A fixed chance line of
+# 1/n_classes is the theoretical expectation; the empirical null shows the spread around
+# it, which is what a p-value needs.
+
+# In[13]:
+
+
 perm_rows = [(t, v) for t in CLF_TARGETS
              for v in (VARIANTS if t in BLOCKED_TARGETS else ['raw'])]
 
@@ -1040,7 +1229,16 @@ fig.savefig(FIG_DIR / f'{FIG_PREFIX}permutation_tests.png', dpi=FIG_DPI,
             bbox_inches='tight', facecolor='white')
 plt.show()
 
-# ===== cell 13 ==========================================================
+
+# ## 10. Probability calibration — binary targets
+# 
+# Random Forest probabilities on small samples tend to be pushed toward 0 and 1. This
+# matters whenever `predict_proba` is read as a probability rather than a ranking. The
+# diagonal is perfect calibration; the Brier score summarises the gap (lower is better).
+
+# In[14]:
+
+
 BINARY_TARGETS = [t for t in CLF_TARGETS if len(TARGETS[t]['order'] or []) == 2]
 
 fig, axes = plt.subplots(1, len(BINARY_TARGETS),
@@ -1069,7 +1267,15 @@ fig.savefig(FIG_DIR / f'{FIG_PREFIX}calibration.png', dpi=FIG_DPI,
             bbox_inches='tight', facecolor='white')
 plt.show()
 
-# ===== cell 14 ==========================================================
+
+# ## 11. Regression diagnostics — `pi_clsm`
+# 
+# Out-of-fold predictions against observed pollen load. Points are coloured by the
+# 3-class grouping used in section 5, so the two framings can be read against each other.
+
+# In[15]:
+
+
 POLL_COLOURS = {'none': '#4C72B0', 'weak': '#DD8452', 'strong': '#55A868'}
 
 # One row per variant. pi_clsm spans 0 to ~350 with most flowers near zero, so the
@@ -1120,7 +1326,26 @@ fig.savefig(FIG_DIR / f'{FIG_PREFIX}regression_pi_clsm.png', dpi=FIG_DPI,
             bbox_inches='tight', facecolor='white')
 plt.show()
 
-# ===== cell 15 ==========================================================
+
+# ## 12. Does the transformation drive the result?
+# 
+# CLR is the default here, but the PCoA in 08a/09c uses rCLR, and one could argue for
+# raw counts. Random Forest is not invariant to the choice: CLR and TSS divide by a
+# per-sample quantity, which can reorder samples within a feature, and that ordering is
+# what a split threshold acts on.
+# 
+# The specific risk with raw counts is documented in 08a: unbagged flowers are
+# systematically sequenced deeper than bagged ones on every farm. On untransformed
+# counts a forest can reach high accuracy on `sample_type` by reading library size
+# rather than community composition. The diagnostic below quantifies that directly,
+# and the panel shows whether it materialises.
+# 
+# Fixed hyperparameters and a single 5-fold CV are used here — this panel compares
+# transforms against each other, not against an absolute standard.
+
+# In[16]:
+
+
 # ── Diagnostic: how strongly is library size tied to each target? ───────────
 lib_rows = []
 for ds, counts_raw in [('ITS1', counts_its1), ('16S', counts_16s)]:
@@ -1140,7 +1365,10 @@ print('Variance in sequencing depth explained by each target (eta^2):')
 print(lib_df.to_string(index=False))
 print('\nHigh eta^2 means raw counts give the forest a technical shortcut.')
 
-# ===== cell 16 ==========================================================
+
+# In[17]:
+
+
 TRANSFORMS = ['raw', 'tss', 'clr', 'rclr']
 
 def score_fixed(X_df, y_s):
@@ -1164,7 +1392,10 @@ for ds, counts_raw, tax_d in [('ITS1', counts_its1, tax_its1), ('16S', counts_16
 tr_df = pd.DataFrame(tr_rows)
 tr_df.to_csv(TAB_DIR / f'{FIG_PREFIX}transform_comparison.csv', index=False)
 
-# ===== cell 17 ==========================================================
+
+# In[18]:
+
+
 fig, axes = plt.subplots(2, len(CLF_TARGETS), figsize=(4.1 * len(CLF_TARGETS), 7.4),
                          sharey=True)
 fig.suptitle('Sensitivity to the feature transformation (fixed hyperparameters, 5-fold CV)',
@@ -1192,7 +1423,30 @@ fig.savefig(FIG_DIR / f'{FIG_PREFIX}transform_comparison.png', dpi=FIG_DPI,
             bbox_inches='tight', facecolor='white')
 plt.show()
 
-# ===== cell 18 ==========================================================
+
+# ## 13. Effect of the prevalence threshold
+# 
+# 10% is used throughout, to match 08a/08b and the ANCOMBC2 scripts — RF importances are
+# only comparable with ANCOMBC2 and ISA results if all three see the same feature space.
+# The cost differs sharply between markers:
+# 
+# | threshold | ITS1 features | ITS1 reads kept | 16S features | 16S reads kept |
+# |---|---|---|---|---|
+# | 5 % | 554 | 96.9 % | 580 | 77.6 % |
+# | **10 %** | **303** | **94.2 %** | **231** | **65.2 %** |
+# | 20 % | 158 | 87.1 % | 87 | 46.1 % |
+# 
+# For ITS1 the step from 5% to 10% costs under 3% of reads. For 16S it discards a third
+# of them — the bacterial community is far more even. That number belongs in the Methods.
+# 
+# The last row, `10% within unbagged`, computes prevalence inside the unbagged subset
+# instead of across all 294 flowers. Three of the targets live only on unbagged flowers,
+# and a taxon common there but rare overall is dropped by the global filter: 45 ITS1
+# features (0.6% of reads) and 37 16S features (3.8% of reads).
+
+# In[19]:
+
+
 unbagged_ids = list(meta.index[meta['sample_type'] == 'unbagged_flower'])
 PREV_CONFIGS = [('0 %', 0.00, None), ('5 %', 0.05, None), ('10 % (used)', 0.10, None),
                 ('20 %', 0.20, None), ('10 % within unbagged', 0.10, unbagged_ids)]
@@ -1211,7 +1465,10 @@ for ds, counts_raw, tax_d in [('ITS1', counts_its1, tax_its1), ('16S', counts_16
 pv_df = pd.DataFrame(pv_rows)
 pv_df.to_csv(TAB_DIR / f'{FIG_PREFIX}prevalence_comparison.csv', index=False)
 
-# ===== cell 19 ==========================================================
+
+# In[20]:
+
+
 fig, axes = plt.subplots(2, len(CLF_TARGETS), figsize=(4.3 * len(CLF_TARGETS), 7.8),
                          sharey=True)
 fig.suptitle('Effect of the prevalence threshold (fixed hyperparameters, 5-fold CV)',
@@ -1245,7 +1502,22 @@ fig.savefig(FIG_DIR / f'{FIG_PREFIX}prevalence_comparison.png', dpi=FIG_DPI,
             bbox_inches='tight', facecolor='white')
 plt.show()
 
-# ===== cell 20 ==========================================================
+
+# ## 14. Permutation and SHAP importance
+# 
+# Both measures are computed **fold-wise on held-out data**, not on a model refitted to
+# everything. That matters: with `min_samples_leaf=1` a forest fitted on all samples
+# reaches balanced accuracy 1.000, and shuffling any one of several hundred correlated
+# features then changes nothing — the first run produced permutation importances of
+# exactly zero for 8 of 12 combinations. Measuring on the test fold removes that
+# failure mode.
+# 
+# Error bars are the spread across folds. A tall bar with a wide error bar surfaced in
+# one fold; a tall bar with a tight one is a taxon the model leans on consistently.
+
+# In[21]:
+
+
 def plot_importance_panel(measure, title, xlabel, fname):
     """One row per (target, variant), one column per feature set."""
     rows = [(t, v) for t in CLF_TARGETS
@@ -1299,7 +1571,25 @@ imp_long.insert(2, 'feature_label', [
 imp_long.to_csv(TAB_DIR / f'{FIG_PREFIX}importances.csv', index=False)
 print('Saved importances table.')
 
-# ===== cell 21 ==========================================================
+
+# ## 15. Importance aggregated by taxonomic rank
+# 
+# Gini importance summed per taxon, using the deepest rank each feature was classified
+# to: `g__Fusarium` when the genus is known, otherwise `f__Nectriaceae`, `o__Hypocreales`
+# and so on. That fallback replaces the former single `unclassified` bin, which pooled
+# 55 of 303 ITS1 features and 47 of 231 16S features and therefore always topped the
+# chart — its height was an artefact of aggregation, not one important taxon.
+# 
+# Prefixes are kept so the labels match the ANCOMBC2 and ISA figures.
+# 
+# **Columns are normalised independently** (each target's maximum becomes 1), so colour
+# compares taxa *within* a column. A bright cell under a weak target is the maximum of
+# near-zero values and does not mean the same absolute importance as a bright cell under
+# a strong one.
+
+# In[22]:
+
+
 def imp_by_rank(imp_series, rank_map):
     """Sum fold-averaged Gini importance per deepest-assigned taxonomic rank.
 
@@ -1337,3 +1627,4 @@ def rank_heatmap(ds, n_top=25):
 # the single-marker feature sets are shown.
 for ds in ['ITS1', '16S']:
     rank_heatmap(ds).to_csv(TAB_DIR / f'{FIG_PREFIX}rank_importance_{ds}.csv')
+

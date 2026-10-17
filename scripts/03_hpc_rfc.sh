@@ -10,6 +10,8 @@
 #SBATCH --mail-type=END,FAIL
 
 # Random Forest analysis (notebooks/03_16S_ITS1_RFC.py), batch version.
+# The .py is generated from the notebook; regenerate it after editing the notebook:
+#   cd notebooks && jupyter nbconvert --to script 03_16S_ITS1_RFC.ipynb
 #
 # Runtime reference: on a 6-core laptop the importance step alone took ~15 h with
 # everything else served from cache. It is the dominant cost -- for the Combined
@@ -40,7 +42,7 @@ export OMP_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 export OPENBLAS_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 export MKL_NUM_THREADS=${SLURM_CPUS_PER_TASK:-1}
 export LOKY_MAX_CPU_COUNT=${SLURM_CPUS_PER_TASK:-1}
-export MPLBACKEND=Agg
+export MPLBACKEND=Agg    # required: the generated script does not choose a backend itself
 
 # Without this the whole job runs on ONE core, silently.
 #
