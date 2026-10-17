@@ -12,12 +12,15 @@ shift the flower microbiome?
 
 ## Setup
 
-- **R**: Windows R 4.4.2 via RStudio; renv locks packages (`renv::restore()`).
-  From WSL terminal: `"/mnt/c/Program Files/R/R-4.4.2/bin/Rscript.exe" script.R`
-- **Python**: WSL Ubuntu; `ml` conda env (scikit-learn stack); `cfm_analysis`
-  conda env (Jupyter, biom-format, umap-learn)
+- **R**: Windows R 4.6.1 via RStudio; renv locks packages (`renv::restore()`).
+  From WSL terminal: `"/mnt/c/Program Files/R/R-4.6.1/bin/Rscript.exe" script.R`
+- **Python**: WSL Ubuntu, miniforge (conda/mamba). JupyterLab runs from `base`;
+  notebook kernels: `ml` (scikit-learn, biom-format, umap-learn; notebooks
+  01-04) and `gamma` (gudhi; TDA notebooks 07a/07b)
+- **Notebooks in git**: outputs are stripped on commit by the nbstripout git
+  filter (own env `nbstripout`); commit from the WSL terminal
 - **HPC Hamilton**: SSH alias `hamilton`; `jcnx71@login2.ham8`;
-  project root `~/nobackup/cacao_flower_microbiome/`; **access expires 2026-08-23**
+  project root `~/nobackup/cacao_flower_microbiome/`;
 
 ## Canonical R entry points
 
@@ -30,8 +33,12 @@ shift the flower microbiome?
 
 ## Key analytical decisions
 
-- **Beta diversity primary metric**: rCLR Aitchison —
-  `vegdist(..., method = "robust.aitchison")`; non-rarefied, no zero imputation
+- **Beta diversity primary metric**: CLR Aitchison with multiplicative zero
+  replacement — `zCompositions::cmultRepl(method = "CZM", output = "p-counts")` →
+  CLR → Euclidean (`aitchison_CLR` in 08a/08b); non-rarefied
+- **rCLR** (`vegdist(..., method = "robust.aitchison")`): sensitivity metric only;
+  it weights the zero/presence structure and inflated the ITS1 treatment R² (with
+  significant PERMDISP) relative to CLR, Bray-Curtis and Jaccard
 - **Prevalence filter**: 10% of samples, applied before distance computation in 08a/08b
 - **Alpha diversity (main text)**: Observed, Shannon, Berger-Parker, Faith PD (16S
   only); Chao1 computed but NOT reported (downward biased after DADA2 removes global
@@ -51,9 +58,9 @@ shift the flower microbiome?
 
 ## Current active work
 
-1. Stabilize modular R pipeline; beta diversity (08–10a/b/c scripts) recently restructured
-2. Zeta diversity on HPC — failed Slurm runs need retry before 2026-08-23
-3. Manuscript methods draft lives in `docs/analysis_log.md` (local only, not in git)
+1. Stabilize modular R pipeline and results;
+2. Stabilize ML approaches in notebooks;
+3. Write manuscript methods and results; draft lives in `docs/cacao_flower_microbiome_nm.docx` (local only, not in git)
 
 ## Datasets
 

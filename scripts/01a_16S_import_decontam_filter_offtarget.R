@@ -199,8 +199,19 @@ names(which(sample_sums(ps_16S_bacteria) == 0))
 
 # ---- Additional taxonomically filtered subsets of potential exploratory interest ---- 
 # The subset with Archaea sequences includes 83 ASVs assigned to d__Archaea:
-ps_16S_archaea <- ps_16S_decontam |> 
+ps_16S_archaea <- ps_16S_decontam |>
         subset_taxa(Domain == "d__Archaea")
+
+# The prokaryote subset: Bacteria + Archaea, organelles removed as for ps_16S_bacteria.
+# 515F/806R primers target both domains, so archaea are not off-target here.
+# Used for functional annotation (25a), where FAPROTAX covers archaeal functions.
+ps_16S_prokaryotes <- ps_16S_decontam |>
+        subset_taxa(
+                Domain %in% c("d__Bacteria", "d__Archaea") &
+                (is.na(Order)  | Order  != "o__Chloroplast") &
+                (is.na(Family) | Family != "f__Mitochondria")
+        ) |>
+        (\(ps) prune_samples(sample_sums(ps) > 0, ps))()
 
 # The subset with Eukaryota sequences includes 263 ASVs assigned to d__Eukaryota:
 # This subset includes 2 ASVs assigned to g__Phytophthora, the major cocoa pathogen. NB!
@@ -226,6 +237,15 @@ ps_16S_unassigned <- ps_16S_decontam |>
 # ---- Filter only biological samples (remove all controls) ----
 ps_16S_bacteria_biosamples <- subset_samples(
         ps_16S_bacteria,
+        !sample_type %in% c(
+                "extraction_control",
+                "negative_pcr_control",
+                "mock_community"
+        )
+)
+
+ps_16S_prokaryotes_biosamples <- subset_samples(
+        ps_16S_prokaryotes,
         !sample_type %in% c(
                 "extraction_control",
                 "negative_pcr_control",
@@ -260,6 +280,13 @@ saveRDS(ps_16S_bacteria,
 saveRDS(
         ps_16S_bacteria_biosamples,
         file = here("results", "rds", "ps_16S_bacteria_biosamples.rds"),
+        compress = "xz"
+)
+
+# Bacteria + Archaea biosamples, used for functional annotation (25a)
+saveRDS(
+        ps_16S_prokaryotes_biosamples,
+        file = here("results", "rds", "ps_16S_prokaryotes_biosamples.rds"),
         compress = "xz"
 )
 

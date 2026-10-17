@@ -10416,40 +10416,6 @@
       "Maintainer": "William Gearty <willgearty@gmail.com>",
       "Repository": "CRAN"
     },
-    "rstudioai": {
-      "Package": "rstudioai",
-      "Version": "2.3.4",
-      "Source": "GitHub",
-      "Type": "Package",
-      "Title": "RgentAI: AI-Powered Statistical Analysis Assistant for R",
-      "Author": "Nathan Bresette",
-      "Maintainer": "Nathan Bresette <support@rgentai.com>",
-      "Description": "An intelligent AI assistant for R programming that provides conversational chat, plot analysis, error debugging, and specialized agents for data cleaning, transformation, statistical analysis, and machine learning workflows.",
-      "License": "MIT + file LICENSE",
-      "Depends": [
-        "R (>= 4.0.0)"
-      ],
-      "Imports": [
-        "httr",
-        "rstudioapi",
-        "jsonlite",
-        "clipr",
-        "shiny",
-        "httpuv"
-      ],
-      "Suggests": [
-        "testthat",
-        "remotes"
-      ],
-      "RoxygenNote": "7.3.2",
-      "RemoteType": "github",
-      "RemoteHost": "api.github.com",
-      "RemoteRepo": "Rgent-AI",
-      "RemoteUsername": "NathanBresette",
-      "RemoteRef": "HEAD",
-      "RemoteSha": "0fb47837429ccfcf4c0a05a01861b13e9e90c70d",
-      "NeedsCompilation": "no"
-    },
     "rstudioapi": {
       "Package": "rstudioapi",
       "Version": "0.18.0",

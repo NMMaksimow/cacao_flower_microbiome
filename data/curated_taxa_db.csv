@@ -1,0 +1,59 @@
+Domain;Kingdom;Genus;Species;GenusSyn;SpeciesSyn;SH;context;role;note;DOI
+Eukaryota;Stramenopila;Phytophthora;megakarya;;;;cacao;pathogen;causative agent of black pod rot (West Africa mostly);https://doi.org/10.1007/978-3-319-24789-2
+Eukaryota;Stramenopila;Phytophthora;palmivora;;;;cacao;pathogen;causative agent of black pod rot (worldwide);https://doi.org/10.1007/978-3-319-24789-2
+Eukaryota;Stramenopila;Phytophthora;citrophthora;;;;cacao;pathogen;causative agent of black pod rot (Brazil, Indonesia, India);https://doi.org/10.1007/978-3-319-24789-2
+Eukaryota;Stramenopila;Phytophthora;capsici;;tropicalis;;cacao;pathogen;causative agent of black pod rot (Americas, Caribbean area);https://doi.org/10.1007/978-3-319-24789-2
+Eukaryota;Stramenopila;Phytophthora;tropicalis;;capsici;;cacao;pathogen;causative agent of black pod rot (Americas, Caribbean area);https://doi.org/10.1007/978-3-319-24789-2
+Eukaryota;Stramenopila;Trachysphaera;fructigena;;;;cacao;pathogen;causative agent of mealy pod diesease;https://doi.org/10.1007/978-3-319-24789-2
+Eukaryota;Fungi;Moniliophthora;roreri;;;;cacao;pathogen;causative agent of frosty pod disease;https://doi.org/10.1007/978-3-319-24789-2
+Eukaryota;Fungi;Moniliophthora;perniciosa;;;;cacao;pathogen;causative agent of witche's broom disease;https://doi.org/10.1007/978-3-319-24789-2
+Eukaryota;Fungi;Phellinus;noxious;;;;cacao;pathogen;brown root rot disease;https://doi.org/10.1007/978-3-319-24789-2
+Eukaryota;Fungi;Ceratobasidium;theobromae;;;;cacao;pathogen;causative agent of vascular streak dieback;https://doi.org/10.1186/s40694-019-0077-6
+Eukaryota;Fungi;Oncobasidium;theobromae;Ceratobasidium ;;;cacao;pathogen;causative agent of vascular streak dieback;https://doi.org/10.1007/978-3-319-24789-2
+Eukaryota;Fungi;Thanatephorus;theobromae;Ceratobasidium ;;;cacao;pathogen;causative agent of vascular streak dieback;https://doi.org/10.1007/978-3-319-24789-2
+Eukaryota;Fungi;Lasiodiplodia;theobromae;Botryodiplodia;;;cacao;pathogen;causative agent of vascular streak dieback and charcoal pod rot;https://doi.org/10.1139/gen-2019-0112
+Eukaryota;Fungi;Botryodiplodia;theobromae;Lasiodiplodia;;;cacao;pathogen;causative agent of vascular streak dieback;https://doi.org/10.1007/978-3-319-24789-2
+Eukaryota;Fungi;Ceratocystis;cacaofunesta;;;;cacao;pathogen;causative agent of wilt of cacao;https://doi.org/10.1007/978-3-319-24789-2
+Eukaryota;Fungi;Armillaria;;;;;cacao;pathogen;causative agent of root rot;https://doi.org/10.1007/978-3-319-24789-2
+Eukaryota;Fungi;Marasmius;crinis-equi;;;;cacao;pathogen;causative agent of thread blight disease;https://doi.org/10.1094/PDIS-03-20-0565-RE
+Eukaryota;Fungi;Marasmius;tenuissimus;;;;cacao;pathogen;causative agent of thread blight disease;https://doi.org/10.1094/PHYTOFR-03-23-0027-A
+Eukaryota;Fungi;Marasmiellus;palmivorus;;;;cacao;pathogen;causative agent of thread blight disease;https://doi.org/10.1094/PDIS-03-20-0565-RE
+Eukaryota;Fungi;Paramarasmius;palmivorus;Marasmius;;;cacao;pathogen;causative agent of thread blight disease;https://doi.org/10.1094/PHYTOFR-03-24-0024-A
+Eukaryota;Fungi;Marasmiellus;scandens;;;;cacao;pathogen;causative agent of thread blight disease;https://doi.org/10.1094/PDIS-03-20-0565-RE
+Eukaryota;Fungi;Erythricium;salmonicolor;;;;cacao;pathogen;causative agent of pink disease;https://doi.org/10.1007/978-3-319-24789-2
+Eukaryota;Fungi;Colletotrichum;gloeosporioides;;;;cacao;pathogen;some of the species in this spicies complex are causative agents of anthracnose;https://doi.org/10.1007/978-3-319-24789-2
+Eukaryota;Fungi;Colletotrichum;siamense;;;;cacao;;reported from infected tissues;https://doi.org/10.1007/978-3-319-24789-2
+Eukaryota;Fungi;Colletotrichum;theobromicola;;;;cacao;pathogen;causative agent of anthracnose;https://doi.org/10.1007/978-3-319-24789-2
+Eukaryota;Fungi;Colletotrichum;tropicale;;;;cacao;biocontrol;endophyte with biocontrol properties, acting through activating host defence genes;https://doi.org/10.3389/fmicb.2014.00479
+Eukaryota;Fungi;Colletotrichum;aeschynomenes;;;;cacao;;;
+Eukaryota;Fungi;Pestalotiopsis;;;;;cacao;pathogen;;
+Eukaryota;Fungi;Trichoderma;asperellum;;;;cacao;biocontrol;isolates T2 and T4 showed biocontrol properties in vitro against Phytophthora;https://doi.org/10.1016/j.biocontrol.2015.04.018
+Eukaryota;Fungi;Trichoderma;longibrachiatum;;;;cacao;biocontrol;isolates T15 and T16 showed biocontrol properties in vitro against Phytophthora;https://doi.org/10.1016/j.biocontrol.2015.04.018
+Eukaryota;Fungi;Trichoderma;virens;;;;cacao;biocontrol;isolates T1 and Tv showed biocontrol properties vitro against Phytophthora;https://doi.org/10.1016/j.biocontrol.2015.04.018
+Eukaryota;Fungi;Trichoderma;harzianum;;;;cacao;biocontrol;isolate DIS-219f increased yield and resistance to Phytophthora;https://doi.org/10.1111/ppa.12383
+Eukaryota;Fungi;Trichoderma;ovalisporum;;;;cacao;biocontrol;isolate DIS-70a increased yield and resistance to Phytophthora;https://doi.org/10.1111/ppa.12383
+Eukaryota;Fungi;Trichoderma;hamatum;;;;cacao;biocontrol;isolate DIS 219b corresponded drought resistance against Phytophthora;https://doi.org/10.1093/jxb/erp165
+Eukaryota;Fungi;Hannaella;luteola;;;;cacao;symbiont;isolated form flowers, fruits;https://doi.org/10.1007/s40858-020-00418-w
+Eukaryota;Fungi;Hannaella;oryzae;;;;cacao;symbiont;isolated form leaves, flowers;https://doi.org/10.1007/s40858-020-00418-w
+Eukaryota;Fungi;Hannaella;coprosmae;;;;cacao;symbiont;isolated from leaves;
+Eukaryota;Fungi;Hannaella;surugaensis;;;;cacao;symbiont;isolated form flowers;
+Eukaryota;Fungi;Cryptococcus;heimaeyensis;;;;cacao;symbiont;isolated form leaves, flowers;https://doi.org/10.1007/s40858-020-00418-w
+Eukaryota;Fungi;Cryptococcus;taibaiensis;;;;cacao;symbiont;isolated form leaves, flowers, and fruits;https://doi.org/10.1007/s40858-020-00418-w
+Eukaryota;Fungi;Candida;saopaulonensis;;;;cacao;symbiont;isolated form flowers;https://doi.org/10.1007/s40858-020-00418-w
+Eukaryota;Fungi;Candida;nonsoborphila;;;;cacao;symbiont;isolated form leaves, fruits;https://doi.org/10.1007/s40858-020-00418-w
+Eukaryota;Fungi;Candida;parapsilosis;;;;cacao;symbiont;isolated form leaves;https://doi.org/10.1007/s40858-020-00418-w
+Eukaryota;Fungi;Candida;intermedia;;;;cacao;symbiont;isolated form leaves;https://doi.org/10.1007/s40858-020-00418-w
+Eukaryota;Fungi;Candida;sorbosivorans;;;;cacao;symbiont;isolated form leaves;https://doi.org/10.1007/s40858-020-00418-w
+Eukaryota;Fungi;Candida;orthopsilosis;;;;cacao;biocontrol;"isolated from leaves, fruits; strain LEV 225 showed biocontrol properties in vitro against Moniliphthora";https://doi.org/10.1007/s40858-020-00418-w
+Eukaryota;Fungi;Hanseniaspora;uvarum;;;;cacao;biocontrol;"isolated from leaves, flowers; strains LEV 162, 210, 211 showed biocontrol properties in vitro against Moniliphthora";https://doi.org/10.1007/s40858-020-00418-w
+Eukaryota;Fungi;Kwoniella;mangrovensis;;;;cacao;symbiont;isolated from fruits;https://doi.org/10.1007/s40858-020-00418-w
+Eukaryota;Fungi;Occultifur;externus;;;;cacao;symbiont;isolated from leaves;https://doi.org/10.1007/s40858-020-00418-w
+Eukaryota;Fungi;Rhodotorula;paludigena;;;;cacao;biocontrol;"isolated from leaves, flowers; strains LEV 166, 168 showed biocontrol properties in vitro against Moniliophthora";https://doi.org/10.1007/s40858-020-00418-w
+Eukaryota;Fungi;Pichia;sporocuriosa;;;;cacao;symbiont;isolated from flowers;https://doi.org/10.1007/s40858-020-00418-w
+Eukaryota;Fungi;Sporobolomyces;roseus;;;;cacao;symbiont;isolated from leaves;https://doi.org/10.1007/s40858-020-00418-w
+Eukaryota;Fungi;Wickerhamomyces;lynferdii;;;;cacao;symbiont;isolated from leaves;https://doi.org/10.1007/s40858-020-00418-w
+Eukaryota;Fungi;Yamadazyma;triangularis;;;;cacao;symbiont;isolated from leaves;https://doi.org/10.1007/s40858-020-00418-w
+Eukaryota;Fungi;Metschnikowia;;;;;flower;pathogen;some strains known to induce pollen grain rupture;
+Bacteria;;Acinetobacter;;;;;flower;pathogen;some strains stimulate pollen germination and pollen tube rupture;
+Bacteria;;Wolbachia;;;;;insect;insect symbiont;;
+Eukaryota;Fungi;Simplicillium;;;;;insect;insect pathogen;ant pathogen;

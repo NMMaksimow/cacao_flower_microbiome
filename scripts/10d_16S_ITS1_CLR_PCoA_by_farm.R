@@ -1,4 +1,5 @@
 # ---- 0. Parameters -------------------------------------------------------
+DIST        <- "aitchison_CLR"   # primary metric: CLR Aitchison with CZM zero replacement
 FARM_LEVELS <- c("ib", "vr", "sa", "kk", "mt", "vi", "yb")
 MGMT        <- c(ib = "inside_forest", vr = "near_forest",  sa = "near_forest",
                  kk = "agroforest",   mt = "agroforest",   vi = "full_sun",
@@ -6,8 +7,8 @@ MGMT        <- c(ib = "inside_forest", vr = "near_forest",  sa = "near_forest",
 # Colours match Python notebooks (01a_16s_pca_by_farm.ipynb, 01b_its1_pca_by_farm.ipynb)
 COLS <- c(bagged_flower = "#4C72B0", unbagged_flower = "#DD8452")
 # Left-margin labels: one per row, top to bottom
-ROW_LABELS <- c("16S bacteria (rCLR Aitchison)",
-                "ITS1 OTU97 fungi (rCLR Aitchison)")
+ROW_LABELS <- c("16S bacteria (CLR Aitchison)",
+                "ITS1 OTU97 fungi (CLR Aitchison)")
 
 # ---- 1. Libraries --------------------------------------------------------
 library(here)
@@ -15,7 +16,7 @@ library(tidyverse)
 library(vegan)   # capscale(), ordiplot(), ordiellipse(), scores()
 
 # ---- 2. Load data --------------------------------------------------------
-# Only the rCLR slice is needed from each marker's RDS; no phyloseq loading required.
+# Only the CLR slice is needed from each marker's RDS; no phyloseq loading required.
 dist_list_16s <- readRDS(here("results", "rds", "16S_dist_list.rds"))
 meta_list_16s <- readRDS(here("results", "rds", "16S_meta_list.rds"))
 
@@ -25,17 +26,17 @@ meta_list_its <- readRDS(here("results", "rds", "ITS1_otu97_meta_list.rds"))
 for (rds_name in c("16S_dist_list.rds", "ITS1_otu97_dist_list.rds")) {
   obj  <- if (grepl("16S", rds_name)) dist_list_16s else dist_list_its
   label <- if (grepl("16S", rds_name)) "08a" else "08b"
-  if (!"aitchison_rCLR" %in% names(obj))
-    stop(sprintf("%s missing 'aitchison_rCLR' — re-run %s to regenerate.", rds_name, label))
+  if (!DIST %in% names(obj))
+    stop(sprintf("%s missing '%s' — re-run %s to regenerate.", rds_name, DIST, label))
 }
 
-d_16s  <- dist_list_16s[["aitchison_rCLR"]]
-m_16s  <- meta_list_16s[["aitchison_rCLR"]]
-d_its  <- dist_list_its[["aitchison_rCLR"]]
-m_its  <- meta_list_its[["aitchison_rCLR"]]
+d_16s  <- dist_list_16s[[DIST]]
+m_16s  <- meta_list_16s[[DIST]]
+d_its  <- dist_list_its[[DIST]]
+m_its  <- meta_list_its[[DIST]]
 
 # ---- 3. Combined 2-row PCoA figure ---------------------------------------
-# Layout: row 1 = 16S rCLR, row 2 = ITS1 OTU97 rCLR; columns = 7 farms.
+# Layout: row 1 = 16S CLR, row 2 = ITS1 OTU97 CLR; columns = 7 farms.
 # Each row has independent shared axis limits (16S and ITS1 live in different
 # Aitchison spaces); limits computed in pass 1, applied in pass 2.
 # Panel titles: row 1 shows farm code + management + 16S n; row 2 shows ITS1 n only
@@ -44,7 +45,7 @@ m_its  <- meta_list_its[["aitchison_rCLR"]]
 
 dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
 
-png(here("results", "figures", "09c_16S_ITS1_rCLR_pcoa_by_farm.png"),
+png(here("results", "figures", "10d_16S_ITS1_CLR_pcoa_by_farm.png"),
     width = 20, height = 9, units = "in", res = 300)
 
 # mfrow: 2 marker rows × 7 farm columns
@@ -152,7 +153,7 @@ for (i in seq_along(ROW_LABELS)) {
         at = y_ndc, las = 0, cex = 0.72, line = 2)
 }
 
-mtext("Within-farm PCoA — rCLR Aitchison (shared axis limits within marker rows)",
+mtext("Within-farm PCoA — CLR Aitchison (CZM zero replacement; shared axis limits within marker rows)",
       outer = TRUE, cex = 1.1, line = 1, side = 3)
 
 # Legend band: reserves the bottom 7% of device height.
@@ -172,4 +173,4 @@ legend("bottom",
 
 dev.off()
 
-message("Done. Figure saved to results/figures/09c_16S_ITS1_rCLR_pcoa_by_farm.png")
+message("Done. Figure saved to results/figures/10d_16S_ITS1_CLR_pcoa_by_farm.png")

@@ -3,7 +3,7 @@ FARM_LEVELS <- c("ib", "vr", "sa", "kk", "mt", "vi", "yb")
 MGMT        <- c(ib = "inside_forest", vr = "near_forest",  sa = "near_forest",
                  kk = "agroforest",   mt = "agroforest",   vi = "full_sun",
                  yb = "full_sun")
-# Colours match Python notebooks and 09c
+# Colours match Python notebooks and 10d
 COLS <- c(bagged_flower = "#4C72B0", unbagged_flower = "#DD8452")
 
 # Strip labels for the top row (16S): "farm | management"

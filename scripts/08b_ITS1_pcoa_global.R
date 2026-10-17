@@ -1,6 +1,7 @@
 # ---- 0. Parameters -------------------------------------------------------
 PREV_THRESHOLD <- 0.10    # prevalence filter: features in >= 10% of all biosamples
 RAREFY_DEPTH   <- 15000L  # rarefaction depth for depth-sensitive metrics (BC, Jaccard)
+RAREFY_ITER    <- 100L    # number of rarefactions averaged by vegan::avgdist()
 
 # Distance metrics in canonical order (matches 09b_ITS1_pcoa_by_farm.R)
 # ITS1 has no UniFrac (ITS too variable for reliable phylogenetic inference)
@@ -115,40 +116,37 @@ dist_ait_clr <- dist(clr_mat)
 # dist() already sets Labels = rownames(clr_mat); no manual override needed
 
 # Rarefaction for depth-sensitive metrics.
-# Rationale: unbagged flowers have systematically more reads than bagged across all farms
-# (confirmed in 04b depth boxplots). Without rarefaction, depth confounds the bagged vs
-# unbagged comparison for Bray-Curtis and Jaccard.
+# Rationale: without rarefaction, sequencing depth confounds the bagged vs unbagged
+# comparison for Bray-Curtis and Jaccard.
 # Aitchison metrics above are inherently depth-robust and stay non-rarefied.
 # ITS1 uses 15000 reads, consistent with alpha diversity rarefaction depth; ITS1 libraries are deeper than 16S.
-set.seed(42)
-ps_rare <- suppressMessages(
-  phyloseq::rarefy_even_depth(ps_prev, sample.size = RAREFY_DEPTH,
-                               rngseed = 42L, replace = FALSE,
-                               trimOTUs = TRUE, verbose = FALSE)
-)
-cat(sprintf("After rarefaction to %d reads: %d samples remaining (dropped %d)\n",
-            RAREFY_DEPTH, nsamples(ps_rare),
-            nsamples(ps_prev) - nsamples(ps_rare)))
-
-meta_rare  <- as(sample_data(ps_rare), "data.frame")
-otu_t_rare <- as(otu_table(ps_rare), "matrix") |>
-  (\(m) if (taxa_are_rows(ps_rare)) t(m) else m)()
-rownames(otu_t_rare) <- rownames(meta_rare)
+# vegan::avgdist() repeats rrarefy() + distance RAREFY_ITER times and averages the
+# matrices, which removes the noise of a single random subsample. Samples with fewer
+# than RAREFY_DEPTH reads are dropped by avgdist (with a warning listing them).
 
 # Bray-Curtis on rarefied counts (abundance-weighted)
-dist_bc  <- vegdist(otu_t_rare, method = "bray")
-attr(dist_bc,  "Labels") <- rownames(meta_rare)
+set.seed(42)
+dist_bc <- vegan::avgdist(otu_t, sample = RAREFY_DEPTH, iterations = RAREFY_ITER,
+                          dmethod = "bray")
 
 # Jaccard on rarefied presence/absence (binary)
-dist_jac <- vegdist(otu_t_rare, method = "jaccard", binary = TRUE)
-attr(dist_jac, "Labels") <- rownames(meta_rare)
+set.seed(42)
+dist_jac <- vegan::avgdist(otu_t, sample = RAREFY_DEPTH, iterations = RAREFY_ITER,
+                           dmethod = "jaccard", binary = TRUE)
+
+# Samples that survived rarefaction, in the order of the distance labels
+meta_rare <- meta[labels(dist_bc), ]
+cat(sprintf("After rarefaction to %d reads (%d iterations): %d samples remaining (dropped %d)\n",
+            RAREFY_DEPTH, RAREFY_ITER, nrow(meta_rare), nrow(meta) - nrow(meta_rare)))
 
 dist_list <- list(
   aitchison_rCLR = dist_ait,      # non-rarefied: robust rCLR (zeros as missing)
   aitchison_CLR  = dist_ait_clr,  # non-rarefied: CLR + multiplicative zero replacement
-  bray_curtis    = dist_bc,        # rarefied 15k: abundance-weighted dissimilarity
-  jaccard        = dist_jac        # rarefied 15k: binary presence/absence
+  bray_curtis    = dist_bc,        # rarefied 15k, mean of 100: abundance-weighted dissimilarity
+  jaccard        = dist_jac        # rarefied 15k, mean of 100: binary presence/absence
 )
+# Rarefaction settings travel with the matrices so downstream captions (10b) match them
+attr(dist_list, "rarefy") <- list(depth = RAREFY_DEPTH, iterations = RAREFY_ITER)
 
 # meta_list maps each distance key to the correct metadata frame for that distance.
 # Rarefied distances use meta_rare (samples that survived rarefaction); non-rarefied
@@ -272,7 +270,7 @@ for (i in seq_along(DIST_LEVELS)) {
         at = y_ndc, las = 0, cex = 0.65, line = 2)
 }
 
-mtext("Global PCoA — ITS1 OTU97 fungi | prev >= 10% | BC/Jaccard rarefied 15k reads",
+mtext("Global PCoA — ITS1 OTU97 fungi | prev >= 10% | BC/Jaccard rarefied to 15000 reads, mean of 100 rarefactions",
       outer = TRUE, cex = 1.0, line = 1, side = 3)
 
 dev.off()

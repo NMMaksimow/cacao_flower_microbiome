@@ -1,6 +1,7 @@
 # ---- 0. Parameters -------------------------------------------------------
 PREV_THRESHOLD <- 0.10    # prevalence filter: features in >= 10% of all biosamples
-RAREFY_DEPTH   <- 10000L  # rarefaction depth for depth-sensitive metrics (BC, Jaccard, UniFrac)
+RAREFY_DEPTH   <- 2000L   # rarefaction depth for depth-sensitive metrics (BC, Jaccard, UniFrac)
+RAREFY_ITER    <- 100L    # number of rarefactions averaged by vegan::avgdist()
 
 # Distance metrics in canonical order (matches 09a_16S_pcoa_by_farm.R)
 DIST_LEVELS <- c("aitchison_rCLR", "aitchison_CLR",
@@ -124,49 +125,58 @@ dist_ait_clr <- dist(clr_mat)
 # dist() already sets Labels = rownames(clr_mat); no manual override needed
 
 # Rarefaction for depth-sensitive metrics.
-# Rationale: unbagged flowers have systematically more reads than bagged across all farms
-# (confirmed in 04a depth boxplots). Without rarefaction, depth confounds the bagged vs
-# unbagged comparison for binary (Jaccard, uUniFrac) and count-weighted (BC, wUniFrac) metrics.
+# Rationale: without rarefaction, sequencing depth confounds the bagged vs unbagged
+# comparison for binary (Jaccard, uUniFrac) and count-weighted (BC, wUniFrac) metrics.
 # Aitchison metrics above are inherently depth-robust and stay non-rarefied.
-set.seed(42)
-ps_rare <- suppressMessages(
-  phyloseq::rarefy_even_depth(ps_prev, sample.size = RAREFY_DEPTH,
-                               rngseed = 42L, replace = FALSE,
-                               trimOTUs = TRUE, verbose = FALSE)
-)
-cat(sprintf("After rarefaction to %d reads: %d samples remaining (dropped %d)\n",
-            RAREFY_DEPTH, nsamples(ps_rare),
-            nsamples(ps_prev) - nsamples(ps_rare)))
-
-meta_rare  <- as(sample_data(ps_rare), "data.frame")
-otu_t_rare <- as(otu_table(ps_rare), "matrix") |>
-  (\(m) if (taxa_are_rows(ps_rare)) t(m) else m)()
-rownames(otu_t_rare) <- rownames(meta_rare)
+# Depth 2000 keeps 254/294 samples (127 bagged / 127 unbagged, 46/49 trees with both
+# treatments); 10000 kept only 102 samples and broke the paired tree design.
+# vegan::avgdist() repeats rrarefy() + distance RAREFY_ITER times and averages the
+# matrices, which removes the noise of a single random subsample. Samples with fewer
+# than RAREFY_DEPTH reads are dropped by avgdist (with a warning listing them).
+# avgdist passes method = dmethod to distfun; extra arguments (e.g. binary) go via `...`.
 
 # Bray-Curtis on rarefied counts (abundance-weighted)
-dist_bc  <- vegdist(otu_t_rare, method = "bray")
-attr(dist_bc,  "Labels") <- rownames(meta_rare)
+set.seed(42)
+dist_bc <- vegan::avgdist(otu_t, sample = RAREFY_DEPTH, iterations = RAREFY_ITER,
+                          dmethod = "bray")
 
 # Jaccard on rarefied presence/absence (binary)
-dist_jac <- vegdist(otu_t_rare, method = "jaccard", binary = TRUE)
-attr(dist_jac, "Labels") <- rownames(meta_rare)
+set.seed(42)
+dist_jac <- vegan::avgdist(otu_t, sample = RAREFY_DEPTH, iterations = RAREFY_ITER,
+                           dmethod = "jaccard", binary = TRUE)
 
-# Weighted UniFrac: abundance-weighted branch lengths (rarefied; tree propagated from ps_prev)
-dist_unifrac_w <- phyloseq::distance(ps_rare, method = "wunifrac")
-attr(dist_unifrac_w, "Labels") <- rownames(meta_rare)
+# UniFrac needs the phylogeny, so each rarefied matrix is wrapped back into a
+# phyloseq object (counts + tree from ps_prev) and passed to phyloseq::distance().
+unifrac_fun <- \(x, method, ...) {
+  phyloseq::distance(phyloseq(otu_table(x, taxa_are_rows = FALSE), phy_tree(ps_prev)),
+                     method = method)
+}
 
-# Unweighted UniFrac: presence/absence-weighted branch lengths (rarefied)
-dist_unifrac_u <- phyloseq::distance(ps_rare, method = "unifrac")
-attr(dist_unifrac_u, "Labels") <- rownames(meta_rare)
+# Weighted UniFrac: abundance-weighted branch lengths
+set.seed(42)
+dist_unifrac_w <- vegan::avgdist(otu_t, sample = RAREFY_DEPTH, iterations = RAREFY_ITER,
+                                 distfun = unifrac_fun, dmethod = "wunifrac")
+
+# Unweighted UniFrac: presence/absence-weighted branch lengths
+set.seed(42)
+dist_unifrac_u <- vegan::avgdist(otu_t, sample = RAREFY_DEPTH, iterations = RAREFY_ITER,
+                                 distfun = unifrac_fun, dmethod = "unifrac")
+
+# Samples that survived rarefaction, in the order of the distance labels
+meta_rare <- meta[labels(dist_bc), ]
+cat(sprintf("After rarefaction to %d reads (%d iterations): %d samples remaining (dropped %d)\n",
+            RAREFY_DEPTH, RAREFY_ITER, nrow(meta_rare), nrow(meta) - nrow(meta_rare)))
 
 dist_list <- list(
   aitchison_rCLR = dist_ait,      # non-rarefied: robust rCLR (zeros as missing)
   aitchison_CLR  = dist_ait_clr,  # non-rarefied: CLR + multiplicative zero replacement
-  bray_curtis    = dist_bc,        # rarefied 10k: abundance-weighted dissimilarity
-  unifrac_w      = dist_unifrac_w, # rarefied 10k: phylogenetic, abundance-weighted
-  jaccard        = dist_jac,       # rarefied 10k: binary presence/absence
-  unifrac_u      = dist_unifrac_u  # rarefied 10k: phylogenetic, binary
+  bray_curtis    = dist_bc,        # rarefied 2k, mean of 100: abundance-weighted dissimilarity
+  unifrac_w      = dist_unifrac_w, # rarefied 2k, mean of 100: phylogenetic, abundance-weighted
+  jaccard        = dist_jac,       # rarefied 2k, mean of 100: binary presence/absence
+  unifrac_u      = dist_unifrac_u  # rarefied 2k, mean of 100: phylogenetic, binary
 )
+# Rarefaction settings travel with the matrices so downstream captions (10a) match them
+attr(dist_list, "rarefy") <- list(depth = RAREFY_DEPTH, iterations = RAREFY_ITER)
 
 # meta_list maps each distance key to the correct metadata frame for that distance.
 # Rarefied distances use meta_rare (samples that survived rarefaction); non-rarefied
@@ -296,7 +306,7 @@ for (i in seq_along(DIST_LEVELS)) {
         at = y_ndc, las = 0, cex = 0.65, line = 2)
 }
 
-mtext("Global PCoA — 16S ASV bacteria | prev >= 10% | BC/UniFrac/Jaccard rarefied 10k reads",
+mtext("Global PCoA — 16S ASV bacteria | prev >= 10% | BC/UniFrac/Jaccard rarefied to 2000 reads, mean of 100 rarefactions",
       outer = TRUE, cex = 1.0, line = 1, side = 3)
 
 dev.off()

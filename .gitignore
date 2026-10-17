@@ -84,3 +84,12 @@ scripts/exploratory/
 # Internal docs: notes, journal, methods drafts — not for public repo
 docs/
 
+# Local-only files and outputs
+.vscode/
+dag.svg
+rulegraph.svg
+data/CIGAF.csv
+qiime2/taxonomy_nb_classifier_comparison/
+# Callose plug image analysis: separate sub-project, ~54 GB raw CZI data
+image_analysis/
+
