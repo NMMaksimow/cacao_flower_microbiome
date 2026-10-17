@@ -32,13 +32,15 @@ manifest_its1: "qiime2/import/manifest_ITS1.tsv"
 #
 # UNITE (dynamic threshold): eukaryotes release (fungi + other eukaryotes).
 #   Dynamic species hypothesis threshold (not fixed 97%/99%). Trained on
-#   ITS1F/ITS2 region with qiime feature-classifier fit-classifier-naive-bayes.
+#   full-length reference sequences (no primer-region extraction) with
+#   qiime feature-classifier fit-classifier-naive-bayes
+#   (qiime2/scripts/08a_train_unite_classifier.sh).
 db_dir: "qiime2/databases"
 silva_classifier: "qiime2/databases/SILVA/silva-138-99-nb-diverse-weighted-classifier.qza"
 unite_classifier: "qiime2/databases/UNITE/unite_eukaryotes_dynamic_classifier.qza"
 
 # ── DADA2 parameters — 16S V4 (515F/806R, ~253 bp amplicon) ──────────────────
-# MiSeq 2×250 bp reads; after primer trimming ~230 bp.
+# NovaSeq 2×250 bp reads; after primer trimming ~230 bp.
 # No truncation — full-length reads, high quality throughout.
 # maxEE=2.0 standard stringency; trunc_q=2 (QIIME2 default, hardcoded in rule).
 # Verified in logs/07_dada2_denoising.out + logs/07b_dada2_denoising_16S_corrected.out
@@ -55,7 +57,7 @@ its_otu_perc_identity: 0.97
 
 # ── DADA2 parameters — ITS1 (ITS1F/ITS2, variable length ~200-500 bp) ────────
 # Variable-length amplicons — no truncation (required for ITS).
-# Same maxEE as 16S — MiSeq reads are high quality.
+# Same maxEE as 16S.
 # Note: S. cerevisiae ITS1 (~479 bp) may be lost due to insufficient overlap
 # with 2×250 bp reads (only ~21 bp overlap), but all other fungal taxa retained.
 dada2_trunc_len_f_its: 0
