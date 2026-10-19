@@ -62,6 +62,32 @@ shift the flower microbiome?
 2. Stabilize ML approaches in notebooks;
 3. Write manuscript methods and results; draft lives in `docs/cacao_flower_microbiome_nm.docx` (local only, not in git)
 
+## v2 rerun in progress
+
+v1 ITS1 data carry untrimmed 3' primer read-through (step 05), so amplicon
+processing is being re-run. Until v2 results replace them, "Key analytical
+decisions" above describe v1.
+
+- Branch `v2-rerun`; v1 state is tag `v1-results`. R analyses continue on
+  `master` against v1 data.
+- Main changes from v1: anchored 5' primer trimming plus 3' read-through
+  removal; DADA2 in R with error models learned per sequencing run (v1 merged
+  both runs before error learning) and an error function suited to NovaSeq
+  binned quality scores; 16S taxonomy with SILVA 144 classifiers (choice
+  pending); UNITE v10 classifier retrained in QIIME 2 2026.4. An ablation
+  ladder separates the effects of these changes (see the plan).
+- Hamilton outputs: `qiime2_v2/` (exports in `qiime2_v2/export/`, same layout as
+  v1), SLURM logs in `logs/v2/`; `results/v2/` comes with the R switch-over.
+- Pipeline code in `workflow/` with its own `config_CFM_v2.yaml`; the v1
+  `workflow/Snakefile` and `config_CFM.yaml` stay unchanged.
+- QIIME 2 2026.4: `module load qiime2/2026.04qiime2`. Prefix every QIIME 2 and
+  DADA2 command with `R_ENVIRON_USER=/dev/null R_PROFILE_USER=/dev/null`
+  (`~/.Renviron` sets `R_LIBS_USER` for my own HPC R and breaks QIIME 2's R
+  plugins; do not edit it).
+- Snakemake 7.17.1: `module load snakemake/7.17.1`, SLURM via `--cluster`,
+  profile `workflow/profiles/hamilton/`.
+- Full plan and phases: `docs/v2_rerun_plan.md` (local only, not in git).
+
 ## Datasets
 
 - **CFM**: this project (primary)
