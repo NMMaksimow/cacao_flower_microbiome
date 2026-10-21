@@ -22,3 +22,17 @@ module_stacks:    "stacks/2.64"            # demultiplexing, identical to v1
 # QIIME 2's R plugins break with the personal library set in ~/.Renviron, so every
 # QIIME 2 and DADA2 command runs with this prefix.
 r_isolation: "R_ENVIRON_USER=/dev/null R_PROFILE_USER=/dev/null"
+
+# ── Raw data layout ───────────────────────────────────────────────────────────
+# Each lane is a separate sequencing run (own flowcell and instrument):
+#   L1 = flowcell HVGYYDRX5 (A01415, run 1088); L2 = flowcell HWYVWDRX5 (A00783, run 1809)
+# Raw file name: <sublib>/<sublib>_<library_id>_<flowcell>_<lane>_<read>.fq.gz
+library_id: "FKDL250197829-1A"
+flowcells:
+  L1: "HVGYYDRX5"
+  L2: "HWYVWDRX5"
+
+# ── 01. Adapter trimming (identical to v1 step 02) ────────────────────────────
+# Nextera adapter read-through at the 3' end of R1 and R2
+adapter_r1: "TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG"
+adapter_r2: "GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG"
