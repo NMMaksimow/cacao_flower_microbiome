@@ -1,0 +1,37 @@
+# =============================================================================
+# Cacao Flower Microbiome (CFM) - v2 amplicon pipeline
+# =============================================================================
+# Starts from the raw per-lane FASTQ files. The two lanes are two sequencing runs
+# (NovaSeq 6000, 2x250 bp, binned quality scores Q2/Q11/Q25/Q37), so each run
+# goes through adapter trimming, demultiplexing, primer trimming and DADA2 on its
+# own; only the DADA2 sequence tables are merged. ITS1 has no phylogeny.
+#
+# The v1 pipeline (workflow/Snakefile + config_CFM.yaml) is kept unchanged.
+#
+# Code and data live in different folders on Hamilton:
+#   code: ~/nobackup/cfm_v2_code                (clone of branch v2-rerun)
+#   data: ~/nobackup/cacao_flower_microbiome    (working directory for all paths)
+#
+# Run (inside tmux on the login node; avoid the Tuesday 8-10am at-risk period):
+#   module load bioinformatics snakemake/7.17.1
+#   cd ~/nobackup/cacao_flower_microbiome
+#   snakemake --snakefile ~/nobackup/cfm_v2_code/workflow/Snakefile_v2 \
+#             --profile  ~/nobackup/cfm_v2_code/workflow/profiles/hamilton
+#
+# Dry run first: add -n to the command above.
+# =============================================================================
+
+import os
+
+# The working directory is the data folder, not the code folder, so the config
+# is located relative to this Snakefile.
+configfile: os.path.join(workflow.basedir, "config_CFM_v2.yaml")
+
+OUT_DIR = config["out_dir"]
+
+include: "rules/00_env_check.smk"
+
+
+rule all:
+    input:
+        f"{OUT_DIR}/00_env/tool_versions.txt",

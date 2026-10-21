@@ -1,0 +1,42 @@
+# =============================================================================
+# Snakemake 7 profile for Hamilton (SLURM through --cluster)
+# =============================================================================
+# Used with:  snakemake --profile <code folder>/workflow/profiles/hamilton
+# Each rule sets threads and, where needed, resources; the values below are the
+# defaults for rules that set nothing.
+# For Snakemake 8/9 only "cluster" and "cluster-cancel" change
+# (executor cluster-generic); the rules stay the same.
+
+# How each job is submitted. {threads} and {resources.*} come from the rule;
+# %j is the SLURM job ID, so every job gets its own log file.
+# --parsable makes sbatch print only the job ID, which cluster-cancel needs.
+cluster: >-
+  sbatch
+  --partition={resources.partition}
+  --cpus-per-task={threads}
+  --mem={resources.mem_mb}M
+  --time={resources.runtime}
+  --gres=tmp:{resources.tmp_gb}G
+  --job-name=smk-{rule}
+  --output=logs/v2/slurm/{rule}-%j.out
+  --error=logs/v2/slurm/{rule}-%j.err
+  --mail-type=FAIL
+  --parsable
+
+# Ctrl+C on the controller cancels the running SLURM jobs
+cluster-cancel: scancel
+
+# Defaults: runtime in minutes, memory in MB, node-local tmp in GB
+default-resources:
+  - "partition='shared'"
+  - mem_mb=4000
+  - runtime=60
+  - tmp_gb=5
+
+jobs: 50                  # at most 50 jobs queued or running at once
+max-jobs-per-second: 2    # submit slowly, to be gentle on the scheduler
+latency-wait: 120         # seconds to wait for output files on the shared filesystem
+restart-times: 0          # a failed job is not retried automatically
+keep-going: true          # independent jobs continue when one fails
+rerun-incomplete: true    # outputs of interrupted jobs are recomputed
+printshellcmds: true      # show each shell command in the controller output

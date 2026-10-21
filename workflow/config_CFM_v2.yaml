@@ -1,0 +1,24 @@
+# =============================================================================
+# CFM v2 configuration
+# Platform: Illumina NovaSeq 6000, 2x250 bp, binned quality scores
+# Amplicons: 16S V4 (515F/806R) + ITS1 (ITS1F/ITS2)
+# All paths are relative to the data folder ~/nobackup/cacao_flower_microbiome
+# =============================================================================
+
+# ── Input and output folders ──────────────────────────────────────────────────
+raw_dir: "data/raw_data/X204SC25042477-Z01-F001/01.RawData"
+out_dir: "qiime2_v2"
+log_dir: "logs/v2"
+
+# Temporary files of QIIME 2 can be large; keep them on /nobackup, not node /tmp
+tmp_dir: "/nobackup/jcnx71/tmp"
+
+# ── Software (environment modules, all under "bioinformatics") ───────────────
+module_base:      "bioinformatics"
+module_qiime2:    "qiime2/2026.04qiime2"   # cutadapt 5.2, vsearch, R 4.5.2, DADA2 1.38.0
+module_cutadapt:  "cutadapt/4.9"           # adapter trimming only, identical to v1
+module_stacks:    "stacks/2.64"            # demultiplexing, identical to v1
+
+# QIIME 2's R plugins break with the personal library set in ~/.Renviron, so every
+# QIIME 2 and DADA2 command runs with this prefix.
+r_isolation: "R_ENVIRON_USER=/dev/null R_PROFILE_USER=/dev/null"
