@@ -34,15 +34,32 @@ RAW_DIR = config["raw_dir"]
 LANES = list(config["flowcells"])
 SUBLIBS = sorted(entry.name for entry in os.scandir(RAW_DIR) if entry.is_dir())
 
-# What a wildcard may match: a lane is L1 or L2; a sublibrary name has no "/"
+# Samples and markers, read from the v2 barcode files (third column: <sample>_<marker>).
+# The sublibrary is looked up per sample AND marker: after the cmt53/cmtPC correction
+# the 16S and ITS1 libraries of these two samples sit in different sublibraries.
+MARKERS = config["markers"]
+MAPPING_DIR = os.path.join(workflow.basedir, "resources", "internal_tag_mappings")
+SUBLIB_OF = {}
+for sublib in SUBLIBS:
+    with open(os.path.join(MAPPING_DIR, f"{sublib}_tags.tsv")) as handle:
+        for line in handle:
+            sample, marker = line.split("\t")[2].strip().rsplit("_", 1)
+            SUBLIB_OF[(sample, marker)] = sublib
+SAMPLES = sorted({sample for sample, marker in SUBLIB_OF})
+
+# What a wildcard may match: lane L1/L2, marker 16S/ITS1; names have no "/"
 wildcard_constraints:
     lane="L1|L2",
+    marker="16S|ITS1",
     sublib="[^/]+",
+    sample="[^/]+",
 
 include: "rules/00_env_check.smk"
 include: "rules/01_adapter_trimming.smk"
 include: "rules/02_demultiplex.smk"
 include: "rules/qc_02_demux_vs_v1.smk"
+include: "rules/03_primer_trimming.smk"
+include: "rules/qc_03_primer_trimming.smk"
 
 
 rule all:
@@ -55,3 +72,4 @@ rule all:
         ),
         expand(f"{OUT_DIR}/02_demux/{{lane}}/{{sublib}}", lane=LANES, sublib=SUBLIBS),
         f"{OUT_DIR}/qc/02_demux_vs_v1.tsv",
+        f"{OUT_DIR}/qc/03_primer_trimming.tsv",

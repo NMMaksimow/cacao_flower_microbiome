@@ -36,3 +36,21 @@ flowcells:
 # Nextera adapter read-through at the 3' end of R1 and R2
 adapter_r1: "TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG"
 adapter_r2: "GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG"
+
+# ── 03. Primer trimming ───────────────────────────────────────────────────────
+# Linked adapters per read: anchored 5' primer (required) ... reverse complement
+# of the other primer (optional; removes 3' read-through with all that follows).
+# Reverse complements are written out here; cutadapt does not compute them.
+markers: ["16S", "ITS1"]
+primers:
+  16S:                                  # 515F (Parada 2016) / 806R (Apprill 2015)
+    fwd:    "GTGYCAGCMGCCGCGGTAA"
+    rev:    "GGACTACNVGGGTWTCTAAT"
+    fwd_rc: "TTACCGCGGCKGCTGRCAC"
+    rev_rc: "ATTAGAWACCCBNGTAGTCC"
+  ITS1:                                 # ITS1F / ITS2
+    fwd:    "CTTGGTCATTTAGAGGAAGTAA"
+    rev:    "GCTGCGTTCTTCATCGATGC"
+    fwd_rc: "TTACTTCCTCTAAATGACCAAG"
+    rev_rc: "GCATCGATGAAGAACGCAGC"
+primer_min_length: 50                   # applied to both mates after trimming
