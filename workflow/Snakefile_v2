@@ -41,6 +41,7 @@ wildcard_constraints:
 
 include: "rules/00_env_check.smk"
 include: "rules/01_adapter_trimming.smk"
+include: "rules/02_demultiplex.smk"
 
 
 rule all:
@@ -51,3 +52,4 @@ rule all:
             lane=LANES,
             sublib=SUBLIBS,
         ),
+        expand(f"{OUT_DIR}/02_demux/{{lane}}/{{sublib}}", lane=LANES, sublib=SUBLIBS),
