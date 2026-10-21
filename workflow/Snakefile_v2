@@ -47,12 +47,13 @@ for sublib in SUBLIBS:
             SUBLIB_OF[(sample, marker)] = sublib
 SAMPLES = sorted({sample for sample, marker in SUBLIB_OF})
 
-# What a wildcard may match: lane L1/L2, marker 16S/ITS1; names have no "/"
+# What a wildcard may match: lane L1/L2, marker 16S/ITS1, error function; names have no "/"
 wildcard_constraints:
     lane="L1|L2",
     marker="16S|ITS1",
     sublib="[^/]+",
     sample="[^/]+",
+    errfun="loess|binned",
 
 include: "rules/00_env_check.smk"
 include: "rules/01_adapter_trimming.smk"
@@ -60,6 +61,9 @@ include: "rules/02_demultiplex.smk"
 include: "rules/qc_02_demux_vs_v1.smk"
 include: "rules/03_primer_trimming.smk"
 include: "rules/qc_03_primer_trimming.smk"
+include: "rules/04_dada2_filter.smk"
+include: "rules/05_dada2_learn_errors.smk"
+include: "rules/qc_04_error_models.smk"
 
 
 rule all:
@@ -73,3 +77,4 @@ rule all:
         expand(f"{OUT_DIR}/02_demux/{{lane}}/{{sublib}}", lane=LANES, sublib=SUBLIBS),
         f"{OUT_DIR}/qc/02_demux_vs_v1.tsv",
         f"{OUT_DIR}/qc/03_primer_trimming.tsv",
+        expand(f"{OUT_DIR}/qc/04_error_models_{{marker}}.tsv", marker=MARKERS),
