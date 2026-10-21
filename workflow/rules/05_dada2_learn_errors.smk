@@ -27,8 +27,8 @@ rule dada2_learn_errors:
         seed=config["dada2"]["seed"],
     threads: 16
     resources:
-        mem_mb=32000,
-        runtime=360,
+        mem_mb=8000,
+        runtime=120,
         tmp_gb=5,
     shell:
         r"""

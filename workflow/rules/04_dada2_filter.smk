@@ -30,8 +30,8 @@ rule dada2_filter:
         qual_bins=",".join(str(q) for q in config["dada2"]["qual_bins"]),
     threads: 16
     resources:
-        mem_mb=16000,
-        runtime=60,
+        mem_mb=64000,
+        runtime=90,
         tmp_gb=5,
     shell:
         r"""

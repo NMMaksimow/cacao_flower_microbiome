@@ -30,8 +30,8 @@ rule qc_error_models:
         min_pairs=config["dada2"]["mock_min_pairs"],
     threads: 8
     resources:
-        mem_mb=16000,
-        runtime=120,
+        mem_mb=8000,
+        runtime=60,
         tmp_gb=2,
     shell:
         r"""
