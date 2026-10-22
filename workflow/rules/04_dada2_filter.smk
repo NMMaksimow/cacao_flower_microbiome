@@ -9,6 +9,9 @@
 
 
 rule dada2_filter:
+    # Real runs only; the "pooled" folder is made by rule dada2_pool_runs (06)
+    wildcard_constraints:
+        lane="L1|L2",
     input:
         expand(
             f"{OUT_DIR}/03_primer_trimmed/{{lane}}/{{marker}}/{{sample}}_R{{read}}.fq.gz",

@@ -47,13 +47,15 @@ for sublib in SUBLIBS:
             SUBLIB_OF[(sample, marker)] = sublib
 SAMPLES = sorted({sample for sample, marker in SUBLIB_OF})
 
-# What a wildcard may match: lane L1/L2, marker 16S/ITS1, error function; names have no "/"
+# What a wildcard may match: lane L1/L2 (or "pooled": both runs together, ablation
+# rung A), marker 16S/ITS1, error function, ablation rung; names have no "/"
 wildcard_constraints:
-    lane="L1|L2",
+    lane="L1|L2|pooled",
     marker="16S|ITS1",
     sublib="[^/]+",
     sample="[^/]+",
     errfun="loess|binned",
+    rung="A|B|C",
 
 include: "rules/00_env_check.smk"
 include: "rules/01_adapter_trimming.smk"
@@ -64,6 +66,10 @@ include: "rules/qc_03_primer_trimming.smk"
 include: "rules/04_dada2_filter.smk"
 include: "rules/05_dada2_learn_errors.smk"
 include: "rules/qc_04_error_models.smk"
+include: "rules/06_dada2_denoise.smk"
+include: "rules/07_dada2_merge_runs.smk"
+include: "rules/08_qiime2_import.smk"
+include: "rules/qc_05_dada2.smk"
 
 
 rule all:
@@ -78,3 +84,6 @@ rule all:
         f"{OUT_DIR}/qc/02_demux_vs_v1.tsv",
         f"{OUT_DIR}/qc/03_primer_trimming.tsv",
         expand(f"{OUT_DIR}/qc/04_error_models_{{marker}}.tsv", marker=MARKERS),
+        expand(f"{OUT_DIR}/denoise/CFM_{{marker}}_dada2_{{kind}}.qza", marker=MARKERS, kind=["table", "repseqs"]),
+        expand(f"{OUT_DIR}/qc/05_read_tracking_{{marker}}.tsv", marker=MARKERS),
+        f"{OUT_DIR}/qc/05_primer_remnants.tsv",

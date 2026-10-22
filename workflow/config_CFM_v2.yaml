@@ -70,3 +70,14 @@ dada2:
   qual_bins: [11, 25, 37]      # for makeBinnedQualErrfun; the filter step checks them
   error_functions: ["loess", "binned"]
   mock_min_pairs: 1000         # mocks with fewer read pairs are left out of the mock summary
+
+# ── 06-07. Denoising, merging the runs, chimeras: ablation rungs ──────────────
+# All rungs use the same primer-trimmed and filtered reads. "pooled" = both runs'
+# reads concatenated per sample (as v1 did). C is the main pipeline; A and B exist
+# only to separate the effects of the v2 changes (compared in step 2.8).
+#   A: pooled runs, loess   B: per run, loess   C: per run, binned (chosen 2026-10-22)
+ablation_rungs:
+  A: {lanes: ["pooled"], errfun: "loess"}
+  B: {lanes: ["L1", "L2"], errfun: "loess"}
+  C: {lanes: ["L1", "L2"], errfun: "binned"}
+main_rung: "C"
