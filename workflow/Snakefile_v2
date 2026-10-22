@@ -29,6 +29,7 @@ configfile: os.path.join(workflow.basedir, "config_CFM_v2.yaml")
 
 OUT_DIR = config["out_dir"]
 RAW_DIR = config["raw_dir"]
+DB_DIR = config["databases_dir"]   # shared reference databases and classifiers
 
 # Lanes (one per sequencing run) and sublibraries (one subfolder each in RAW_DIR)
 LANES = list(config["flowcells"])
@@ -56,6 +57,7 @@ wildcard_constraints:
     sample="[^/]+",
     errfun="loess|binned",
     rung="A|B|C",
+    classifier="[A-Za-z_-]+",
 
 include: "rules/00_env_check.smk"
 include: "rules/01_adapter_trimming.smk"
@@ -70,6 +72,9 @@ include: "rules/06_dada2_denoise.smk"
 include: "rules/07_dada2_merge_runs.smk"
 include: "rules/08_qiime2_import.smk"
 include: "rules/qc_05_dada2.smk"
+include: "rules/09_taxonomy_16S.smk"
+include: "rules/qc_06_silva144.smk"
+include: "rules/10_taxonomy_ITS1_classifier.smk"
 
 
 rule all:
@@ -87,3 +92,6 @@ rule all:
         expand(f"{OUT_DIR}/denoise/CFM_{{marker}}_dada2_{{kind}}.qza", marker=MARKERS, kind=["table", "repseqs"]),
         expand(f"{OUT_DIR}/qc/05_read_tracking_{{marker}}.tsv", marker=MARKERS),
         f"{OUT_DIR}/qc/05_primer_remnants.tsv",
+        f"{OUT_DIR}/qc/06_silva144_comparison.tsv",
+        list(UNITE.values()),
+        f"{OUT_DIR}/taxonomy/unite_test_set/test_taxonomy.tsv",

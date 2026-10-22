@@ -81,3 +81,37 @@ ablation_rungs:
   B: {lanes: ["L1", "L2"], errfun: "loess"}
   C: {lanes: ["L1", "L2"], errfun: "binned"}
 main_rung: "C"
+
+# ── Reference databases and classifiers (shared, outside the project) ─────────
+# Layout: <database>/<release>/reference/ and <database>/<release>/classifiers/
+# qiime2-<v>_sklearn-<v>/ (a classifier loads only with its scikit-learn version).
+# See README.md files there for sources, DOIs and md5 checksums.
+databases_dir: "/nobackup/jcnx71/databases"
+
+# ── 09. 16S taxonomy: the four official SILVA 144 classifiers ─────────────────
+# V4 515F/806R region-extracted (recommended for 16S); built with QIIME 2 2026.7,
+# scikit-learn 1.7.1 = same as QIIME 2 2026.4. Downloaded with .md5 and .doi files.
+silva144:
+  dir: "SILVA/144/classifiers/qiime2-2026.7_sklearn-1.7.1"
+  base_url: "https://www.arb-silva.de/fileadmin/silva_databases/current/QIIME2/2026.7/SSU/V4-515f-806r"
+  classifiers:
+    uniform:       "uniform/SILVA_144_SSURef_NR99_uniform_classifier_V4-515f-806r.qza"
+    average:       "weighted/average/SILVA_144_SSURef_NR99_weighted_classifier_V4-515f-806r_average.qza"
+    plant-corpus:  "weighted/plant-corpus/SILVA_144_SSURef_NR99_weighted_classifier_V4-515f-806r_plant-corpus.qza"
+    plant-surface: "weighted/plant-surface/SILVA_144_SSURef_NR99_weighted_classifier_V4-515f-806r_plant-surface.qza"
+classify_n_jobs: 8              # parallel workers of classify-sklearn (each loads the classifier)
+
+# ── 10. ITS1 classifiers: UNITE v10 (19.02.2025), dynamic, all eukaryotes ──────
+# Full-length references (recommended for ITS). "s_all": v1's file with singletons,
+# retrained here in QIIME 2 2026.4; "no_singletons": community classifier
+# (github.com/colinbrislawn/unite-train, release v10.0-2025-02-19-qiime2-2026.4).
+unite:
+  reference_dir: "UNITE/v10_2025-02-19/reference"
+  classifier_dir: "UNITE/v10_2025-02-19/classifiers/qiime2-2026.4_sklearn-1.7.1"
+  fasta: "sh_refs_qiime_ver10_dynamic_s_all_19.02.2025.fasta"
+  taxonomy: "sh_taxonomy_qiime_ver10_dynamic_s_all_19.02.2025.txt"
+  classifiers:
+    s_all: "unite_ver10_dynamic_s_all_19.02.2025-Q2-2026.4.qza"
+    no_singletons: "unite_ver2025-02-19_dynamic_eukaryotes-Q2-2026.4.qza"
+  community_url: "https://github.com/colinbrislawn/unite-train/releases/download/v10.0-2025-02-19-qiime2-2026.4/unite_ver2025-02-19_dynamic_eukaryotes-Q2-2026.4.qza"
+  test_set_size: 10000          # non-singleton references for the F-score comparison
