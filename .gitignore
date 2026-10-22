@@ -93,3 +93,8 @@ qiime2/taxonomy_nb_classifier_comparison/
 # Callose plug image analysis: separate sub-project, ~54 GB raw CZI data
 image_analysis/
 
+
+# v2 pipeline outputs (fetched from Hamilton as needed)
+qiime2_v2/
+# ZymoBIOMICS mock reference archives (expected sequences are in workflow/resources/mock/)
+data/ZymoBIOMICS*.zip
