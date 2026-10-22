@@ -29,8 +29,9 @@ out_png     <- args[5]
 
 # ── 0. Load and parse taxonomies ──────────────────────────────────────────────
 # SILVA: d__;p__;c__;o__;f__;g__;s__   UNITE: k__;p__;c__;o__;f__;g__;s__
-# A rank counts unless empty or uncultured/Unknown/metagenome/unidentified.
-uninformative <- "^(uncultured|Unknown|metagenome|unidentified)"
+# A rank counts unless empty or uncultured/Unknown/metagenome/unidentified/Incertae_Sedis.
+# SILVA 144 splits some taxa into "X" and "X--other"; both count as X.
+uninformative <- "^(uncultured|Unknown|metagenome|unidentified|Incertae_Sedis)"
 rank_levels <- c("unclassified", "domain", "phylum", "class", "order", "family", "genus", "species")
 
 tax_parsed <- classifiers |>
@@ -45,7 +46,7 @@ tax_parsed <- classifiers |>
     family  = str_match(taxon, "f__([^;]+)")[, 2],
     genus   = str_match(taxon, "g__([^;]+)")[, 2],
     species = str_match(taxon, "s__([^;]+)")[, 2],
-    across(domain:species, \(x) if_else(str_detect(x, uninformative), NA_character_, x)),
+    across(domain:species, \(x) if_else(str_detect(x, uninformative), NA_character_, str_remove(x, "--other$"))),
     depth = case_when(
       !is.na(species) ~ "species", !is.na(genus) ~ "genus", !is.na(family) ~ "family",
       !is.na(order) ~ "order", !is.na(class) ~ "class", !is.na(phylum) ~ "phylum",
@@ -102,12 +103,15 @@ genus_wide <- tax_parsed |>
   select(feature_id, classifier, genus) |>
   pivot_wider(names_from = classifier, values_from = genus)
 
+# % identical genus between two classifiers, over features with a genus in both
+pair_agreement <- function(a, b) {
+  both <- genus_wide[!is.na(genus_wide[[a]]) & !is.na(genus_wide[[b]]), ]
+  tibble(agreement = mean(both[[a]] == both[[b]]) * 100, n = nrow(both))
+}
+
 p_agreement <- expand_grid(cl1 = classifiers, cl2 = classifiers) |>
   filter(match(cl1, classifiers) <= match(cl2, classifiers)) |>
-  mutate(stats = map2(cl1, cl2, \(a, b) {
-    both <- genus_wide |> filter(!is.na(.data[[a]]), !is.na(.data[[b]]))
-    tibble(agreement = mean(both[[a]] == both[[b]]) * 100, n = nrow(both))
-  })) |>
+  mutate(stats = map2(cl1, cl2, pair_agreement)) |>
   unnest(stats) |>
   mutate(cl1 = factor(cl1, levels = classifiers), cl2 = factor(cl2, levels = classifiers)) |>
   ggplot(aes(x = cl1, y = cl2, fill = agreement)) +

@@ -10,7 +10,8 @@ on biosamples; no unexpected genera relative to the uniform classifier.
                classifier does not give that ASV (no genus or another genus)
   short ASVs:  class of the ASVs shorter than 200 nt (new in v2)
 A rank counts as assigned unless empty or starting with uncultured/Unknown/metagenome
-(as in scripts/exploratory/01a_16S_compare_nb_classifiers_CFM.R).
+(as in scripts/exploratory/01a_16S_compare_nb_classifiers_CFM.R) or Incertae_Sedis.
+SILVA 144 splits some taxa into "X" and "X--other"; both count as X.
 
 Usage (rule qc_silva144_comparison, inside the QIIME 2 module for the biom package):
     python qc_silva144_comparison.py <table.biom> <asv.fasta> <expected.fasta> \
@@ -24,7 +25,7 @@ from collections import Counter
 import biom
 
 RANKS = ["d", "p", "c", "o", "f", "g", "s"]
-UNINFORMATIVE = ("uncultured", "Unknown", "metagenome")
+UNINFORMATIVE = ("uncultured", "Unknown", "metagenome", "Incertae_Sedis")
 # SILVA genus names that are correct for the mock organisms' genus
 GENUS_SYNONYMS = {"Escherichia": {"Escherichia-Shigella"}, "Lactobacillus": {"Limosilactobacillus"}}
 
@@ -45,7 +46,7 @@ def parse_taxon(taxon):
     for part in taxon.split(";"):
         part = part.strip()
         if len(part) > 3 and part[1:3] == "__" and part[0] in RANKS:
-            name = part[3:]
+            name = part[3:].replace("--other", "")
             if name and not name.startswith(UNINFORMATIVE):
                 ranks[part[0]] = name
     return ranks

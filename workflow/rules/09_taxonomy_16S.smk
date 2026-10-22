@@ -4,7 +4,11 @@
 # The classifiers are downloaded once into the shared databases folder, each with
 # its .md5 (checked) and .doi file. Downloads run on the login node ("localrules"),
 # because compute nodes may have no internet access. classify-sklearn uses the
-# default confidence threshold 0.7, as v1.
+# default confidence threshold 0.7, as v1, and --p-read-orientation same: the ASVs
+# start right after the 515F primer, i.e. in the orientation of the SILVA V4
+# references. The default "auto" guesses the orientation from a subset of reads; with
+# it, the "average" classifier gave nonsense for all ASVs although its model scores
+# the mock sequences correctly, most likely because "auto" chose reverse-complement.
 
 SILVA144_DIR = f"{DB_DIR}/{config['silva144']['dir']}"
 SILVA144 = {name: f"{SILVA144_DIR}/{os.path.basename(path)}"
@@ -60,6 +64,7 @@ rule classify_16S:
         {params.r_isolation} qiime feature-classifier classify-sklearn \
             --i-classifier {input.classifier} \
             --i-reads {input.reads} \
+            --p-read-orientation same \
             --p-n-jobs {params.n_jobs} \
             --o-classification {output.qza}
         export_dir=$(mktemp -d)
