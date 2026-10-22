@@ -28,8 +28,9 @@ rule train_unite_s_all:
         tmp_dir=config["tmp_dir"],
     threads: 1
     resources:
+        partition="bigmem",   # 1 CPU with 240 GB fits easily on a 2 TB node
         mem_mb=240000,
-        runtime=2880,
+        runtime=1440,
         tmp_gb=80,
     shell:
         r"""

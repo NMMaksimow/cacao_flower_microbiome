@@ -48,7 +48,8 @@ rule classify_16S:
         n_jobs=config["classify_n_jobs"],
     threads: config["classify_n_jobs"]
     resources:
-        mem_mb=96000,
+        partition="bigmem",   # weighted classifiers need > 12 GB per worker
+        mem_mb=300000,
         runtime=360,
         tmp_gb=20,
     shell:
