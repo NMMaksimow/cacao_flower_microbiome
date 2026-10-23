@@ -81,7 +81,8 @@ p_confidence <- ggplot(tax_parsed, aes(x = classifier, y = confidence, fill = cl
   geom_hline(yintercept = 0.7, linetype = "dashed", colour = "grey40", linewidth = 0.4) +  # classify-sklearn cut-off
   scale_fill_brewer(palette = "Set2") +
   labs(title = "Confidence score distribution", x = NULL, y = "Confidence") +
-  theme_bw(base_size = 12)
+  theme_bw(base_size = 12) +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1, vjust = 1))
 
 # ── 3. Confidence bands ───────────────────────────────────────────────────────
 p_bands <- tax_parsed |>
