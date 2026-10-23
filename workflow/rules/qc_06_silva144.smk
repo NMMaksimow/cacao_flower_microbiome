@@ -14,6 +14,7 @@ rule qc_silva144_comparison:
     output:
         summary=f"{OUT_DIR}/qc/06_silva144_comparison.tsv",
         details=f"{OUT_DIR}/qc/06_silva144_details.tsv",
+        figure=f"{OUT_DIR}/qc/06_silva144_comparison.png",
     params:
         base=config["module_base"],
         qiime2=config["module_qiime2"],
@@ -30,5 +31,5 @@ rule qc_silva144_comparison:
         set -euo pipefail
         module load {params.base} {params.qiime2}
         python {params.script} {input.table} {input.asvs} {input.expected} {params.min_mock} \
-            {output.summary} {output.details} {params.named}
+            {output.summary} {output.details} {output.figure} {params.named}
         """
