@@ -18,7 +18,7 @@ rule qc_silva144_comparison:
     params:
         base=config["module_base"],
         qiime2=config["module_qiime2"],
-        script=f"{workflow.basedir}/scripts/qc_silva144_comparison.py",
+        script=f"{workflow.basedir}/scripts/qc_classifier_comparison.py",
         min_mock=config["dada2"]["mock_min_pairs"],
         named=" ".join(f"{c}={OUT_DIR}/taxonomy/CFM_16S_taxonomy_{c}.tsv" for c in SILVA144),
     threads: 1
@@ -30,6 +30,6 @@ rule qc_silva144_comparison:
         r"""
         set -euo pipefail
         module load {params.base} {params.qiime2}
-        python {params.script} {input.table} {input.asvs} {input.expected} {params.min_mock} \
+        python {params.script} 16S {input.table} {input.asvs} {input.expected} {params.min_mock} \
             {output.summary} {output.details} {output.figure} {params.named}
         """

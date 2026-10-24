@@ -29,9 +29,10 @@ out_png     <- args[5]
 
 # ── 0. Load and parse taxonomies ──────────────────────────────────────────────
 # SILVA: d__;p__;c__;o__;f__;g__;s__   UNITE: k__;p__;c__;o__;f__;g__;s__
-# A rank counts unless empty or uncultured/Unknown/metagenome/unidentified/Incertae_Sedis.
+# A rank counts unless empty or uncultured/Unknown/metagenome/unidentified/Incertae_Sedis
+# (SILVA) or Incertae_sedis (UNITE).
 # SILVA 144 splits some taxa into "X" and "X--other"; both count as X.
-uninformative <- "^(uncultured|Unknown|metagenome|unidentified|Incertae_Sedis)"
+uninformative <- "^(uncultured|Unknown|metagenome|unidentified|Incertae_[Ss]edis)"
 rank_levels <- c("unclassified", "domain", "phylum", "class", "order", "family", "genus", "species")
 
 tax_parsed <- classifiers |>

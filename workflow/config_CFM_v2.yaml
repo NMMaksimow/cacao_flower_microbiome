@@ -114,4 +114,25 @@ unite:
     s_all: "unite_ver10_dynamic_s_all_19.02.2025-Q2-2026.4.qza"
     no_singletons: "unite_ver2025-02-19_dynamic_eukaryotes-Q2-2026.4.qza"
   community_url: "https://github.com/colinbrislawn/unite-train/releases/download/v10.0-2025-02-19-qiime2-2026.4/unite_ver2025-02-19_dynamic_eukaryotes-Q2-2026.4.qza"
-  test_set_size: 10000          # non-singleton references for the F-score comparison
+  doi: "10.15156/BIO/3301243"   # UNITE QIIME release for eukaryotes, v10 19.02.2025
+
+# ── Main classifiers: their taxonomy is exported for R ────────────────────────
+# 16S chosen 2026-10-23 from QC 06; ITS1 is set after QC 07 (rule fixed in
+# docs/v2_rerun_plan.md); until then the ITS1 taxonomy exports and RUN_INFO wait.
+taxonomy_main:
+  16S: "average"
+  ITS1: null
+
+# ── 13. 16S phylogeny: three input sets ("tracks"), tree method as in v1 ───────
+# all:  every ASV, midpoint root (v1 method on v2 data)
+# prok: bacteria + archaea without organelles, rooted on the archaea
+# bact: bacteria without organelles (= scripts/01a filter), midpoint root; primary
+# Filters use the main 16S taxonomy (qiime taxa filter-seqs, mode "contains").
+phylogeny_tracks:
+  prok:
+    include: "d__Bacteria,d__Archaea"
+    exclude: "o__Chloroplast,f__Mitochondria"
+  bact:
+    include: "d__Bacteria"
+    exclude: "o__Chloroplast,f__Mitochondria"
+phylogeny_threads: 16

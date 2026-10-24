@@ -75,6 +75,11 @@ include: "rules/qc_05_dada2.smk"
 include: "rules/09_taxonomy_16S.smk"
 include: "rules/qc_06_silva144.smk"
 include: "rules/10_taxonomy_ITS1_classifier.smk"
+include: "rules/11_its1_otus.smk"
+include: "rules/12_taxonomy_ITS1.smk"
+include: "rules/13_phylogeny_16S.smk"
+include: "rules/14_export.smk"
+include: "rules/qc_07_unite.smk"
 
 
 rule all:
@@ -94,4 +99,12 @@ rule all:
         f"{OUT_DIR}/qc/05_primer_remnants.tsv",
         f"{OUT_DIR}/qc/06_silva144_comparison.tsv",
         list(UNITE.values()),
-        f"{OUT_DIR}/taxonomy/unite_test_set/test_taxonomy.tsv",
+        expand(f"{OUT_DIR}/taxonomy/CFM_ITS1_{{features}}_taxonomy_{{classifier}}.tsv",
+               features=list(ITS1_FEATURES), classifier=list(UNITE)),
+        f"{OUT_DIR}/phylogeny/prok/CFM_16S_rooted_tree_archaea.nwk",
+        EXPORT_FEATURES,
+        EXPORT_TREES,
+        EXPORT_TAXONOMY,
+        f"{OUT_DIR}/qc/07_unite_comparison.tsv",
+        # RUN_INFO lists all exports, so it waits for the ITS1 choice (taxonomy_main)
+        [f"{EXPORT_DIR}/RUN_INFO.txt"] if MAIN_ITS1 else [],

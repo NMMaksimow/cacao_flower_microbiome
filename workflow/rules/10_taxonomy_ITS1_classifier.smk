@@ -1,7 +1,7 @@
 # =============================================================================
 # 10. ITS1 classifiers: UNITE v10 (19.02.2025), dynamic, all eukaryotes
 # =============================================================================
-# Two classifiers, compared in 2.7 (F-score on a common test set + on-data checks):
+# Two classifiers, compared on the ITS1 OTUs in QC 07 (as the 16S classifiers in QC 06):
 #   s_all          v1's file WITH singletons, trained here exactly as v1 (08a):
 #                  import FASTA and taxonomy, fit-classifier-naive-bayes with
 #                  defaults, full-length references (no region extraction)
@@ -12,7 +12,7 @@ UNITE_REF_DIR = f"{DB_DIR}/{config['unite']['reference_dir']}"
 UNITE_CLF_DIR = f"{DB_DIR}/{config['unite']['classifier_dir']}"
 UNITE = {name: f"{UNITE_CLF_DIR}/{file}" for name, file in config["unite"]["classifiers"].items()}
 
-localrules: download_unite_no_singletons, unite_test_set
+localrules: download_unite_no_singletons
 
 
 rule train_unite_s_all:
@@ -68,20 +68,3 @@ rule download_unite_no_singletons:
         md5sum {output} | sed 's|  .*/|  |' > {output}.md5
         """
 
-
-rule unite_test_set:
-    input:
-        fasta=f"{UNITE_REF_DIR}/{config['unite']['fasta']}",
-        taxonomy=f"{UNITE_REF_DIR}/{config['unite']['taxonomy']}",
-    output:
-        fasta=f"{OUT_DIR}/taxonomy/unite_test_set/test_sequences.fasta",
-        taxonomy=f"{OUT_DIR}/taxonomy/unite_test_set/test_taxonomy.tsv",
-    params:
-        script=f"{workflow.basedir}/scripts/unite_test_set.py",
-        n=config["unite"]["test_set_size"],
-        seed=config["dada2"]["seed"],
-    shell:
-        r"""
-        python3 {params.script} {input.fasta} {input.taxonomy} {params.n} {params.seed} \
-            {output.fasta} {output.taxonomy}
-        """
