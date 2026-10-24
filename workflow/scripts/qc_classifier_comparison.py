@@ -16,8 +16,10 @@ genus on biosamples; few genera that contradict the reference classifier.
                first classifier given: 16S uniform, ITS1 s_all = v1's) does not give
                that feature (no genus or another genus)
   short ASVs:  16S only, class of the ASVs shorter than 200 nt (new in v2)
-A rank counts as assigned unless empty or starting with uncultured/Unknown/metagenome/
-unidentified/Incertae_Sedis/Incertae_sedis (SILVA and UNITE spellings).
+A rank counts as assigned unless empty, starting with uncultured/Unknown/metagenome/
+unidentified, containing Incertae_Sedis/Incertae_sedis anywhere (SILVA "Incertae_Sedis";
+UNITE placeholders such as "Pleosporaceae_gen_Incertae_sedis") or ending in "_sp"
+(UNITE species placeholders such as "Fungi_sp").
 SILVA 144 splits some taxa into "X" and "X--other"; both count as X.
 The figure shows every metric of the summary table as one bar panel.
 
@@ -60,7 +62,9 @@ def parse_taxon(taxon):
         part = part.strip()
         if len(part) > 3 and part[1:3] == "__" and part[0] in RANKS:
             name = part[3:].replace("--other", "")
-            if name and not name.startswith(UNINFORMATIVE):
+            # UNITE placeholders: "Pleosporaceae_gen_Incertae_sedis", "Fungi_sp"
+            if (name and not name.startswith(UNINFORMATIVE) and "Incertae_" not in name
+                    and not name.endswith("_sp")):
                 ranks[part[0]] = name
     return ranks
 
