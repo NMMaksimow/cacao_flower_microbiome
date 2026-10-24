@@ -28,8 +28,8 @@ rule classify_ITS1:
         tmp_dir=config["tmp_dir"],
     threads: 1
     resources:
-        partition="bigmem",   # v1 needed 120 GB with one worker for a 545 MB classifier
-        mem_mb=150000,
+        partition="bigmem",   # s_all on the 12,388 ASVs ran out of memory at 150 GB
+        mem_mb=300000,
         runtime=480,
         tmp_gb=20,
     shell:
