@@ -80,6 +80,7 @@ include: "rules/12_taxonomy_ITS1.smk"
 include: "rules/13_phylogeny_16S.smk"
 include: "rules/14_export.smk"
 include: "rules/qc_07_unite.smk"
+include: "rules/15_its1_r1_only.smk"
 
 
 rule all:
@@ -108,3 +109,5 @@ rule all:
         f"{OUT_DIR}/qc/07_unite_comparison.tsv",
         # RUN_INFO lists all exports, so it waits for the ITS1 choice (taxonomy_main)
         [f"{EXPORT_DIR}/RUN_INFO.txt"] if MAIN_ITS1 else [],
+        # ITS1 sensitivity branch, forward reads only (its exports are in EXPORT_*)
+        f"{OUT_DIR}/qc/09_its1_r1_vs_merged.tsv",

@@ -7,6 +7,7 @@
 #   CFM_16S_rooted_tree_{bact,all,prok}/tree.nwk   (bact = primary; v1 had one tree)
 #   CFM_16S_taxonomy_<classifier>/taxonomy.tsv     (v1: ..._diverse_weighted)
 #   CFM_ITS1_taxonomy/, CFM_ITS1_otu97_taxonomy/   (main ITS1 classifier)
+#   CFM_ITS1_r1_*                                   (R1-only sensitivity branch, rule file 15)
 #   RUN_INFO.txt                                    (provenance of all of the above)
 # The taxonomy of the main classifiers (config taxonomy_main) is copied from
 # qiime2_v2/taxonomy/. The ITS1 taxonomy and RUN_INFO wait until ITS1 is chosen.
@@ -14,10 +15,10 @@
 EXPORT_DIR = f"{OUT_DIR}/export"
 EXPORT_FEATURES = [
     f"{EXPORT_DIR}/CFM_{name}_table/feature-table.biom"
-    for name in ["16S_dada2", "ITS1_dada2", "ITS1_otu97"]
+    for name in ["16S_dada2", "ITS1_dada2", "ITS1_otu97", "ITS1_r1_dada2", "ITS1_r1_otu97"]
 ] + [
     f"{EXPORT_DIR}/CFM_{name}_repseqs/dna-sequences.fasta"
-    for name in ["16S_dada2", "ITS1_dada2", "ITS1_otu97"]
+    for name in ["16S_dada2", "ITS1_dada2", "ITS1_otu97", "ITS1_r1_dada2", "ITS1_r1_otu97"]
 ]
 EXPORT_TREES = expand(f"{EXPORT_DIR}/CFM_16S_rooted_tree_{{track}}/tree.nwk", track=PHYLO_TRACKS)
 
@@ -27,6 +28,8 @@ TAXONOMY_EXPORT = {f"CFM_16S_taxonomy_{MAIN_16S}": f"{MAIN_TAXONOMY_16S}.tsv"}
 if MAIN_ITS1:
     TAXONOMY_EXPORT["CFM_ITS1_taxonomy"] = f"{OUT_DIR}/taxonomy/CFM_ITS1_asv_taxonomy_{MAIN_ITS1}.tsv"
     TAXONOMY_EXPORT["CFM_ITS1_otu97_taxonomy"] = f"{OUT_DIR}/taxonomy/CFM_ITS1_otu97_taxonomy_{MAIN_ITS1}.tsv"
+    TAXONOMY_EXPORT["CFM_ITS1_r1_taxonomy"] = f"{OUT_DIR}/taxonomy/CFM_ITS1_r1_taxonomy_{MAIN_ITS1}.tsv"
+    TAXONOMY_EXPORT["CFM_ITS1_r1_otu97_taxonomy"] = f"{OUT_DIR}/taxonomy/CFM_ITS1_r1_otu97_taxonomy_{MAIN_ITS1}.tsv"
 EXPORT_TAXONOMY = [f"{EXPORT_DIR}/{name}/taxonomy.tsv" for name in TAXONOMY_EXPORT]
 
 localrules: export_tree_prok, export_taxonomy, run_info
@@ -140,6 +143,7 @@ rule run_info:
         echo "  UNITE DOI: {params.unite_doi}"
         echo "  md5: $(md5sum {params.unite_main} | cut -d' ' -f1)"
         echo "16S trees: {params.tracks} (primary: bact)"
+        echo "ITS1 CFM_ITS1_r1_*: sensitivity branch, forward reads only (same classifier)"
         echo
         echo "Files (md5):"
         (cd $(dirname {output}) && md5sum */*)

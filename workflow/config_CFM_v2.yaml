@@ -136,3 +136,8 @@ phylogeny_tracks:
     include: "d__Bacteria"
     exclude: "o__Chloroplast,f__Mitochondria"
 phylogeny_threads: 16
+
+# ── 15. ITS1 sensitivity branch: forward reads (R1) only ──────────────────────
+# Long R1 reads are 220 or 221 nt; cutting to 220 keeps one ASV per organism.
+r1_only:
+  max_length: 220

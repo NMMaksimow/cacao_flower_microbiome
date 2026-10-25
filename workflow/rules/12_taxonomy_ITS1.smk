@@ -9,7 +9,13 @@
 # references. Both classifiers are compared in QC 07; the main one is set in the
 # config (taxonomy_main) and exported in rule 14.
 
-ITS1_FEATURES = {"asv": "CFM_ITS1_dada2_repseqs", "otu97": "CFM_ITS1_otu97_repseqs"}
+# r1, r1_otu97: forward reads only (sensitivity branch, rule file 15)
+ITS1_FEATURES = {
+    "asv": "CFM_ITS1_dada2_repseqs",
+    "otu97": "CFM_ITS1_otu97_repseqs",
+    "r1": "CFM_ITS1_r1_dada2_repseqs",
+    "r1_otu97": "CFM_ITS1_r1_otu97_repseqs",
+}
 
 
 rule classify_ITS1:
@@ -20,7 +26,7 @@ rule classify_ITS1:
         qza=f"{OUT_DIR}/taxonomy/CFM_ITS1_{{features}}_taxonomy_{{classifier}}.qza",
         tsv=f"{OUT_DIR}/taxonomy/CFM_ITS1_{{features}}_taxonomy_{{classifier}}.tsv",
     wildcard_constraints:
-        features="asv|otu97",
+        features="asv|otu97|r1|r1_otu97",
     params:
         base=config["module_base"],
         qiime2=config["module_qiime2"],
