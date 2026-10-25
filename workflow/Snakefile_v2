@@ -100,8 +100,9 @@ rule all:
         f"{OUT_DIR}/qc/05_primer_remnants.tsv",
         f"{OUT_DIR}/qc/06_silva144_comparison.tsv",
         list(UNITE.values()),
+        # both classifiers on the main ITS1 features (QC 07); R1 sets only with the main one
         expand(f"{OUT_DIR}/taxonomy/CFM_ITS1_{{features}}_taxonomy_{{classifier}}.tsv",
-               features=list(ITS1_FEATURES), classifier=list(UNITE)),
+               features=["asv", "otu97"], classifier=list(UNITE)),
         f"{OUT_DIR}/phylogeny/prok/CFM_16S_rooted_tree_archaea.nwk",
         EXPORT_FEATURES,
         EXPORT_TREES,
