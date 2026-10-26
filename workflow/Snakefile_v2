@@ -81,6 +81,8 @@ include: "rules/13_phylogeny_16S.smk"
 include: "rules/14_export.smk"
 include: "rules/qc_07_unite.smk"
 include: "rules/15_its1_r1_only.smk"
+include: "rules/16_v1_ladder_taxonomy.smk"
+include: "rules/qc_10_v1_vs_v2.smk"
 
 
 rule all:
@@ -112,3 +114,5 @@ rule all:
         [f"{EXPORT_DIR}/RUN_INFO.txt"] if MAIN_ITS1 else [],
         # ITS1 sensitivity branch, forward reads only (its exports are in EXPORT_*)
         f"{OUT_DIR}/qc/09_its1_r1_vs_merged.tsv",
+        # v1 vs v2 comparison with the ablation rungs (Phase 2.8)
+        f"{OUT_DIR}/qc/10_v1_vs_v2_16S.tsv",
