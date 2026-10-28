@@ -1,0 +1,118 @@
+# =============================================================================
+# Cacao Flower Microbiome (CFM) - v2 amplicon pipeline
+# =============================================================================
+# Starts from the raw per-lane FASTQ files. The two lanes are two sequencing runs
+# (NovaSeq 6000, 2x250 bp, binned quality scores Q2/Q11/Q25/Q37), so each run
+# goes through adapter trimming, demultiplexing, primer trimming and DADA2 on its
+# own; only the DADA2 sequence tables are merged. ITS1 has no phylogeny.
+#
+# The v1 pipeline (workflow/Snakefile + config_CFM.yaml) is kept unchanged.
+#
+# Code and data live in different folders on Hamilton:
+#   code: ~/nobackup/cfm_v2_code                (clone of branch v2-rerun)
+#   data: ~/nobackup/cacao_flower_microbiome    (working directory for all paths)
+#
+# Run (inside tmux on the login node; avoid the Tuesday 8-10am at-risk period):
+#   module load bioinformatics snakemake/7.17.1
+#   cd ~/nobackup/cacao_flower_microbiome
+#   snakemake --snakefile ~/nobackup/cfm_v2_code/workflow/Snakefile_v2 \
+#             --profile  ~/nobackup/cfm_v2_code/workflow/profiles/hamilton
+#
+# Dry run first: add -n to the command above.
+# =============================================================================
+
+import os
+
+# The working directory is the data folder, not the code folder, so the config
+# is located relative to this Snakefile.
+configfile: os.path.join(workflow.basedir, "config_CFM_v2.yaml")
+
+OUT_DIR = config["out_dir"]
+RAW_DIR = config["raw_dir"]
+DB_DIR = config["databases_dir"]   # shared reference databases and classifiers
+
+# Lanes (one per sequencing run) and sublibraries (one subfolder each in RAW_DIR)
+LANES = list(config["flowcells"])
+SUBLIBS = sorted(entry.name for entry in os.scandir(RAW_DIR) if entry.is_dir())
+
+# Samples and markers, read from the v2 barcode files (third column: <sample>_<marker>).
+# The sublibrary is looked up per sample AND marker: after the cmt53/cmtPC correction
+# the 16S and ITS1 libraries of these two samples sit in different sublibraries.
+MARKERS = config["markers"]
+MAPPING_DIR = os.path.join(workflow.basedir, "resources", "internal_tag_mappings")
+SUBLIB_OF = {}
+for sublib in SUBLIBS:
+    with open(os.path.join(MAPPING_DIR, f"{sublib}_tags.tsv")) as handle:
+        for line in handle:
+            sample, marker = line.split("\t")[2].strip().rsplit("_", 1)
+            SUBLIB_OF[(sample, marker)] = sublib
+SAMPLES = sorted({sample for sample, marker in SUBLIB_OF})
+
+# What a wildcard may match: lane L1/L2 (or "pooled": both runs together, ablation
+# rung A), marker 16S/ITS1, error function, ablation rung; names have no "/"
+wildcard_constraints:
+    lane="L1|L2|pooled",
+    marker="16S|ITS1",
+    sublib="[^/]+",
+    sample="[^/]+",
+    errfun="loess|binned",
+    rung="A|B|C",
+    classifier="[A-Za-z_-]+",
+
+include: "rules/00_env_check.smk"
+include: "rules/01_adapter_trimming.smk"
+include: "rules/02_demultiplex.smk"
+include: "rules/qc_02_demux_vs_v1.smk"
+include: "rules/03_primer_trimming.smk"
+include: "rules/qc_03_primer_trimming.smk"
+include: "rules/04_dada2_filter.smk"
+include: "rules/05_dada2_learn_errors.smk"
+include: "rules/qc_04_error_models.smk"
+include: "rules/06_dada2_denoise.smk"
+include: "rules/07_dada2_merge_runs.smk"
+include: "rules/08_qiime2_import.smk"
+include: "rules/qc_05_dada2.smk"
+include: "rules/09_taxonomy_16S.smk"
+include: "rules/qc_06_silva144.smk"
+include: "rules/10_taxonomy_ITS1_classifier.smk"
+include: "rules/11_its1_otus.smk"
+include: "rules/12_taxonomy_ITS1.smk"
+include: "rules/13_phylogeny_16S.smk"
+include: "rules/14_export.smk"
+include: "rules/qc_07_unite.smk"
+include: "rules/15_its1_r1_only.smk"
+include: "rules/16_v1_ladder_taxonomy.smk"
+include: "rules/qc_10_v1_vs_v2.smk"
+
+
+rule all:
+    input:
+        f"{OUT_DIR}/00_env/tool_versions.txt",
+        expand(
+            f"{OUT_DIR}/01_adapter_trimmed/{{lane}}/{{sublib}}.cutadapt.json",
+            lane=LANES,
+            sublib=SUBLIBS,
+        ),
+        expand(f"{OUT_DIR}/02_demux/{{lane}}/{{sublib}}", lane=LANES, sublib=SUBLIBS),
+        f"{OUT_DIR}/qc/02_demux_vs_v1.tsv",
+        f"{OUT_DIR}/qc/03_primer_trimming.tsv",
+        expand(f"{OUT_DIR}/qc/04_error_models_{{marker}}.tsv", marker=MARKERS),
+        expand(f"{OUT_DIR}/denoise/CFM_{{marker}}_dada2_{{kind}}.qza", marker=MARKERS, kind=["table", "repseqs"]),
+        expand(f"{OUT_DIR}/qc/05_read_tracking_{{marker}}.tsv", marker=MARKERS),
+        f"{OUT_DIR}/qc/05_primer_remnants.tsv",
+        f"{OUT_DIR}/qc/06_silva144_comparison.tsv",
+        list(UNITE.values()),
+        # both classifiers on the main ITS1 features (QC 07); R1 sets only with the main one
+        expand(f"{OUT_DIR}/taxonomy/CFM_ITS1_{{features}}_taxonomy_{{classifier}}.tsv",
+               features=["asv", "otu97"], classifier=list(UNITE)),
+        f"{OUT_DIR}/phylogeny/prok/CFM_16S_rooted_tree_archaea.nwk",
+        EXPORT_FEATURES,
+        EXPORT_TREES,
+        EXPORT_TAXONOMY,
+        f"{OUT_DIR}/qc/07_unite_comparison.tsv",
+        # RUN_INFO lists all exports, so it waits for the ITS1 choice (taxonomy_main)
+        [f"{EXPORT_DIR}/RUN_INFO.txt"] if MAIN_ITS1 else [],
+        # ITS1 sensitivity branch, forward reads only (its exports are in EXPORT_*)
+        f"{OUT_DIR}/qc/09_its1_r1_vs_merged.tsv",
+        # v1 vs v2 comparison with the ablation rungs (Phase 2.8)
+        f"{OUT_DIR}/qc/10_v1_vs_v2_16S.tsv",

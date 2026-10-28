@@ -65,17 +65,10 @@ __pycache__/
 .snakemake/
 
 # Large result files
-results/large_outputs/
 *.h5
 
-# Generated figures/tables if not intended for version control
-results/biom
-results/figures/
-results/tables/
-results/*.png
-results/*.svg
-results/*.pdf
-results/rds
+# Analysis results (local and on Hamilton; results/v1 and results/v2, same layout)
+results/
 
 # Exploratory analysis notebooks and R scripts
 notebooks/exploratory/
@@ -93,3 +86,8 @@ qiime2/taxonomy_nb_classifier_comparison/
 # Callose plug image analysis: separate sub-project, ~54 GB raw CZI data
 image_analysis/
 
+
+# v2 pipeline outputs (fetched from Hamilton as needed)
+qiime2_v2/
+# ZymoBIOMICS mock reference archives (expected sequences are in workflow/resources/mock/)
+data/ZymoBIOMICS*.zip

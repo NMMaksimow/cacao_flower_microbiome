@@ -1,0 +1,143 @@
+# =============================================================================
+# CFM v2 configuration
+# Platform: Illumina NovaSeq 6000, 2x250 bp, binned quality scores
+# Amplicons: 16S V4 (515F/806R) + ITS1 (ITS1F/ITS2)
+# All paths are relative to the data folder ~/nobackup/cacao_flower_microbiome
+# =============================================================================
+
+# ── Input and output folders ──────────────────────────────────────────────────
+raw_dir: "data/raw_data/X204SC25042477-Z01-F001/01.RawData"
+out_dir: "qiime2_v2"
+log_dir: "logs/v2"
+
+# Temporary files of QIIME 2 can be large; keep them on /nobackup, not node /tmp
+tmp_dir: "/nobackup/jcnx71/tmp"
+
+# ── Software (environment modules, all under "bioinformatics") ───────────────
+module_base:      "bioinformatics"
+module_qiime2:    "qiime2/2026.04qiime2"   # cutadapt 5.2, vsearch, R 4.5.2, DADA2 1.38.0
+module_cutadapt:  "cutadapt/4.9"           # adapter trimming only, identical to v1
+module_stacks:    "stacks/2.64"            # demultiplexing, identical to v1
+
+# QIIME 2's R plugins break with the personal library set in ~/.Renviron, so every
+# QIIME 2 and DADA2 command runs with this prefix.
+r_isolation: "R_ENVIRON_USER=/dev/null R_PROFILE_USER=/dev/null"
+
+# ── Raw data layout ───────────────────────────────────────────────────────────
+# Each lane is a separate sequencing run (own flowcell and instrument):
+#   L1 = flowcell HVGYYDRX5 (A01415, run 1088); L2 = flowcell HWYVWDRX5 (A00783, run 1809)
+# Raw file name: <sublib>/<sublib>_<library_id>_<flowcell>_<lane>_<read>.fq.gz
+library_id: "FKDL250197829-1A"
+flowcells:
+  L1: "HVGYYDRX5"
+  L2: "HWYVWDRX5"
+
+# ── 01. Adapter trimming (identical to v1 step 02) ────────────────────────────
+# Nextera adapter read-through at the 3' end of R1 and R2
+adapter_r1: "TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG"
+adapter_r2: "GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG"
+
+# ── 03. Primer trimming ───────────────────────────────────────────────────────
+# Linked adapters per read: anchored 5' primer (required) ... reverse complement
+# of the other primer (optional; removes 3' read-through with all that follows).
+# Reverse complements are written out here; cutadapt does not compute them.
+markers: ["16S", "ITS1"]
+primers:
+  16S:                                  # 515F (Parada 2016) / 806R (Apprill 2015)
+    fwd:    "GTGYCAGCMGCCGCGGTAA"
+    rev:    "GGACTACNVGGGTWTCTAAT"
+    fwd_rc: "TTACCGCGGCKGCTGRCAC"
+    rev_rc: "ATTAGAWACCCBNGTAGTCC"
+  ITS1:                                 # ITS1F / ITS2
+    fwd:    "CTTGGTCATTTAGAGGAAGTAA"
+    rev:    "GCTGCGTTCTTCATCGATGC"
+    fwd_rc: "TTACTTCCTCTAAATGACCAAG"
+    rev_rc: "GCATCGATGAAGAACGCAGC"
+primer_min_length: 50                   # applied to both mates after trimming
+
+# ── 04-05. DADA2 in R, per run (lane) and marker ──────────────────────────────
+# filterAndTrim: no truncation (variable-length ITS1; full-length 16S reads),
+# DADA2 defaults otherwise (truncQ = 2, rm.phix = TRUE). After primer trimming the
+# reads contain only three quality values (binned): Q11, Q25, Q37.
+dada2:
+  max_ee: [2, 2]
+  max_n: 0
+  min_len: 50
+  trunc_q: 2
+  learn_nbases: 1.0e8          # bases used to learn each error model
+  learn_randomize: true        # draw samples at random (fixed seed), not in file order
+  seed: 20261021
+  qual_bins: [11, 25, 37]      # for makeBinnedQualErrfun; the filter step checks them
+  error_functions: ["loess", "binned"]
+  mock_min_pairs: 1000         # mocks with fewer read pairs are left out of the mock summary
+
+# ── 06-07. Denoising, merging the runs, chimeras: ablation rungs ──────────────
+# All rungs use the same primer-trimmed and filtered reads. "pooled" = both runs'
+# reads concatenated per sample (as v1 did). C is the main pipeline; A and B exist
+# only to separate the effects of the v2 changes (compared in step 2.8).
+#   A: pooled runs, loess   B: per run, loess   C: per run, binned (chosen 2026-10-22)
+ablation_rungs:
+  A: {lanes: ["pooled"], errfun: "loess"}
+  B: {lanes: ["L1", "L2"], errfun: "loess"}
+  C: {lanes: ["L1", "L2"], errfun: "binned"}
+main_rung: "C"
+
+# ── Reference databases and classifiers (shared, outside the project) ─────────
+# Layout: <database>/<release>/reference/ and <database>/<release>/classifiers/
+# qiime2-<v>_sklearn-<v>/ (a classifier loads only with its scikit-learn version).
+# See README.md files there for sources, DOIs and md5 checksums.
+databases_dir: "/nobackup/jcnx71/databases"
+
+# ── 09. 16S taxonomy: the four official SILVA 144 classifiers ─────────────────
+# V4 515F/806R region-extracted (recommended for 16S); built with QIIME 2 2026.7,
+# scikit-learn 1.7.1 = same as QIIME 2 2026.4. Downloaded with .md5 and .doi files.
+silva144:
+  dir: "SILVA/144/classifiers/qiime2-2026.7_sklearn-1.7.1"
+  base_url: "https://www.arb-silva.de/fileadmin/silva_databases/current/QIIME2/2026.7/SSU/V4-515f-806r"
+  classifiers:
+    uniform:       "uniform/SILVA_144_SSURef_NR99_uniform_classifier_V4-515f-806r.qza"
+    average:       "weighted/average/SILVA_144_SSURef_NR99_weighted_classifier_V4-515f-806r_average.qza"
+    plant-corpus:  "weighted/plant-corpus/SILVA_144_SSURef_NR99_weighted_classifier_V4-515f-806r_plant-corpus.qza"
+    plant-surface: "weighted/plant-surface/SILVA_144_SSURef_NR99_weighted_classifier_V4-515f-806r_plant-surface.qza"
+classify_n_jobs: 8              # parallel workers of classify-sklearn (each loads the classifier)
+
+# ── 10. ITS1 classifiers: UNITE v10 (19.02.2025), dynamic, all eukaryotes ──────
+# Full-length references (recommended for ITS). "s_all": v1's file with singletons,
+# retrained here in QIIME 2 2026.4; "no_singletons": community classifier
+# (github.com/colinbrislawn/unite-train, release v10.0-2025-02-19-qiime2-2026.4).
+unite:
+  reference_dir: "UNITE/v10_2025-02-19/reference"
+  classifier_dir: "UNITE/v10_2025-02-19/classifiers/qiime2-2026.4_sklearn-1.7.1"
+  fasta: "sh_refs_qiime_ver10_dynamic_s_all_19.02.2025.fasta"
+  taxonomy: "sh_taxonomy_qiime_ver10_dynamic_s_all_19.02.2025.txt"
+  classifiers:
+    s_all: "unite_ver10_dynamic_s_all_19.02.2025-Q2-2026.4.qza"
+    no_singletons: "unite_ver2025-02-19_dynamic_eukaryotes-Q2-2026.4.qza"
+  community_url: "https://github.com/colinbrislawn/unite-train/releases/download/v10.0-2025-02-19-qiime2-2026.4/unite_ver2025-02-19_dynamic_eukaryotes-Q2-2026.4.qza"
+  doi: "10.15156/BIO/3301243"   # UNITE QIIME release for eukaryotes, v10 19.02.2025
+
+# ── Main classifiers: their taxonomy is exported for R ────────────────────────
+# 16S chosen 2026-10-23 from QC 06; ITS1 chosen 2026-10-25 from QC 07 by the rule
+# fixed in docs/v2_rerun_plan.md (fungal reads to genus: 89.9% vs 69.3% for s_all).
+taxonomy_main:
+  16S: "average"
+  ITS1: "no_singletons"
+
+# ── 13. 16S phylogeny: three input sets ("tracks"), tree method as in v1 ───────
+# all:  every ASV, midpoint root (v1 method on v2 data)
+# prok: bacteria + archaea without organelles, rooted on the archaea
+# bact: bacteria without organelles (= scripts/01a filter), midpoint root; primary
+# Filters use the main 16S taxonomy (qiime taxa filter-seqs, mode "contains").
+phylogeny_tracks:
+  prok:
+    include: "d__Bacteria,d__Archaea"
+    exclude: "o__Chloroplast,f__Mitochondria"
+  bact:
+    include: "d__Bacteria"
+    exclude: "o__Chloroplast,f__Mitochondria"
+phylogeny_threads: 16
+
+# ── 15. ITS1 sensitivity branch: forward reads (R1) only ──────────────────────
+# Long R1 reads are 220 or 221 nt; cutting to 220 keeps one ASV per organism.
+r1_only:
+  max_length: 220
