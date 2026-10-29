@@ -14,6 +14,11 @@ shift the flower microbiome?
 
 - **R**: Windows R 4.6.1 via RStudio; renv locks packages (`renv::restore()`).
   From WSL terminal: `"/mnt/c/Program Files/R/R-4.6.1/bin/Rscript.exe" script.R`
+- **Data version**: environment variable `CFM_VERSION` (`v1` | `v2`, unset = v2),
+  read in `scripts/utils_paths.R`: exports from `qiime2/export/` (v1) or
+  `qiime2_v2/export/` (v2), results to `results/<version>/`. From WSL pass it to
+  Windows R with `WSLENV=CFM_VERSION CFM_VERSION=v1 Rscript.exe ...`; in RStudio
+  `Sys.setenv(CFM_VERSION = "v1")`. `results/v1/` is a frozen archive.
 - **Python**: WSL Ubuntu, miniforge (conda/mamba). JupyterLab runs from `base`;
   notebook kernel `ml` (scikit-learn, biom-format, umap-learn; notebooks 01-03);
   host-genotype (04) and TDA (07a/07b, kernel `gamma`) notebooks are out of the
