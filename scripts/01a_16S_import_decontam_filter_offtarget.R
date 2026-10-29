@@ -228,22 +228,40 @@ ps_16S_unassigned <- ps_16S_decontam |>
 ################################################################################
 
 # ---- Filter only biological samples (remove all controls) ----
-ps_16S_bacteria_biosamples <- subset_samples(
+# Two sets per object:
+# a) _with_deviations: all 294 flowers (supplementary ordination, sensitivity tests);
+# b) main name: 288 flowers sampled by the standard protocol (EXCLUDE_DEVIATIONS,
+#    defined in utils_read_metadata.R). Exclusion after decontam, so decontam
+#    used every sample.
+# Taxa with zero counts in the set (found only in controls or mocks) are dropped.
+deviation_ids <- metadata$sample_id[metadata$sampling_deviation %in% EXCLUDE_DEVIATIONS]
+
+ps_16S_bacteria_biosamples_with_deviations <- subset_samples(
         ps_16S_bacteria,
         !sample_type %in% c(
                 "extraction_control",
                 "negative_pcr_control",
                 "mock_community"
         )
+) |>
+        (\(ps) prune_taxa(taxa_sums(ps) > 0, ps))()
+
+ps_16S_bacteria_biosamples <- drop_deviations(
+        ps_16S_bacteria_biosamples_with_deviations, deviation_ids
 )
 
-ps_16S_prokaryotes_biosamples <- subset_samples(
+ps_16S_prokaryotes_biosamples_with_deviations <- subset_samples(
         ps_16S_prokaryotes,
         !sample_type %in% c(
                 "extraction_control",
                 "negative_pcr_control",
                 "mock_community"
         )
+) |>
+        (\(ps) prune_taxa(taxa_sums(ps) > 0, ps))()
+
+ps_16S_prokaryotes_biosamples <- drop_deviations(
+        ps_16S_prokaryotes_biosamples_with_deviations, deviation_ids
 )
 
 ################################################################################
@@ -270,9 +288,16 @@ saveRDS(ps_16S_bacteria,
         file = file.path(RESULTS_DIR, "rds", "ps_16S_bacteria.rds"),
         compress = "xz")
 
+# Bacteria biosamples: 288 (main analyses) and 294 (with deviations)
 saveRDS(
         ps_16S_bacteria_biosamples,
         file = file.path(RESULTS_DIR, "rds", "ps_16S_bacteria_biosamples.rds"),
+        compress = "xz"
+)
+
+saveRDS(
+        ps_16S_bacteria_biosamples_with_deviations,
+        file = file.path(RESULTS_DIR, "rds", "ps_16S_bacteria_biosamples_with_deviations.rds"),
         compress = "xz"
 )
 
@@ -280,6 +305,12 @@ saveRDS(
 saveRDS(
         ps_16S_prokaryotes_biosamples,
         file = file.path(RESULTS_DIR, "rds", "ps_16S_prokaryotes_biosamples.rds"),
+        compress = "xz"
+)
+
+saveRDS(
+        ps_16S_prokaryotes_biosamples_with_deviations,
+        file = file.path(RESULTS_DIR, "rds", "ps_16S_prokaryotes_biosamples_with_deviations.rds"),
         compress = "xz"
 )
 
@@ -313,3 +344,5 @@ dir.create(file.path(RESULTS_DIR, "biom"), showWarnings = FALSE, recursive = TRU
 
 export_to_biom(ps_16S_bacteria,            "cfm_16s_bacteria_allsamples",  file.path(RESULTS_DIR, "biom"))
 export_to_biom(ps_16S_bacteria_biosamples, "cfm_16s_bacteria_biosamples",  file.path(RESULTS_DIR, "biom"))
+export_to_biom(ps_16S_bacteria_biosamples_with_deviations,
+               "cfm_16s_bacteria_biosamples_with_deviations",  file.path(RESULTS_DIR, "biom"))

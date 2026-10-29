@@ -141,13 +141,26 @@ ps_ITS1_unassigned <- ps_ITS1_decontam |>
 ################################################################################
 
 # ---- Filter only biological samples (remove all controls) ----
-ps_ITS1_fungi_biosamples <- subset_samples(
+# Two sets per object:
+# a) _with_deviations: all 294 flowers (supplementary ordination, sensitivity tests);
+# b) main name: 288 flowers sampled by the standard protocol (EXCLUDE_DEVIATIONS,
+#    defined in utils_read_metadata.R). Exclusion after decontam, so decontam
+#    used every sample.
+# Taxa with zero counts in the set (found only in controls or mocks) are dropped.
+deviation_ids <- metadata$sample_id[metadata$sampling_deviation %in% EXCLUDE_DEVIATIONS]
+
+ps_ITS1_fungi_biosamples_with_deviations <- subset_samples(
         ps_ITS1_fungi,
         !sample_type %in% c(
                 "extraction_control",
                 "negative_pcr_control",
                 "mock_community"
         )
+) |>
+        (\(ps) prune_taxa(taxa_sums(ps) > 0, ps))()
+
+ps_ITS1_fungi_biosamples <- drop_deviations(
+        ps_ITS1_fungi_biosamples_with_deviations, deviation_ids
 )
 
 ################################################################################
@@ -173,9 +186,16 @@ saveRDS(ps_ITS1_fungi,
         file = file.path(RESULTS_DIR, "rds", "ps_ITS1_fungi.rds"),
         compress = "xz")
 
+# Fungi biosamples: 288 (main analyses) and 294 (with deviations)
 saveRDS(
         ps_ITS1_fungi_biosamples,
         file = file.path(RESULTS_DIR, "rds", "ps_ITS1_fungi_biosamples.rds"),
+        compress = "xz"
+)
+
+saveRDS(
+        ps_ITS1_fungi_biosamples_with_deviations,
+        file = file.path(RESULTS_DIR, "rds", "ps_ITS1_fungi_biosamples_with_deviations.rds"),
         compress = "xz"
 )
 
@@ -209,6 +229,8 @@ dir.create(file.path(RESULTS_DIR, "biom"), showWarnings = FALSE, recursive = TRU
 
 export_to_biom(ps_ITS1_fungi,            "cfm_its1_fungi_allsamples",  file.path(RESULTS_DIR, "biom"))
 export_to_biom(ps_ITS1_fungi_biosamples, "cfm_its1_fungi_biosamples",  file.path(RESULTS_DIR, "biom"))
+export_to_biom(ps_ITS1_fungi_biosamples_with_deviations,
+               "cfm_its1_fungi_biosamples_with_deviations",  file.path(RESULTS_DIR, "biom"))
 
 
 ################################################################################
@@ -290,14 +312,20 @@ ps_ITS1_otu97_unassigned <- ps_ITS1_otu97_decontam |>
 ############### Biological samples (OTU97) #####################################
 ################################################################################
 
-# Remove extraction controls, negative PCR controls, and mock communities
-ps_ITS1_otu97_fungi_biosamples <- subset_samples(
+# Remove extraction controls, negative PCR controls, and mock communities;
+# 294 (with deviations) and 288 (main) sets, as in the ASV workflow
+ps_ITS1_otu97_fungi_biosamples_with_deviations <- subset_samples(
         ps_ITS1_otu97_fungi,
         !sample_type %in% c(
                 "extraction_control",
                 "negative_pcr_control",
                 "mock_community"
         )
+) |>
+        (\(ps) prune_taxa(taxa_sums(ps) > 0, ps))()
+
+ps_ITS1_otu97_fungi_biosamples <- drop_deviations(
+        ps_ITS1_otu97_fungi_biosamples_with_deviations, deviation_ids
 )
 
 cat(sprintf("OTU97 biosamples (fungi only): %d OTUs × %d samples\n",
@@ -329,11 +357,17 @@ saveRDS(ps_ITS1_otu97_fungi_biosamples,
         file     = file.path(RESULTS_DIR, "rds", "ps_ITS1_otu97_fungi_biosamples.rds"),
         compress = "xz")
 
+saveRDS(ps_ITS1_otu97_fungi_biosamples_with_deviations,
+        file     = file.path(RESULTS_DIR, "rds", "ps_ITS1_otu97_fungi_biosamples_with_deviations.rds"),
+        compress = "xz")
+
 # Export OTU97 cleaned tables as BIOM (mirrors ASV export above)
 export_to_biom(ps_ITS1_otu97_fungi,
                "cfm_its1_otu97_fungi_allsamples",  file.path(RESULTS_DIR, "biom"))
 export_to_biom(ps_ITS1_otu97_fungi_biosamples,
                "cfm_its1_otu97_fungi_biosamples",  file.path(RESULTS_DIR, "biom"))
+export_to_biom(ps_ITS1_otu97_fungi_biosamples_with_deviations,
+               "cfm_its1_otu97_fungi_biosamples_with_deviations",  file.path(RESULTS_DIR, "biom"))
 
 
 ################################################################################
@@ -393,14 +427,19 @@ if (CFM_VERSION == "v2") {
                 subset_taxa(Kingdom == "k__Fungi") |>
                 (\(ps) prune_samples(sample_sums(ps) > 0, ps))()
 
-        # ---- Biological samples ----
-        ps_ITS1_r1_otu97_fungi_biosamples <- subset_samples(
+        # ---- Biological samples: 294 (with deviations) and 288 (main) ----
+        ps_ITS1_r1_otu97_fungi_biosamples_with_deviations <- subset_samples(
                 ps_ITS1_r1_otu97_fungi,
                 !sample_type %in% c(
                         "extraction_control",
                         "negative_pcr_control",
                         "mock_community"
                 )
+        ) |>
+                (\(ps) prune_taxa(taxa_sums(ps) > 0, ps))()
+
+        ps_ITS1_r1_otu97_fungi_biosamples <- drop_deviations(
+                ps_ITS1_r1_otu97_fungi_biosamples_with_deviations, deviation_ids
         )
 
         cat(sprintf("R1 OTU97 biosamples (fungi only): %d OTUs × %d samples\n",
@@ -428,8 +467,14 @@ if (CFM_VERSION == "v2") {
                 file     = file.path(RESULTS_DIR, "rds", "ps_ITS1_r1_otu97_fungi_biosamples.rds"),
                 compress = "xz")
 
+        saveRDS(ps_ITS1_r1_otu97_fungi_biosamples_with_deviations,
+                file     = file.path(RESULTS_DIR, "rds", "ps_ITS1_r1_otu97_fungi_biosamples_with_deviations.rds"),
+                compress = "xz")
+
         export_to_biom(ps_ITS1_r1_otu97_fungi,
                        "cfm_its1_r1_otu97_fungi_allsamples",  file.path(RESULTS_DIR, "biom"))
         export_to_biom(ps_ITS1_r1_otu97_fungi_biosamples,
                        "cfm_its1_r1_otu97_fungi_biosamples",  file.path(RESULTS_DIR, "biom"))
+        export_to_biom(ps_ITS1_r1_otu97_fungi_biosamples_with_deviations,
+                       "cfm_its1_r1_otu97_fungi_biosamples_with_deviations",  file.path(RESULTS_DIR, "biom"))
 }

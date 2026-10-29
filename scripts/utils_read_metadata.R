@@ -1,7 +1,7 @@
 ## ============================================================================
 ## utils_read_metadata — sample metadata from the TSV, with column types
 ##
-## Sourced by 01a, 01b and 01_microscopy_data_analysis.Rmd.
+## Sourced by 01a, 01b, 01c and 01_microscopy_data_analysis.Rmd.
 ##
 ## data/sample_metadata_with_microscopy.txt (exported from the lab workbook) is
 ## the single source of truth for sample metadata. Columns are typed by name, so
@@ -12,6 +12,22 @@
 ## `sample-id` renamed to sample_id. Factor conversion for phyloseq stays in the
 ## calling scripts.
 ## ============================================================================
+
+# Sampling deviations excluded from the main analyses (288 of 294 flowers):
+#   no_buffer       pkk71, pyb43, cmt71
+#   two_flowers     pyb42
+#   insect_present  cvi11, cvi51 (bagged flowers with an insect inside: failed exclusion)
+# Edit this vector to change which deviations are excluded.
+EXCLUDE_DEVIATIONS <- c("no_buffer", "two_flowers", "insect_present")
+
+# Main analysis set from a biosample phyloseq object: the deviation samples
+# (deviation_ids, from the metadata) are removed, then taxa left with zero counts
+# (phyloseq prunes the tree with them). Stops if a deviation sample is missing.
+drop_deviations <- function(ps, deviation_ids) {
+        stopifnot(all(deviation_ids %in% phyloseq::sample_names(ps)))
+        ps <- phyloseq::prune_samples(!phyloseq::sample_names(ps) %in% deviation_ids, ps)
+        phyloseq::prune_taxa(phyloseq::taxa_sums(ps) > 0, ps)
+}
 
 read_sample_metadata <- function() {
         readr::read_tsv(
