@@ -334,3 +334,102 @@ export_to_biom(ps_ITS1_otu97_fungi,
                "cfm_its1_otu97_fungi_allsamples",  file.path(RESULTS_DIR, "biom"))
 export_to_biom(ps_ITS1_otu97_fungi_biosamples,
                "cfm_its1_otu97_fungi_biosamples",  file.path(RESULTS_DIR, "biom"))
+
+
+################################################################################
+############### R1-only OTU97 (v2 sensitivity branch) ##########################
+################################################################################
+# v2 only: forward reads denoised alone (cut to 220 nt), runs merged, chimeras
+# removed, 97% OTUs, same UNITE classifier. Merging R1 with R2 loses the long
+# Saccharomyces amplicon in the mock; this branch tests whether the flower data
+# change (QC 09: ~1% of reads, no genus lost). Same metadata, decontam and
+# off-target filter as the OTU97 workflow above.
+
+if (CFM_VERSION == "v2") {
+
+        # ---- Import R1-only OTU97 table and taxonomy ----
+        otu_table_ITS1_r1_otu97 <- suppressWarnings(
+                read_biom(
+                        file.path(EXPORT_DIR, "CFM_ITS1_r1_otu97_table", "feature-table.biom")
+                )
+        ) |>
+                biom_data() |>
+                as.matrix() |>
+                otu_table(taxa_are_rows = TRUE)
+
+        taxonomy_table_ITS1_r1_otu97 <- read_qiime2_taxonomy(
+                file.path(EXPORT_DIR, "CFM_ITS1_r1_otu97_taxonomy", "taxonomy.tsv")
+        )
+
+        ps_ITS1_r1_otu97_raw <- phyloseq(
+                otu_table_ITS1_r1_otu97,
+                taxonomy_table_ITS1_r1_otu97,
+                sample_metadata_ITS1
+                )
+
+        cat(sprintf("R1 OTU97 raw: %d OTUs × %d samples\n",
+                    ntaxa(ps_ITS1_r1_otu97_raw),
+                    nsamples(ps_ITS1_r1_otu97_raw)))
+
+        # ---- Decontam (threshold 0.5, mock communities excluded) ----
+        decontam_prev050_ITS1_r1_otu97 <- ps_ITS1_r1_otu97_raw |>
+                subset_samples(sample_type != "mock_community") |>
+                isContaminant(
+                        method    = "prevalence",
+                        neg       = "is_negative_control",
+                        threshold = 0.5
+                        )
+
+        cat(sprintf("R1 OTU97 decontam: %d OTUs flagged as contaminant\n",
+                    sum(decontam_prev050_ITS1_r1_otu97$contaminant)))
+
+        ps_ITS1_r1_otu97_decontam <- prune_taxa(
+                !decontam_prev050_ITS1_r1_otu97$contaminant,
+                ps_ITS1_r1_otu97_raw
+                )
+
+        # ---- Off-target filter: k__Fungi only ----
+        ps_ITS1_r1_otu97_fungi <- ps_ITS1_r1_otu97_decontam |>
+                subset_taxa(Kingdom == "k__Fungi") |>
+                (\(ps) prune_samples(sample_sums(ps) > 0, ps))()
+
+        # ---- Biological samples ----
+        ps_ITS1_r1_otu97_fungi_biosamples <- subset_samples(
+                ps_ITS1_r1_otu97_fungi,
+                !sample_type %in% c(
+                        "extraction_control",
+                        "negative_pcr_control",
+                        "mock_community"
+                )
+        )
+
+        cat(sprintf("R1 OTU97 biosamples (fungi only): %d OTUs × %d samples\n",
+                    ntaxa(ps_ITS1_r1_otu97_fungi_biosamples),
+                    nsamples(ps_ITS1_r1_otu97_fungi_biosamples)))
+
+        # ---- Save RDS and BIOM ----
+        saveRDS(ps_ITS1_r1_otu97_raw,
+                file     = file.path(RESULTS_DIR, "rds", "ps_ITS1_r1_otu97_raw.rds"),
+                compress = "xz")
+
+        saveRDS(decontam_prev050_ITS1_r1_otu97,
+                file     = file.path(RESULTS_DIR, "rds", "decontam_prev050_ITS1_r1_otu97.rds"),
+                compress = "xz")
+
+        saveRDS(ps_ITS1_r1_otu97_decontam,
+                file     = file.path(RESULTS_DIR, "rds", "ps_ITS1_r1_otu97_decontam.rds"),
+                compress = "xz")
+
+        saveRDS(ps_ITS1_r1_otu97_fungi,
+                file     = file.path(RESULTS_DIR, "rds", "ps_ITS1_r1_otu97_fungi.rds"),
+                compress = "xz")
+
+        saveRDS(ps_ITS1_r1_otu97_fungi_biosamples,
+                file     = file.path(RESULTS_DIR, "rds", "ps_ITS1_r1_otu97_fungi_biosamples.rds"),
+                compress = "xz")
+
+        export_to_biom(ps_ITS1_r1_otu97_fungi,
+                       "cfm_its1_r1_otu97_fungi_allsamples",  file.path(RESULTS_DIR, "biom"))
+        export_to_biom(ps_ITS1_r1_otu97_fungi_biosamples,
+                       "cfm_its1_r1_otu97_fungi_biosamples",  file.path(RESULTS_DIR, "biom"))
+}
