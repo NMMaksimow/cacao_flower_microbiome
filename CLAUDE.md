@@ -50,6 +50,11 @@ relative to `results/<version>/`.
 |------|----------|
 | `rds/ps_16S_bacteria_biosamples.rds` | 16S phyloseq — post-decontam, bacteria only |
 | `rds/ps_ITS1_otu97_fungi_biosamples.rds` | ITS1 OTU97 phyloseq — post-decontam, fungi only |
+| `rds/*_biosamples_with_deviations.rds` | the same with all 294 flowers (sensitivity analyses) |
+
+In v2 the biosample objects hold the 288 flowers sampled by the standard protocol
+(`EXCLUDE_DEVIATIONS` in `scripts/utils_read_metadata.R`); zero-count taxa are
+dropped. In the v1 archive the same names hold all 294 flowers.
 | `rds/16S_dist_list.rds` + `16S_meta_list.rds` | 16S distance matrices (08a output) |
 | `rds/ITS1_otu97_dist_list.rds` + `ITS1_otu97_meta_list.rds` | ITS1 distance matrices (08b output) |
 
