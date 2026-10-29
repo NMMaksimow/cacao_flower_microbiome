@@ -33,10 +33,10 @@ shift the flower microbiome?
 - **Code goes through git only.** Write and edit code locally, commit and
   `git push`, then `git pull` on Hamilton before running. Do not edit code on
   Hamilton.
-- **Results go one way, Hamilton -> laptop, with rsync:**
-  `rsync -a --partial hamilton:nobackup/cacao_flower_microbiome/<path>/ <path>/`;
-  check md5 of key files after the download. Never rsync code, and never rsync
-  from the laptop to Hamilton.
+- **Data and results go both ways with rsync** (biom, RDS, tables, figures):
+  `rsync -a --partial <src>/<path>/ <dst>/<path>/`, into the matching
+  `results/<version>/` folder; copy only what the step needs; check md5 of key files
+  after the transfer. Code never goes by rsync.
 - Before working, `git pull` where you work; before a run on Hamilton,
   `git status` must show no modified or untracked files.
 
