@@ -20,7 +20,9 @@ editor_options:
 knitr::opts_chunk$set(echo = TRUE)
 
 library(here)
-library(readxl)
+
+# read_sample_metadata(): sample metadata TSV with column types
+source(here("scripts", "utils_read_metadata.R"))
 
 library(tidyr)
 library(dplyr)
@@ -46,21 +48,7 @@ library(lme4)
 ```{r read_and_clean, echo=FALSE, warning=FALSE, message=FALSE}
 # ---- Read sample metadata dataframe (all samples including metabarcoding controls) ----
 # Reusable for microbiome and microscopy analyses
-cocoa_sample_metadata <- read_xlsx(
-        here("data", "sample_metadata_with_microscopy.xlsx"),
-        sheet = "metadata",
-        col_types = c("text","text","text","text","text",
-                      "text", "text", "date", "date", "date",
-                      "text", "text", "numeric", "date", "date", 
-                      "text", "text", "numeric", "date", "logical",
-                      "text", "numeric", "logical", "logical", "numeric",
-                      "logical", "numeric", "logical", "numeric", "logical",
-                      "logical", "numeric", "logical")
-        )  |>
-        # Remove qiime2:types row (QIIME2 metadata requirement)
-        slice(-1) |>
-        # Remove hyphen in sample-id (QIIME2 metadata requirement)
-        rename(sample_id = `sample-id`) 
+cocoa_sample_metadata <- read_sample_metadata()
 
 str(cocoa_sample_metadata)
 ```

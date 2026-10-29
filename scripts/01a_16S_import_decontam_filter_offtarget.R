@@ -2,7 +2,6 @@
 
 # Importing data
 library(readr) # (part of tidyverse) import of delimited text files (CSV, TSV)
-library(readxl) # import of Excel files (.xls, .xlsx)
 library(biomformat) # reading and writing BIOM-format microbiome files
 library(here) # constructs file paths relative to the project root
 
@@ -18,27 +17,16 @@ library(phyloseq) # integrate analysis of microbiome data (OTU/ASV, taxonomy, me
 library(decontam) # identification and removal of contaminant taxa
 library(ape)      # read.tree() for loading Newick phylogenetic tree
 
+# read_sample_metadata(): sample metadata TSV with column types
+source(here("scripts", "utils_read_metadata.R"))
+
 
 ################################################################################
 ################### Import data and phyloseq object building ###################
 ################################################################################
 # ---- Creating phyloseq object for 16S microbiome data ----
-# 1) Metadata: Import metadata from .xlsx
-metadata <- read_xlsx(
-        here("data", "sample_metadata_with_microscopy.xlsx"),
-        sheet = "metadata",
-        col_types = c("text","text","text","text","text",
-                      "text", "text", "date", "date", "date",
-                      "text", "text", "numeric", "date", "date", 
-                      "text", "text", "numeric", "date", "logical",
-                      "text", "numeric", "logical", "logical", "numeric",
-                      "logical", "numeric", "logical", "numeric", "logical",
-                      "logical", "numeric", "logical")
-        )  |>
-        # Remove qiime2:types row (QIIME2 metadata requirement)
-        dplyr::slice(-1) |>
-        # Remove hyphen in sample-id (QIIME2 metadata requirement)
-        dplyr::rename(sample_id = `sample-id`) |>
+# 1) Metadata: Import metadata from the TSV (see scripts/utils_read_metadata.R)
+metadata <- read_sample_metadata() |>
         # To match row names in SampleID in phyloseq object
         column_to_rownames("sample_id") |>
         # Restore sample_id as metadata column (needed by downstream scripts)
