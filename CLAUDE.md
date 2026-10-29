@@ -67,7 +67,8 @@ relative to `results/<version>/`.
   **v2 community classifier without singletons** (more fungal reads to genus)
 - **ITS1**: OTUs at 97% (vsearch de-novo) to collapse intragenomic length polymorphism;
   no ITS phylogeny (too variable for reliable inference)
-- **Decontam**: prevalence method, threshold 0.55
+- **Decontam**: prevalence method, threshold 16S 0.55, ITS1 0.5 (ITS1 to be reviewed
+  in Phase 3)
 
 ## Script conventions
 
@@ -99,9 +100,7 @@ decisions" above are otherwise unchanged.
 - Exports for R: Hamilton `qiime2_v2/export/` (v1 folder names, plus
   `CFM_16S_taxonomy_average`, `CFM_16S_rooted_tree_{bact,all,prok}`, `RUN_INFO.txt`);
   QC tables and figures in `qiime2_v2/qc/`; SLURM logs in `logs/v2/`.
-- For the R switch-over: SILVA 144 adds a `k__` rank (parse ranks by prefix) and
-  renames genera (e.g. Aureimonas -> Mesocryomonas, Candidatus Tremblaya ->
-  Tremblayella); attach a tree only after the taxonomy filter.
+- Phase 3 to-do and decision log: `docs/analysis_log.md` (the single living document).
 - QIIME 2 2026.4: `module load qiime2/2026.04qiime2`. Prefix every QIIME 2 and
   DADA2 command with `R_ENVIRON_USER=/dev/null R_PROFILE_USER=/dev/null`
   (`~/.Renviron` sets `R_LIBS_USER` for my own HPC R and breaks QIIME 2's R
@@ -109,7 +108,8 @@ decisions" above are otherwise unchanged.
 - Snakemake 7.17.1: `module load snakemake/7.17.1`, SLURM via `--cluster`,
   profile `workflow/profiles/hamilton/`; code clone on Hamilton
   `~/nobackup/cfm_v2_code`.
-- Decisions, results and phases: `docs/v2_rerun_plan.md` (local only, not in git).
+- v2 processing record (Phases 0-2.8, frozen): `docs/v2_rerun_plan.md` (local only,
+  not in git).
 
 ## Datasets
 
