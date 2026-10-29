@@ -23,6 +23,18 @@ shift the flower microbiome?
 - **HPC Hamilton**: SSH alias `hamilton`; `jcnx71@login2.ham8`;
   project root `~/nobackup/cacao_flower_microbiome/`;
 
+## Laptop - Hamilton sync
+
+- **Code goes through git only.** Write and edit code locally, commit and
+  `git push`, then `git pull` on Hamilton before running. Do not edit code on
+  Hamilton.
+- **Results go one way, Hamilton -> laptop, with rsync:**
+  `rsync -a --partial hamilton:nobackup/cacao_flower_microbiome/<path>/ <path>/`;
+  check md5 of key files after the download. Never rsync code, and never rsync
+  from the laptop to Hamilton.
+- Before working, `git pull` where you work; before a run on Hamilton,
+  `git status` must show no modified or untracked files.
+
 ## Canonical R entry points
 
 Results are kept per processing version: `results/v1/` (v1 data, current R outputs)
