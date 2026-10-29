@@ -163,15 +163,11 @@ N_JOBS_CV = -1
 # ANCOMBC2 / ISA results. No abundance filter is applied anywhere in this project.
 PREV_THRESH = 0.10
 
-# ── Sample exclusions ────────────────────────────────────────────────────────
-# cyb43 : bagged flower with pi_clsm=340 -> the bag failed, the 'bagged' label is wrong.
-#         Dropped everywhere.
-# cvi11, cvi51 : bagged flowers with an insect found inside during specimen prep.
-#         They violate the 'no insect access' definition, so they are dropped from
-#         sample_type. They are bagged, so unbagged-only targets exclude them anyway.
-#         farm_id keeps them: farm identity is unaffected by insect contact.
-OUTLIER_IDS = ['cyb43']
-INSECT_IDS  = ['cvi11', 'cvi51']
+# ── Samples ──────────────────────────────────────────────────────────────────
+# The sample set is defined upstream, as in the R scripts: the main biom holds the 288
+# flowers sampled by the standard protocol (EXCLUDE_DEVIATIONS in
+# scripts/utils_read_metadata.R), the _with_deviations biom all 294. Every flower in
+# the biom is used; there are no RFC-specific exclusions.
 
 PI_THRESH_POLL = 40   # pollen grains per stigma; none / weak / strong boundary (as in 07a/07b)
 
@@ -345,21 +341,20 @@ for col in ['pi_clsm', 'fungal_colonization_score']:
         meta_raw[col].astype(str).str.replace(',', '.', regex=False), errors='coerce')
 
 meta_raw = meta_raw[meta_raw['sample_type'].isin(['bagged_flower', 'unbagged_flower'])]
-n_all = len(meta_raw)
 
-meta = meta_raw[~meta_raw.index.isin(OUTLIER_IDS)].copy()
+# Flowers present in the feature tables (288 main set, 294 with deviations)
+in_biom = counts_its1.columns.union(counts_16s.columns)
+meta = meta_raw[meta_raw.index.isin(in_biom)].copy()
 
-print(f'{n_all:4d}  all bagged + unbagged flowers')
-print(f'{len(meta):4d}  after dropping {OUTLIER_IDS} (bag failure)')
-print(f'{len(meta[~meta.index.isin(INSECT_IDS)]):4d}  after also dropping {INSECT_IDS} '
-      f'(insect inside bag) -> used for sample_type')
+print(f'{len(meta_raw):4d}  bagged + unbagged flowers in the metadata')
+print(f'{len(meta):4d}  of them in the feature tables (sample set {SAMPLE_SET})')
 print()
 print(meta['sample_type'].value_counts().to_string())
 
 
 # ## 2. Feature filtering and transformation
 # 
-# **Prevalence filter (10%) and the transform are computed on all 294 flowers, before
+# **Prevalence filter (10%) and the transform are computed on all flowers in the sample set, before
 # any target-specific subsetting.** That is safe for CLR: CLR is a per-sample (per-row)
 # operation, so selecting a subset of samples afterwards does not change the feature
 # values. It also keeps every target in the same feature space, and the same space that
@@ -500,15 +495,13 @@ for _d in FEATURES.values():
 
 
 def target_farm_id(m):
-    """7 farms, all flowers. Insect-carrying flowers are kept: farm identity is
-    unaffected by whether an insect reached the flower."""
+    """7 farms, all flowers."""
     return m['farm_id'].dropna()
 
 
 def target_sample_type(m):
-    """Bagged vs unbagged. cvi11/cvi51 are excluded here: an insect was found inside
-    those bags, so they break the class definition this target is testing."""
-    return m.loc[~m.index.isin(INSECT_IDS), 'sample_type'].dropna()
+    """Bagged vs unbagged, all flowers."""
+    return m['sample_type'].dropna()
 
 
 def _unbagged(m):
@@ -1467,7 +1460,7 @@ plt.show()
 # of them — the bacterial community is far more even. That number belongs in the Methods.
 # 
 # The last row, `10% within unbagged`, computes prevalence inside the unbagged subset
-# instead of across all 294 flowers. Three of the targets live only on unbagged flowers,
+# instead of across all flowers. Three of the targets live only on unbagged flowers,
 # and a taxon common there but rare overall is dropped by the global filter: 45 ITS1
 # features (0.6% of reads) and 37 16S features (3.8% of reads).
 
