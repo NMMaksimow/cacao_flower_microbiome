@@ -17,8 +17,36 @@ library(phyloseq) # integrate analysis of microbiome data (OTU/ASV, taxonomy, me
 library(decontam) # identification and removal of contaminant taxa
 library(ape)      # read.tree() for loading Newick phylogenetic tree
 
+# Data version switch: CFM_VERSION, EXPORT_DIR, RESULTS_DIR
+source(here("scripts", "utils_paths.R"))
 # read_sample_metadata(): sample metadata TSV with column types
 source(here("scripts", "utils_read_metadata.R"))
+# read_qiime2_taxonomy(): taxonomy.tsv with ranks matched by prefix
+source(here("scripts", "utils_read_taxonomy.R"))
+
+# ---- Version-specific inputs ----
+# Taxonomy: v1 SILVA 138 diverse-weighted; v2 SILVA 144 V4 "average"
+taxonomy_dir_16S <- c(v1 = "CFM_16S_taxonomy_diverse_weighted",
+                      v2 = "CFM_16S_taxonomy_average")[[CFM_VERSION]]
+# Trees: v1 has one tree (all ASVs, midpoint-rooted). v2: bact (Bacteria without
+# organelles, midpoint-rooted; primary) and the prok tree rooted on the archaea with
+# the archaea kept (pipeline intermediate, not in the exports; copied from Hamilton)
+tree_path_bacteria <- c(
+        v1 = file.path(EXPORT_DIR, "CFM_16S_rooted_tree", "tree.nwk"),
+        v2 = file.path(EXPORT_DIR, "CFM_16S_rooted_tree_bact", "tree.nwk")
+)[[CFM_VERSION]]
+tree_path_prokaryotes <- c(
+        v1 = file.path(EXPORT_DIR, "CFM_16S_rooted_tree", "tree.nwk"),
+        v2 = here("qiime2_v2", "phylogeny", "prok", "CFM_16S_rooted_tree_archaea.nwk")
+)[[CFM_VERSION]]
+
+# Attach a tree to a filtered object. Never at phyloseq() construction: phyloseq
+# silently drops taxa missing from the tree. Here every taxon must be a tip.
+attach_tree <- function(ps, tree_path) {
+        tree <- ape::read.tree(tree_path)
+        stopifnot(all(taxa_names(ps) %in% tree$tip.label))
+        merge_phyloseq(ps, phy_tree(ape::keep.tip(tree, taxa_names(ps))))
+}
 
 
 ################################################################################
@@ -74,39 +102,17 @@ sample_metadata_16S <- sample_data(metadata)
 # 2) ASV feature table with counts (QIIME2 DADA2 output)
 # Build otu_table-class phyloseq object from biom feature table converted to matrix
 asv_table_16S <- read_biom(
-        here("qiime2", "export", "CFM_16S_dada2_table", "feature-table.biom")
-        ) |> 
+        file.path(EXPORT_DIR, "CFM_16S_dada2_table", "feature-table.biom")
+        ) |>
         biom_data() |> 
         as.matrix() |> 
         otu_table(taxa_are_rows = TRUE)
 
 # 3) Taxonomy table (QIIME2 SILVA Naive-Bayes classifier output)
 # Build taxonomyTable-class phyloseq object from tsv taxonomy table exported from QIIME2
-taxonomy_table_16S <- read_tsv(
-        here("qiime2", "export", "CFM_16S_taxonomy_diverse_weighted", "taxonomy.tsv"), 
-        show_col_types = FALSE
-) |> 
-        transmute(
-                # Fix space in the first column
-                FeatureID = `Feature ID`,
-                # Handle trailing spaces with regex (might be redundant)
-                Taxon = str_replace_all(Taxon, "\\s+", " ")
-        ) |> 
-        # Split Taxon string into columns with taxonomic ranks
-        separate(
-                Taxon,
-                # Species Hypothesis from UNITE database was preserved
-                into = c("Domain", "Phylum", "Class", "Order", "Family", "Genus", "Species"),
-                sep = ";\\s*",
-                # Explicit handling under-annotated taxa (by default separate rises warning and fill from the right)
-                fill = "right"
-        ) |> 
-        # One more explicit handling blank taxonomic ranks
-        mutate(across(-FeatureID, ~na_if(.x, ""))) |> 
-        column_to_rownames("FeatureID") |> 
-        # Phyloseq function requires matrix as input 
-        as.matrix() |> 
-        tax_table()
+taxonomy_table_16S <- read_qiime2_taxonomy(
+        file.path(EXPORT_DIR, taxonomy_dir_16S, "taxonomy.tsv")
+)
 
 # 4) Create a full experiment-level phyloseq-class object
 ps_16S_raw <- phyloseq(
@@ -115,13 +121,8 @@ ps_16S_raw <- phyloseq(
         sample_metadata_16S
         )
 
-# 4b) Embed rooted phylogenetic tree (built from all DADA2 ASVs before R-side filtering).
-# prune_taxa() / subset_taxa() calls below will auto-prune tree tips to match each subset.
-tree_16S <- ape::read.tree(here("qiime2", "export", "CFM_16S_rooted_tree", "tree.nwk"))
-ps_16S_raw <- merge_phyloseq(ps_16S_raw, phy_tree(tree_16S))
-
 # 5) Representative sequences (FASTA) file path
-repseqs_fp <- here("qiime2", "export", "CFM_16S_dada2_repseqs", "dna-sequences.fasta")
+repseqs_fp <- file.path(EXPORT_DIR, "CFM_16S_dada2_repseqs", "dna-sequences.fasta")
 
 ################################################################################
 ############# Decontamination and cleaning off-target sequences ################
@@ -179,7 +180,9 @@ ps_16S_bacteria <- ps_16S_decontam |>
                 (is.na(Family) | Family != "f__Mitochondria")
         ) |> 
         # prune empty samples (pibEC & pviEC)
-        (\(ps) prune_samples(sample_sums(ps) > 0, ps))()
+        (\(ps) prune_samples(sample_sums(ps) > 0, ps))() |>
+        # Tree after the filter: v2 bact tree has exactly these ASVs as tips
+        attach_tree(tree_path_bacteria)
 
 
 names(which(sample_sums(ps_16S_bacteria) == 0))
@@ -199,7 +202,9 @@ ps_16S_prokaryotes <- ps_16S_decontam |>
                 (is.na(Order)  | Order  != "o__Chloroplast") &
                 (is.na(Family) | Family != "f__Mitochondria")
         ) |>
-        (\(ps) prune_samples(sample_sums(ps) > 0, ps))()
+        (\(ps) prune_samples(sample_sums(ps) > 0, ps))() |>
+        # Tree after the filter, with the archaea (v2: rooted on the archaea)
+        attach_tree(tree_path_prokaryotes)
 
 # The subset with Eukaryota sequences includes 263 ASVs assigned to d__Eukaryota:
 # This subset includes 2 ASVs assigned to g__Phytophthora, the major cocoa pathogen. NB!
@@ -245,36 +250,36 @@ ps_16S_prokaryotes_biosamples <- subset_samples(
 ############### Saving resulting phyloseq objects (RDS & BIOM) #################
 ################################################################################
 
-dir.create(here("results", "rds"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "rds"), showWarnings = FALSE, recursive = TRUE)
 
 # Intermediate objects needed by 02b
 saveRDS(ps_16S_raw,
-        file = here("results", "rds", "ps_16S_raw.rds"),
+        file = file.path(RESULTS_DIR, "rds", "ps_16S_raw.rds"),
         compress = "xz")
 
 saveRDS(decontam_prev055_16S,
-        file = here("results", "rds", "decontam_prev055_16S.rds"),
+        file = file.path(RESULTS_DIR, "rds", "decontam_prev055_16S.rds"),
         compress = "xz")
 
 saveRDS(ps_16S_decontam,
-        file = here("results", "rds", "ps_16S_decontam.rds"),
+        file = file.path(RESULTS_DIR, "rds", "ps_16S_decontam.rds"),
         compress = "xz")
 
 # Bacteria all samples (controls + biosamples), used for mock community QC
 saveRDS(ps_16S_bacteria,
-        file = here("results", "rds", "ps_16S_bacteria.rds"),
+        file = file.path(RESULTS_DIR, "rds", "ps_16S_bacteria.rds"),
         compress = "xz")
 
 saveRDS(
         ps_16S_bacteria_biosamples,
-        file = here("results", "rds", "ps_16S_bacteria_biosamples.rds"),
+        file = file.path(RESULTS_DIR, "rds", "ps_16S_bacteria_biosamples.rds"),
         compress = "xz"
 )
 
 # Bacteria + Archaea biosamples, used for functional annotation (25a)
 saveRDS(
         ps_16S_prokaryotes_biosamples,
-        file = here("results", "rds", "ps_16S_prokaryotes_biosamples.rds"),
+        file = file.path(RESULTS_DIR, "rds", "ps_16S_prokaryotes_biosamples.rds"),
         compress = "xz"
 )
 
@@ -293,18 +298,18 @@ export_to_biom <- function(ps, label, out_dir) {
         
         write_biom(
                 make_biom(data = otu_mat),
-                here(out_dir, paste0(label, "_feature-table.biom"))
+                file.path(out_dir, paste0(label, "_feature-table.biom"))
         )
         tibble(
                 `Feature ID` = rownames(as(tax_table(ps), "matrix")),
                 Taxon        = .taxon_string(as(tax_table(ps), "matrix"))
         ) |>
-                write_tsv(here(out_dir, paste0(label, "_taxonomy.tsv")))
+                write_tsv(file.path(out_dir, paste0(label, "_taxonomy.tsv")))
         
         message(sprintf("%-45s  %5d taxa × %3d samples", label, ntaxa(ps), nsamples(ps)))
 }
 
-dir.create(here("results", "biom"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "biom"), showWarnings = FALSE, recursive = TRUE)
 
-export_to_biom(ps_16S_bacteria,            "cfm_16s_bacteria_allsamples",  here("results", "biom"))
-export_to_biom(ps_16S_bacteria_biosamples, "cfm_16s_bacteria_biosamples",  here("results", "biom"))
+export_to_biom(ps_16S_bacteria,            "cfm_16s_bacteria_allsamples",  file.path(RESULTS_DIR, "biom"))
+export_to_biom(ps_16S_bacteria_biosamples, "cfm_16s_bacteria_biosamples",  file.path(RESULTS_DIR, "biom"))

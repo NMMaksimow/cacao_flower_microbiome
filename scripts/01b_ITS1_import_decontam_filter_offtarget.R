@@ -10,8 +10,12 @@ library(tidyverse)
 library(phyloseq)   # integrate analysis of microbiome data (OTU/ASV, taxonomy, metadata)
 library(decontam)   # identification and removal of contaminant taxa
 
+# Data version switch: CFM_VERSION, EXPORT_DIR, RESULTS_DIR
+source(here("scripts", "utils_paths.R"))
 # read_sample_metadata(): sample metadata TSV with column types
 source(here("scripts", "utils_read_metadata.R"))
+# read_qiime2_taxonomy(): taxonomy.tsv with ranks matched by prefix
+source(here("scripts", "utils_read_taxonomy.R"))
 
 ################################################################################
 ################### Import data and phyloseq object building ###################
@@ -67,40 +71,18 @@ sample_metadata_ITS1 <- phyloseq::sample_data(metadata)
 # HDF5 (BIOM v2); the JSON probe fails on binary HDF5 bytes → harmless warnings
 asv_table_ITS1 <- suppressWarnings(
         read_biom(
-                here("qiime2", "export", "CFM_ITS1_dada2_table", "feature-table.biom")
+                file.path(EXPORT_DIR, "CFM_ITS1_dada2_table", "feature-table.biom")
         )
 ) |>
         biom_data() |>
         as.matrix() |>
         otu_table(taxa_are_rows = TRUE)
 
-# 3) Taxonomy table (QIIME2 SILVA Naive-Bayes classifier output)
-# Build taxonomyTable-class phyloseq object from tsv taxonomy table exported from QIIME2
-taxonomy_table_ITS1 <- read_tsv(
-        here("qiime2", "export", "CFM_ITS1_taxonomy", "taxonomy.tsv"),
-        show_col_types = FALSE
-        ) |> 
-        transmute(
-                # Fix space in the first column
-                FeatureID = `Feature ID`,
-                # Handle trailing spaces with regex (might be redundant)
-                Taxon = str_replace_all(Taxon, "\\s+", " ")
-        ) |> 
-        # Split Taxon string into columns with taxonomic ranks
-        separate(
-                Taxon,
-                # Species Hypothesis from UNITE database was preserved
-                into = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species", "UNITE_SH"),
-                sep = ";\\s*",
-                # Explicit handling under-annotated taxa (by default separate rises warning and fill from the right)
-                fill = "right"
-                ) |> 
-        # One more explicit handling blank taxonomic ranks
-        mutate(across(-FeatureID, ~na_if(.x, ""))) |> 
-        column_to_rownames("FeatureID") |> 
-        # Phyloseq function requires matrix as input 
-        as.matrix() |> 
-        tax_table()
+# 3) Taxonomy table (QIIME2 UNITE Naive-Bayes classifier output)
+# Ranks matched by prefix; v1 also has the UNITE species hypothesis (sh__ -> UNITE_SH)
+taxonomy_table_ITS1 <- read_qiime2_taxonomy(
+        file.path(EXPORT_DIR, "CFM_ITS1_taxonomy", "taxonomy.tsv")
+)
 
 # 4) Create a full experiment-level phyloseq-class object
 ps_ITS1_raw <- phyloseq(
@@ -126,8 +108,8 @@ ps_ITS1_raw <- phyloseq(
 # a) more strict - 0.2 (resulted in 11 contaminant features);
 # b) and more relaxed - 0.7 (resulted in 2568 contaminant features).
 
-# 1) Identify contamination with decontam(): 27 ASVs identified as contaminant
-decontam_prev05_ITS1 <- ps_ITS1_raw |>
+# 1) Identify contamination with decontam(): 26 ASVs identified as contaminant (v1)
+decontam_prev050_ITS1 <- ps_ITS1_raw |>
         subset_samples(sample_type != "mock_community") |>
         isContaminant(
                 method = "prevalence",
@@ -138,7 +120,7 @@ decontam_prev05_ITS1 <- ps_ITS1_raw |>
 
 # 2) Remove features identified as contamination from the phyloseq object
 ps_ITS1_decontam <- prune_taxa(
-        !decontam_prev05_ITS1$contaminant,
+        !decontam_prev050_ITS1$contaminant,
         ps_ITS1_raw
         )
 
@@ -171,29 +153,29 @@ ps_ITS1_fungi_biosamples <- subset_samples(
 ################################################################################
 ############### Saving resulting phyloseq objects (RDS & BIOM) #################
 ################################################################################
-dir.create(here("results", "rds"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "rds"), showWarnings = FALSE, recursive = TRUE)
 
 # Intermediate objects needed by 02b
 saveRDS(ps_ITS1_raw,
-        file = here("results", "rds", "ps_ITS1_raw.rds"),
+        file = file.path(RESULTS_DIR, "rds", "ps_ITS1_raw.rds"),
         compress = "xz")
 
-saveRDS(decontam_prev05_ITS1,
-        file = here("results", "rds", "decontam_prev05_ITS1.rds"),
+saveRDS(decontam_prev050_ITS1,
+        file = file.path(RESULTS_DIR, "rds", "decontam_prev050_ITS1.rds"),
         compress = "xz")
 
 saveRDS(ps_ITS1_decontam,
-        file = here("results", "rds", "ps_ITS1_decontam.rds"),
+        file = file.path(RESULTS_DIR, "rds", "ps_ITS1_decontam.rds"),
         compress = "xz")
 
 # Fungi all samples (controls + biosamples), used for mock community QC
 saveRDS(ps_ITS1_fungi,
-        file = here("results", "rds", "ps_ITS1_fungi.rds"),
+        file = file.path(RESULTS_DIR, "rds", "ps_ITS1_fungi.rds"),
         compress = "xz")
 
 saveRDS(
         ps_ITS1_fungi_biosamples,
-        file = here("results", "rds", "ps_ITS1_fungi_biosamples.rds"),
+        file = file.path(RESULTS_DIR, "rds", "ps_ITS1_fungi_biosamples.rds"),
         compress = "xz"
 )
 
@@ -212,21 +194,21 @@ export_to_biom <- function(ps, label, out_dir) {
         
         write_biom(
                 make_biom(data = otu_mat),
-                here(out_dir, paste0(label, "_feature-table.biom"))
+                file.path(out_dir, paste0(label, "_feature-table.biom"))
         )
         tibble(
                 `Feature ID` = rownames(as(tax_table(ps), "matrix")),
                 Taxon        = .taxon_string(as(tax_table(ps), "matrix"))
         ) |>
-                write_tsv(here(out_dir, paste0(label, "_taxonomy.tsv")))
+                write_tsv(file.path(out_dir, paste0(label, "_taxonomy.tsv")))
         
         message(sprintf("%-45s  %5d taxa × %3d samples", label, ntaxa(ps), nsamples(ps)))
 }
 
-dir.create(here("results", "biom"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "biom"), showWarnings = FALSE, recursive = TRUE)
 
-export_to_biom(ps_ITS1_fungi,            "cfm_its1_fungi_allsamples",  here("results", "biom"))
-export_to_biom(ps_ITS1_fungi_biosamples, "cfm_its1_fungi_biosamples",  here("results", "biom"))
+export_to_biom(ps_ITS1_fungi,            "cfm_its1_fungi_allsamples",  file.path(RESULTS_DIR, "biom"))
+export_to_biom(ps_ITS1_fungi_biosamples, "cfm_its1_fungi_biosamples",  file.path(RESULTS_DIR, "biom"))
 
 
 ################################################################################
@@ -240,7 +222,7 @@ export_to_biom(ps_ITS1_fungi_biosamples, "cfm_its1_fungi_biosamples",  here("res
 # OTU count matrix from QIIME2 vsearch cluster-features output
 otu_table_ITS1_otu97 <- suppressWarnings(
         read_biom(
-                here("qiime2", "export", "CFM_ITS1_otu97_table", "feature-table.biom")
+                file.path(EXPORT_DIR, "CFM_ITS1_otu97_table", "feature-table.biom")
         )
 ) |>
         biom_data() |>
@@ -248,27 +230,10 @@ otu_table_ITS1_otu97 <- suppressWarnings(
         otu_table(taxa_are_rows = TRUE)
 
 # ---- Import OTU97 taxonomy table ----
-# Same UNITE NB-classifier output format as the ASV taxonomy;
-# separate() splits the semicolon-delimited Taxon string into ranks
-taxonomy_table_ITS1_otu97 <- read_tsv(
-        here("qiime2", "export", "CFM_ITS1_otu97_taxonomy", "taxonomy.tsv"),
-        show_col_types = FALSE
-        ) |>
-        transmute(
-                FeatureID = `Feature ID`,
-                Taxon     = str_replace_all(Taxon, "\\s+", " ")
-        ) |>
-        separate(
-                Taxon,
-                into = c("Kingdom", "Phylum", "Class", "Order",
-                         "Family", "Genus", "Species", "UNITE_SH"),
-                sep  = ";\\s*",
-                fill = "right"
-        ) |>
-        mutate(across(-FeatureID, ~ na_if(.x, ""))) |>
-        column_to_rownames("FeatureID") |>
-        as.matrix() |>
-        tax_table()
+# Same UNITE NB-classifier output format as the ASV taxonomy
+taxonomy_table_ITS1_otu97 <- read_qiime2_taxonomy(
+        file.path(EXPORT_DIR, "CFM_ITS1_otu97_taxonomy", "taxonomy.tsv")
+)
 
 # ---- Build raw phyloseq object ----
 # Reuse sample_metadata_ITS1 created above — same samples, same metadata
@@ -289,7 +254,7 @@ cat(sprintf("OTU97 raw: %d OTUs × %d samples\n",
 
 # Same prevalence-method decontam as the ASV workflow (threshold = 0.5).
 # Run on all sample types except mock communities.
-decontam_prev05_ITS1_otu97 <- ps_ITS1_otu97_raw |>
+decontam_prev050_ITS1_otu97 <- ps_ITS1_otu97_raw |>
         subset_samples(sample_type != "mock_community") |>
         isContaminant(
                 method    = "prevalence",
@@ -298,11 +263,11 @@ decontam_prev05_ITS1_otu97 <- ps_ITS1_otu97_raw |>
                 )
 
 cat(sprintf("OTU97 decontam: %d OTUs flagged as contaminant\n",
-            sum(decontam_prev05_ITS1_otu97$contaminant)))
+            sum(decontam_prev050_ITS1_otu97$contaminant)))
 
 # Remove contaminant OTUs from the full raw object
 ps_ITS1_otu97_decontam <- prune_taxa(
-        !decontam_prev05_ITS1_otu97$contaminant,
+        !decontam_prev050_ITS1_otu97$contaminant,
         ps_ITS1_otu97_raw
         )
 
@@ -345,27 +310,27 @@ cat(sprintf("OTU97 biosamples (fungi only): %d OTUs × %d samples\n",
 ################################################################################
 
 saveRDS(ps_ITS1_otu97_raw,
-        file     = here("results", "rds", "ps_ITS1_otu97_raw.rds"),
+        file     = file.path(RESULTS_DIR, "rds", "ps_ITS1_otu97_raw.rds"),
         compress = "xz")
 
-saveRDS(decontam_prev05_ITS1_otu97,
-        file     = here("results", "rds", "decontam_prev05_ITS1_otu97.rds"),
+saveRDS(decontam_prev050_ITS1_otu97,
+        file     = file.path(RESULTS_DIR, "rds", "decontam_prev050_ITS1_otu97.rds"),
         compress = "xz")
 
 saveRDS(ps_ITS1_otu97_decontam,
-        file     = here("results", "rds", "ps_ITS1_otu97_decontam.rds"),
+        file     = file.path(RESULTS_DIR, "rds", "ps_ITS1_otu97_decontam.rds"),
         compress = "xz")
 
 saveRDS(ps_ITS1_otu97_fungi,
-        file     = here("results", "rds", "ps_ITS1_otu97_fungi.rds"),
+        file     = file.path(RESULTS_DIR, "rds", "ps_ITS1_otu97_fungi.rds"),
         compress = "xz")
 
 saveRDS(ps_ITS1_otu97_fungi_biosamples,
-        file     = here("results", "rds", "ps_ITS1_otu97_fungi_biosamples.rds"),
+        file     = file.path(RESULTS_DIR, "rds", "ps_ITS1_otu97_fungi_biosamples.rds"),
         compress = "xz")
 
 # Export OTU97 cleaned tables as BIOM (mirrors ASV export above)
 export_to_biom(ps_ITS1_otu97_fungi,
-               "cfm_its1_otu97_fungi_allsamples",  here("results", "biom"))
+               "cfm_its1_otu97_fungi_allsamples",  file.path(RESULTS_DIR, "biom"))
 export_to_biom(ps_ITS1_otu97_fungi_biosamples,
-               "cfm_its1_otu97_fungi_biosamples",  here("results", "biom"))
+               "cfm_its1_otu97_fungi_biosamples",  file.path(RESULTS_DIR, "biom"))
