@@ -58,11 +58,26 @@ from sklearn.base import BaseEstimator, TransformerMixin, clone
 from sklearn.pipeline import Pipeline
 import shap
 
-ROOT      = Path('..').resolve()
-BIOM_DIR  = ROOT / 'results' / 'biom'
-FIG_DIR   = ROOT / 'results' / 'figures' / 'random_forest'
-TAB_DIR   = ROOT / 'results' / 'tables'
-CACHE_DIR = TAB_DIR / 'rf_cache'
+# ── Data version and sample set ──────────────────────────────────────────────
+# CFM_VERSION: v1 | v2 (default v2), as in scripts/utils_paths.R.
+# RFC_SAMPLE_SET:
+#   main            -> 288 flowers sampled by the standard protocol, results/<version>/
+#   with_deviations -> all 294 flowers, results/<version>/rfc_with_deviations/
+# The cache key does not include the data, so each sample set needs its own cache
+# folder; otherwise the second run would silently reuse the first one's results.
+CFM_VERSION = os.environ.get('CFM_VERSION', 'v2')
+SAMPLE_SET  = os.environ.get('RFC_SAMPLE_SET', 'main')
+assert CFM_VERSION in ('v1', 'v2'), CFM_VERSION
+assert SAMPLE_SET in ('main', 'with_deviations'), SAMPLE_SET
+
+ROOT        = Path('..').resolve()
+VER_DIR     = ROOT / 'results' / CFM_VERSION
+BIOM_DIR    = VER_DIR / 'biom'
+BIOM_SUFFIX = '' if SAMPLE_SET == 'main' else '_with_deviations'
+OUT_DIR     = VER_DIR if SAMPLE_SET == 'main' else VER_DIR / 'rfc_with_deviations'
+FIG_DIR     = OUT_DIR / 'figures' / 'random_forest'
+TAB_DIR     = OUT_DIR / 'tables'
+CACHE_DIR   = TAB_DIR / 'rf_cache'
 for d in (FIG_DIR, TAB_DIR, CACHE_DIR):
     d.mkdir(parents=True, exist_ok=True)
 
@@ -168,6 +183,7 @@ print(f'Profile: {"QUICK" if QUICK else "FULL"}  |  trees={N_TREES}  '
       f'outer={N_SPLITS}x{N_REPEATS}  inner={INNER_SPLITS}  '
       f'grid={len(PARAM_GRID["min_samples_leaf"]) * len(PARAM_GRID["max_depth"])} combos  '
       f'perm={N_PERM}/{N_PERM_STRONG} @ {N_TREES_PERM} trees')
+print(f'Data    : {CFM_VERSION}, sample set {SAMPLE_SET}  <- {BIOM_DIR}')
 print(f'Figures -> {FIG_DIR}')
 print(f'Cache   -> {CACHE_DIR}')
 
@@ -198,9 +214,14 @@ print(f'Cache   -> {CACHE_DIR}')
 #   token, capital S). Stripping the suffix alone invents a genus called *Fungi* and a
 #   family called *Rhizobiales*. Both are caught, and the de-duplication step then drops
 #   the value as a repeat of the rank above it.
-# - **The top rank has two names.** SILVA writes `d__Bacteria`, UNITE writes `k__Fungi`,
-#   and 912 of 25035 16S ASVs are classified no further than that. Both letters are
-#   therefore ranks; no taxonomy string contains both, so their relative order is moot.
+# - **Domain and kingdom.** SILVA 138 (v1) writes only `d__Bacteria`; SILVA 144 (v2)
+#   writes `d__Bacteria;k__Bacillati`; UNITE writes `k__Fungi`. Both letters are ranks,
+#   `k` below `d`: a 16S ASV classified to kingdom only is labelled `k__Bacillati`, one
+#   classified to domain only `d__Bacteria`.
+# - **SILVA 144 `--other` suffix.** It marks a paraphyletic remainder group
+#   (`g__Pseudomonas--other`, `k__Pseudomonadati--other`); labels drop it. A few values
+#   join two such groups (`g__Rubrivivax--otherIdeonella--other`); they become
+#   `g__Rubrivivax/Ideonella`.
 # 
 # `s__` and `sh__` are deliberately not candidates for "deepest": species calls from a
 # short amplicon are unreliable, and the R side stops at genus for the same reason.
@@ -213,10 +234,9 @@ TAX_SKIP = {'', 'NA', 'nan', 'unidentified', 'uncultured', 'uncultured_bacterium
             'metagenome', 'Incertae_sedis', 'Incertae_Sedis', 'Unknown_Family',
             'unidentified_Fungi', 'Fungi_sp'}
 
-# Two top ranks, because the two references disagree on the word: SILVA labels the
-# top rank d__Bacteria, UNITE labels it k__Fungi. No string carries both, so their
-# order relative to each other never matters -- 912 of 25035 16S ASVs are classified
-# no further than the domain, and without 'd' they would get no rank at all.
+# Two top ranks: SILVA 138 (v1) has only d__Bacteria; SILVA 144 (v2) has both
+# d__Bacteria and the kingdom below it (k__Bacillati, k__Pseudomonadati); UNITE has
+# k__Fungi. Kingdom-only ASVs are labelled k__..., domain-only ASVs d__Bacteria.
 RANK_ORDER = ['g', 'f', 'o', 'c', 'p', 'k', 'd']   # deepest first, used by the fallback
 RANK_DOWN  = ['d', 'k', 'p', 'c', 'o', 'f', 'g']   # same ranks, top rank first
 
@@ -226,6 +246,13 @@ RANK_DOWN  = ['d', 'k', 'p', 'c', 'o', 'f', 'g']   # same ranks, top rank first
 # (f__Rhizobiales_Incertae_Sedis). Both reduce to the enclosing taxon, which the
 # de-duplication below then recognises as a repeat of the rank above.
 _INCERTAE = re.compile(r'_(?:(?:gen|fam|ord|cls|phy)_)?Incertae_[Ss]edis$')
+
+# SILVA 144 marks a paraphyletic remainder group with '--other'
+# (g__Pseudomonas--other, k__Pseudomonadati--other). Labels drop the suffix; a value
+# joining two such groups (g__Rubrivivax--otherIdeonella--other) becomes
+# g__Rubrivivax/Ideonella.
+def _strip_other(val):
+    return '/'.join(p for p in val.split('--other') if p)
 
 
 def _rank_map(taxon_str):
@@ -256,7 +283,7 @@ def _rank_map(taxon_str):
         if '__' not in part or part.startswith('sh__'):
             continue
         rank, val = part.split('__', 1)
-        raw[rank.strip().lower()] = _INCERTAE.sub('', val.strip())
+        raw[rank.strip().lower()] = _INCERTAE.sub('', _strip_other(val.strip()))
 
     out, seen = {}, set()
     for r in RANK_DOWN:                    # top-down, so 'seen' holds higher ranks only
@@ -295,8 +322,8 @@ def load_marker(biom_stem, label):
     return counts, tax
 
 
-counts_its1, tax_its1 = load_marker('cfm_its1_otu97_fungi_biosamples', 'ITS1 OTU97')
-counts_16s, tax_16s = load_marker('cfm_16s_bacteria_biosamples', '16S ASV')
+counts_its1, tax_its1 = load_marker(f'cfm_its1_otu97_fungi_biosamples{BIOM_SUFFIX}', 'ITS1 OTU97')
+counts_16s, tax_16s = load_marker(f'cfm_16s_bacteria_biosamples{BIOM_SUFFIX}', '16S ASV')
 
 _ex = list(tax_its1.items())[:2]
 print('\nExample labels:', *[f'\n  {v}' for _, v in _ex])

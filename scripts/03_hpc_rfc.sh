@@ -33,7 +33,7 @@ module load python/3.12.5
 source ~/nobackup/venvs/rfc/bin/activate
 
 cd ~/nobackup/cacao_flower_microbiome
-mkdir -p logs/rfc results/figures/random_forest results/tables/rf_cache
+mkdir -p logs/rfc    # the result folders are created by the script itself
 
 # Keep the numerical libraries inside the SLURM allocation. Without this they
 # size their thread pools from the physical core count of the whole node and
@@ -61,15 +61,23 @@ export OMP_PROC_BIND=false
 
 export RFC_QUICK=${RFC_QUICK:-0}
 
+# Data version (v1 | v2) and sample set (main = 288 flowers, with_deviations = 294).
+# Set them at submission, e.g. RFC_SAMPLE_SET=with_deviations sbatch scripts/03_hpc_rfc.sh
+export CFM_VERSION=${CFM_VERSION:-v2}
+export RFC_SAMPLE_SET=${RFC_SAMPLE_SET:-main}
+
 # Tag every output produced here, so cluster and laptop results can share a
 # directory after an rsync instead of silently overwriting each other:
-#   results/figures/random_forest/03_hpc_*.png
-#   results/tables/03_hpc_*.csv
-#   results/tables/rf_cache/v2_hpc_*.json
+#   results/<version>/figures/random_forest/03_hpc_*.png
+#   results/<version>/tables/03_hpc_*.csv
+#   results/<version>/tables/rf_cache/v2_hpc_*.json
+# The with_deviations set writes the same files under results/<version>/rfc_with_deviations/.
 export RFC_TAG=${RFC_TAG:-_hpc}
 
 echo "host        : $(hostname)"
 echo "cores       : ${SLURM_CPUS_PER_TASK:-?}"
+echo "CFM_VERSION : ${CFM_VERSION}"
+echo "sample set  : ${RFC_SAMPLE_SET}"
 echo "RFC_QUICK   : ${RFC_QUICK}"
 echo "python      : $(python -V 2>&1)"
 echo "started     : $(date)"
