@@ -27,10 +27,10 @@ dir.create(file.path(RESULTS_DIR, "tables"),  showWarnings = FALSE, recursive = 
 # Notes on SILVA taxonomy quirks:
 #   - Salmonella is not annotated to genus level in SILVA → represented at Family level as g__NA.
 #   - Escherichia coli appears as g__Escherichia-Shigella (SILVA complex genus).
-#   - SILVA 144 (v2) renames three genera: Lactobacillus fermentum is
-#     Limosilactobacillus; Staphylococcus and Enterococcus carry the paraphyly mark
-#     "--other", and Enterococcus moved to Streptococcaceae.
-#   - v2 also assigns 2 mock ASVs to g__Leclercia-Silvania-Enterobacter--other
+#   - SILVA 144 (v2): Lactobacillus fermentum is Limosilactobacillus, and Enterococcus
+#     moved to Streptococcaceae. (Staphylococcus and Enterococcus also carry the
+#     SILVA 144 mark "--other", dropped at import in utils_read_taxonomy.R.)
+#   - v2 also assigns 2 mock ASVs to g__Leclercia-Silvania-Enterobacter
 #     (s__Enterobacter_ludwigii, ~15k reads); not a D6300 member, so it falls in "Other".
 expected_mock_16S <- tibble(
         Family_Genus = list(
@@ -47,9 +47,9 @@ expected_mock_16S <- tibble(
                 v2 = c(
                         "f__Listeriaceae | g__Listeria",
                         "f__Bacillaceae | g__Bacillus",
-                        "f__Staphylococcaceae | g__Staphylococcus--other",
+                        "f__Staphylococcaceae | g__Staphylococcus",
                         "f__Lactobacillaceae | g__Limosilactobacillus",
-                        "f__Streptococcaceae | g__Enterococcus--other",
+                        "f__Streptococcaceae | g__Enterococcus",
                         "f__Pseudomonadaceae | g__Pseudomonas",
                         "f__Enterobacteriaceae | g__Escherichia-Shigella",
                         "f__Enterobacteriaceae | g__Unassigned"   # Salmonella

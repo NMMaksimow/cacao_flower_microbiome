@@ -24,8 +24,8 @@ dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = 
 # Used to assign taxa to the "Mock community" legend group.
 # Notes: Salmonella → g__Unassigned; E. coli → g__Escherichia-Shigella in SILVA.
 # Names differ between SILVA 138 (v1) and SILVA 144 (v2): Lactobacillus fermentum is
-# Limosilactobacillus, Staphylococcus and Enterococcus carry the paraphyly mark
-# "--other", and Enterococcus moved to Streptococcaceae.
+# Limosilactobacillus, and Enterococcus moved to Streptococcaceae. (The SILVA 144
+# mark "--other" is dropped at import in utils_read_taxonomy.R.)
 mock_expected_16S <- list(
         v1 = c(
                 "f__Listeriaceae | g__Listeria",
@@ -40,9 +40,9 @@ mock_expected_16S <- list(
         v2 = c(
                 "f__Listeriaceae | g__Listeria",
                 "f__Bacillaceae | g__Bacillus",
-                "f__Staphylococcaceae | g__Staphylococcus--other",
+                "f__Staphylococcaceae | g__Staphylococcus",
                 "f__Lactobacillaceae | g__Limosilactobacillus",
-                "f__Streptococcaceae | g__Enterococcus--other",
+                "f__Streptococcaceae | g__Enterococcus",
                 "f__Pseudomonadaceae | g__Pseudomonas",
                 "f__Enterobacteriaceae | g__Escherichia-Shigella",
                 "f__Enterobacteriaceae | g__Unassigned"   # Salmonella

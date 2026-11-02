@@ -13,6 +13,7 @@
 ## Values keep their prefix ("g__Wolbachia"), as the downstream scripts expect.
 ## The table has only the ranks present in the file, top-down. "Unassigned" has
 ## no prefix and goes to the top rank of the file (Domain or Kingdom).
+## The SILVA 144 mark "--other" is dropped (see below), so no value carries it.
 ## ============================================================================
 
 # Rank prefix -> column name, top-down
@@ -26,6 +27,16 @@ read_qiime2_taxonomy <- function(path) {
                 # One row per rank: "d__Bacteria;k__Bacillati;..." -> rows
                 tidyr::separate_longer_delim(Taxon, delim = ";") |>
                 dplyr::mutate(Taxon = stringr::str_trim(Taxon)) |>
+                # SILVA 144 adds "--other" to a clade that carries a taxon's name but
+                # not the sequence of its nomenclatural type (g__Staphylococcus--other);
+                # a few values join two such names (g__Rubrivivax--otherIdeonella--other).
+                # The mark is dropped and two names are joined with "/"
+                # (g__Rubrivivax/Ideonella), as in the RFC labels. Both forms of a name
+                # then merge in tax_glom() when the higher ranks agree (66 genera in
+                # v2); the raw strings stay in the QIIME 2 export taxonomy.tsv.
+                dplyr::mutate(Taxon = Taxon |>
+                                      stringr::str_remove("--other$") |>
+                                      stringr::str_replace_all("--other", "/")) |>
                 # Empty fields (e.g. after a trailing ";") are missing ranks
                 dplyr::filter(Taxon != "") |>
                 dplyr::mutate(
