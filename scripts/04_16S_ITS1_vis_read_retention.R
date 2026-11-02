@@ -633,4 +633,133 @@ print(fig5)
 ggsave(file.path(RESULTS_DIR, "figures", "04_read_retention_covariates.png"),
        plot = fig5, width = 12, height = 12, dpi = 300)
 
+################################################################################
+# Figure 6 + table: bagged vs unbagged flowers in DNA yield and read depth
+#   Is amplicon DNA yield or sequencing depth confounded with the treatment?
+#   Three checks per marker and variable:
+#     - flowers: Mann-Whitney test (unpaired Wilcoxon), bagged vs unbagged
+#     - trees:   mean of the bagged vs mean of the unbagged flowers of each tree
+#                (3 + 3 by design), paired Wilcoxon test
+#     - farms:   number of farms where the unbagged median is higher
+#   Panels: one grey line per tree joins its bagged and unbagged means; boxplots
+#   summarise the tree means. The y range of each row is shared by 16S and ITS1.
+################################################################################
+
+dir.create(file.path(RESULTS_DIR, "tables"), showWarnings = FALSE, recursive = TRUE)
+
+TREATMENT_VARIABLES <- c(dna     = "DNA concentration after PCR (Qubit HS)",
+                         n_reads = "Read depth (final)")
+
+# One row per flower, marker and variable; the DNA column is marker-specific
+treatment_flowers <- bind_rows(
+        depth_16S  |> transmute(marker = "16S",  sample_type, farm_id, tree_id,
+                                dna = dna_concentration_hs_16s, n_reads),
+        depth_ITS1 |> transmute(marker = "ITS1", sample_type, farm_id, tree_id,
+                                dna = dna_concentration_hs_its1, n_reads)
+) |>
+        filter(sample_type %in% flower_lvl) |>
+        pivot_longer(c(dna, n_reads), names_to = "variable", values_to = "value") |>
+        filter(!is.na(value))
+
+# One row per tree: mean of its bagged and mean of its unbagged flowers
+tree_means <- treatment_flowers |>
+        group_by(marker, variable, farm_id, tree_id, sample_type) |>
+        summarise(value = mean(value), .groups = "drop") |>
+        pivot_wider(names_from = sample_type, values_from = value) |>
+        filter(!is.na(bagged_flower), !is.na(unbagged_flower))
+
+# exact = FALSE: normal approximation, as ties make the exact p-value unavailable
+treatment_tests <- treatment_flowers |>
+        group_by(marker, variable) |>
+        summarise(
+                n_bagged        = sum(sample_type == "bagged_flower"),
+                n_unbagged      = sum(sample_type == "unbagged_flower"),
+                median_bagged   = median(value[sample_type == "bagged_flower"]),
+                median_unbagged = median(value[sample_type == "unbagged_flower"]),
+                p_mann_whitney  = wilcox.test(value ~ sample_type, exact = FALSE)$p.value,
+                .groups = "drop"
+        ) |>
+        left_join(
+                tree_means |>
+                        group_by(marker, variable) |>
+                        summarise(
+                                n_trees               = n(),
+                                trees_unbagged_higher = sum(unbagged_flower > bagged_flower),
+                                p_paired_wilcoxon     = wilcox.test(unbagged_flower, bagged_flower,
+                                                                    paired = TRUE,
+                                                                    exact  = FALSE)$p.value,
+                                .groups = "drop"
+                        ),
+                by = c("marker", "variable")
+        ) |>
+        left_join(
+                treatment_flowers |>
+                        group_by(marker, variable, farm_id, sample_type) |>
+                        summarise(value = median(value), .groups = "drop") |>
+                        pivot_wider(names_from = sample_type, values_from = value) |>
+                        group_by(marker, variable) |>
+                        summarise(n_farms               = n(),
+                                  farms_unbagged_higher = sum(unbagged_flower > bagged_flower),
+                                  .groups = "drop"),
+                by = c("marker", "variable")
+        )
+
+print(treatment_tests, width = Inf)
+write_csv(treatment_tests,
+          file.path(RESULTS_DIR, "tables", "04_treatment_dna_depth_tests.csv"))
+
+make_paired <- function(marker_name, variable_name, y_ylim) {
+        stats <- treatment_tests |> filter(marker == marker_name, variable == variable_name)
+
+        tree_means |>
+                filter(marker == marker_name, variable == variable_name) |>
+                mutate(tree_id = as.character(tree_id)) |>
+                pivot_longer(c(bagged_flower, unbagged_flower),
+                             names_to = "sample_type", values_to = "tree_mean") |>
+                ggplot(aes(x = sample_type, y = tree_mean)) +
+                # One line per tree; colour/alpha set how strongly the lines show
+                geom_line(aes(group = tree_id), colour = "grey60", alpha = 0.5) +
+                # width: box width; alpha: box fill transparency (lines show through)
+                geom_boxplot(aes(fill = sample_type), width = 0.4,
+                             outlier.shape = NA, alpha = 0.7) +
+                scale_fill_manual(values = SAMPLE_TYPE_PALETTE, name = "Sample type") +
+                scale_x_discrete(labels = flower_lbl) +
+                scale_y_continuous(labels = label_number(big.mark = "")) +  # 100000, not 1e+05
+                coord_cartesian(ylim = y_ylim) +
+                labs(x        = NULL,
+                     y        = paste0(TREATMENT_VARIABLES[[variable_name]], "\n(tree mean)"),
+                     subtitle = sprintf(paste0("Mann-Whitney p = %.1e (flowers)\n",
+                                               "paired Wilcoxon p = %.1e (trees)\n",
+                                               "unbagged higher: %d/%d trees, %d/%d farms"),
+                                        stats$p_mann_whitney, stats$p_paired_wilcoxon,
+                                        stats$trees_unbagged_higher, stats$n_trees,
+                                        stats$farms_unbagged_higher, stats$n_farms)) +
+                theme_bw() +
+                theme(plot.subtitle = element_text(size = 8))   # size of the test summary
+}
+
+# Row y ceiling: the highest tree mean of either marker plus 5% headroom
+row_ylim <- \(variable_name) tree_means |>
+        filter(variable == variable_name) |>
+        select(bagged_flower, unbagged_flower) |>
+        max() |>
+        (\(m) c(0, m * 1.05))()
+
+# Panel tags A-D run left to right, top to bottom
+fig6 <- wrap_plots(
+        make_paired("16S",  "dna",     row_ylim("dna")) + ggtitle("16S — Bacteria"),
+        make_paired("ITS1", "dna",     row_ylim("dna")) + ggtitle("ITS1 — Fungi") +
+                labs(y = NULL) + HIDE_Y_AXIS,
+        make_paired("16S",  "n_reads", row_ylim("n_reads")),
+        make_paired("ITS1", "n_reads", row_ylim("n_reads")) + labs(y = NULL) + HIDE_Y_AXIS,
+        ncol = 2
+) +
+        plot_layout(guides = "collect") +
+        plot_annotation(tag_levels = "A") &
+        theme(legend.position = "right")
+
+print(fig6)
+ggsave(file.path(RESULTS_DIR, "figures", "04_treatment_dna_depth.png"),
+       plot = fig6, width = 11, height = 10, dpi = 300)
+
 message("04 done")
