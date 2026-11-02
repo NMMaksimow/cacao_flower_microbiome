@@ -5,9 +5,12 @@ library(tibble)   # tibble(), rownames_to_column()
 library(parallel)
 # No extra package needed for Faith's PD — see faithPD_fast() below.
 
-# ---- Project paths (Hamilton HPC — no here()) ----
-project_dir <- "/nobackup/jcnx71/cacao_flower_microbiome"
-rds_dir     <- file.path(project_dir, "results", "rds")
+# ---- Project paths ----
+# The job starts in the project root (see the .sh), where here() finds the repository.
+# utils_paths.R: RESULTS_DIR from CFM_VERSION, BIOSAMPLE_SUFFIX from CFM_SAMPLE_SET
+library(here)
+source(here("scripts", "utils_paths.R"))
+rds_dir <- file.path(RESULTS_DIR, "rds")
 
 dir.create(rds_dir, showWarnings = FALSE, recursive = TRUE)
 
@@ -27,7 +30,7 @@ MGMT_LEVELS <- c("inside_forest", "near_forest", "agroforest", "full_sun")
 
 # ---- Input ----
 cat(sprintf("[%s] Loading phyloseq object...\n", Sys.time()))
-ps <- readRDS(file.path(rds_dir, "ps_16S_bacteria_biosamples.rds"))
+ps <- readRDS(file.path(rds_dir, paste0("ps_16S_bacteria_biosamples", BIOSAMPLE_SUFFIX, ".rds")))
 cat(sprintf("[%s] Loaded: %d samples, %d ASVs\n",
             Sys.time(), nsamples(ps), ntaxa(ps)))
 
@@ -202,7 +205,7 @@ alpha_iters_2k <- parallel::parLapply(
     dplyr::bind_rows() |>
     dplyr::left_join(data.frame(phyloseq::sample_data(ps)), by = "sample_id")
 
-saveRDS(alpha_iters_2k, file.path(rds_dir, "alpha_16S_2k_999iters.rds"))
+saveRDS(alpha_iters_2k, file.path(rds_dir, paste0("alpha_16S_2k_999iters", BIOSAMPLE_SUFFIX, ".rds")))
 cat(sprintf("[%s] Saved alpha_16S_2k_999iters.rds\n", Sys.time()))
 
 ################################################################################
@@ -232,7 +235,7 @@ alpha_summary_2k <- alpha_iters_2k |>
         sample_type     = factor(sample_type)
     )
 
-saveRDS(alpha_summary_2k, file.path(rds_dir, "alpha_16S_2k_999iters_summary.rds"))
+saveRDS(alpha_summary_2k, file.path(rds_dir, paste0("alpha_16S_2k_999iters_summary", BIOSAMPLE_SUFFIX, ".rds")))
 cat(sprintf("[%s] Saved alpha_16S_2k_999iters_summary.rds\n", Sys.time()))
 
 ################################################################################
@@ -255,7 +258,7 @@ alpha_iters_10k <- parallel::parLapply(
     dplyr::bind_rows() |>
     dplyr::left_join(data.frame(phyloseq::sample_data(ps)), by = "sample_id")
 
-saveRDS(alpha_iters_10k, file.path(rds_dir, "alpha_16S_10k_999iters.rds"))
+saveRDS(alpha_iters_10k, file.path(rds_dir, paste0("alpha_16S_10k_999iters", BIOSAMPLE_SUFFIX, ".rds")))
 cat(sprintf("[%s] Saved alpha_16S_10k_999iters.rds\n", Sys.time()))
 
 ################################################################################
@@ -285,7 +288,7 @@ alpha_summary_10k <- alpha_iters_10k |>
         sample_type     = factor(sample_type)
     )
 
-saveRDS(alpha_summary_10k, file.path(rds_dir, "alpha_16S_10k_999iters_summary.rds"))
+saveRDS(alpha_summary_10k, file.path(rds_dir, paste0("alpha_16S_10k_999iters_summary", BIOSAMPLE_SUFFIX, ".rds")))
 cat(sprintf("[%s] Saved alpha_16S_10k_999iters_summary.rds\n", Sys.time()))
 
 parallel::stopCluster(cl)
