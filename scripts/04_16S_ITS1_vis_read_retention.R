@@ -114,7 +114,10 @@ make_depth_table <- function(ps_final, ps_raw) {
 #   show_n       – TRUE: print "n=X" above each box
 #
 # make_scatter parameters:
-#   y_ylim       – numeric c(min, max): y limits shared by the 16S and ITS1 panels
+#   y_ylim        – numeric c(min, max): y limits shared by the 16S and ITS1 panels
+#   colour_levels – sample types listed in the legend (all panels of a figure
+#                   must use the same set, so patchwork merges their legends)
+#   jitter_width  – horizontal jitter of the points (for an ordinal x, e.g. a score)
 ################################################################################
 
 make_stack <- function(tbl,
@@ -261,26 +264,31 @@ make_box <- function(depth_tbl,
         p
 }
 
-# Points colored by sample_type. The legend always lists all 5 sample types
+# Points colored by sample_type. The legend lists every type in colour_levels
 # (limits =, and show.legend = TRUE draws a key even for types absent from a
 # panel), so patchwork merges the legends of all panels into one.
 make_scatter <- function(tbl,
                          x_variable,
                          y_variable,
                          y_ylim,
-                         filter_fn = NULL,
-                         x_label   = x_variable,
-                         y_label   = y_variable,
-                         y_labels  = waiver()) {
+                         filter_fn     = NULL,
+                         x_label       = x_variable,
+                         y_label       = y_variable,
+                         y_labels      = waiver(),
+                         colour_levels = names(SAMPLE_TYPE_PALETTE),
+                         jitter_width  = 0) {
         tbl |>
                 (\(x) if (!is.null(filter_fn)) filter_fn(x) else x)() |>
                 ggplot(aes(x      = .data[[x_variable]],
                            y      = .data[[y_variable]],
                            colour = sample_type)) +
                 geom_point(alpha = 0.6, na.rm = TRUE,      # alpha: point transparency
+                           # seed: the same jitter on every run
+                           position    = position_jitter(width = jitter_width, height = 0,
+                                                         seed = 1),
                            show.legend = TRUE) +
                 scale_colour_manual(values = SAMPLE_TYPE_PALETTE,
-                                    limits = names(SAMPLE_TYPE_PALETTE),
+                                    limits = colour_levels,
                                     name   = "Sample type") +
                 scale_y_continuous(labels = y_labels) +
                 coord_cartesian(ylim = y_ylim) +
@@ -568,61 +576,99 @@ ggsave(file.path(RESULTS_DIR, "figures", "04_read_retention_phenotypes.png"),
        plot = fig4, width = 28, height = 10, dpi = 300)
 
 ################################################################################
-# Figure 5: Continuous covariates (rows) by marker (columns: 16S | ITS1)
-#   Row 1 — final read depth vs DNA concentration after PCR (Qubit HS, measured
-#           per marker after bead cleaning and pooling the triplicates)
-#   Row 2 — fraction of raw reads retained vs number of pollen grains (pi_clsm)
-#   Row 3 — fraction of raw reads retained vs callose plug index
-#   Rows 2-3 use flowers with a value > 0 only. The y range of each row is
-#   shared by 16S and ITS1, so the ITS1 y-axis is hidden.
+# Figure 5 + table: read depth and DNA yield vs microscopy (flowers only)
+#   Rows: number of pollen grains (CLSM) | callose plug index | fungal
+#         colonization score (ordinal 0-5, points jittered horizontally)
+#   Columns: 16S | ITS1; y = final read depth on one scale for all panels
+#   Subtitles: Spearman rho for all flowers, bagged only and unbagged only.
+#   Each farm x treatment group was extracted in its own batch, so a correlation
+#   within one treatment cannot come from the extraction batch.
+#   The table holds the same correlations for DNA concentration as well.
 ################################################################################
 
-pi_fn      <- \(x) filter(x, component == "Retained", !is.na(pi_clsm), pi_clsm > 0)
-callose_fn  <- \(x) filter(x, component == "Retained",
-                           !is.na(callose_plug_index), callose_plug_index > 0)
+dir.create(file.path(RESULTS_DIR, "tables"), showWarnings = FALSE, recursive = TRUE)
 
-covariate_ylim <- c(0, shared_depth_ylim())
-fraction_ylim  <- c(0, 1)
+MICROSCOPY_VARIABLES <- c(pi_clsm                   = "Number of pollen grains (CLSM)",
+                          callose_plug_index        = "Callose plug index",
+                          fungal_colonization_score = "Fungal colonization score")
 
-c16_dna <- make_scatter(depth_16S,  "dna_concentration_hs_16s",  "n_reads",
-                        y_ylim  = covariate_ylim,
-                        x_label = "DNA concentration after PCR (Qubit HS)",
-                        y_label = "Read depth (final)")
-cIT_dna <- make_scatter(depth_ITS1, "dna_concentration_hs_its1", "n_reads",
-                        y_ylim  = covariate_ylim,
-                        x_label = "DNA concentration after PCR (Qubit HS)",
-                        y_label = "Read depth (final)")
+# Microscopy values as numbers (the fungal score is an ordered factor 0-5
+# in the phyloseq sample data)
+as_number <- \(v) as.numeric(as.character(v))
 
-c16_pi  <- make_scatter(tbl_16S,  "pi_clsm", "fraction_of_raw",
-                        y_ylim = fraction_ylim, filter_fn = pi_fn,
-                        x_label = "Number of pollen grains (CLSM)",
-                        y_label = "Fraction of raw reads retained",
-                        y_labels = percent_format())
-cIT_pi  <- make_scatter(tbl_ITS1, "pi_clsm", "fraction_of_raw",
-                        y_ylim = fraction_ylim, filter_fn = pi_fn,
-                        x_label = "Number of pollen grains (CLSM)",
-                        y_label = "Fraction of raw reads retained",
-                        y_labels = percent_format())
+# One row per flower, marker, response (DNA, depth) and microscopy variable;
+# zeros are kept (0 pollen grains and score 0 are real observations)
+microscopy_flowers <- bind_rows(
+        depth_16S  |> transmute(marker = "16S",  sample_type,
+                                dna = dna_concentration_hs_16s, n_reads,
+                                across(all_of(names(MICROSCOPY_VARIABLES)), as_number)),
+        depth_ITS1 |> transmute(marker = "ITS1", sample_type,
+                                dna = dna_concentration_hs_its1, n_reads,
+                                across(all_of(names(MICROSCOPY_VARIABLES)), as_number))
+) |>
+        filter(sample_type %in% flower_lvl) |>
+        pivot_longer(c(dna, n_reads), names_to = "response", values_to = "response_value") |>
+        pivot_longer(all_of(names(MICROSCOPY_VARIABLES)),
+                     names_to = "microscopy", values_to = "microscopy_value") |>
+        filter(!is.na(response_value), !is.na(microscopy_value))
 
-c16_cal <- make_scatter(tbl_16S,  "callose_plug_index", "fraction_of_raw",
-                        y_ylim = fraction_ylim, filter_fn = callose_fn,
-                        x_label = "Callose plug index",
-                        y_label = "Fraction of raw reads retained",
-                        y_labels = percent_format())
-cIT_cal <- make_scatter(tbl_ITS1, "callose_plug_index", "fraction_of_raw",
-                        y_ylim = fraction_ylim, filter_fn = callose_fn,
-                        x_label = "Callose plug index",
-                        y_label = "Fraction of raw reads retained",
-                        y_labels = percent_format())
+# exact = FALSE: normal approximation, as ties make the exact p-value unavailable
+microscopy_spearman <- bind_rows(
+        microscopy_flowers |> mutate(subset = "all"),
+        microscopy_flowers |> mutate(subset = str_remove(sample_type, "_flower"))
+) |>
+        mutate(subset = factor(subset, levels = c("all", "bagged", "unbagged"))) |>
+        group_by(marker, response, microscopy, subset) |>
+        group_modify(\(x, key) {
+                test <- cor.test(x$microscopy_value, x$response_value,
+                                 method = "spearman", exact = FALSE)
+                tibble(n = nrow(x), rho = unname(test$estimate), p = test$p.value)
+        }) |>
+        ungroup()
+
+print(microscopy_spearman, n = Inf)
+write_csv(microscopy_spearman,
+          file.path(RESULTS_DIR, "tables", "04_microscopy_dna_depth_spearman.csv"))
+
+# Subtitle text: one line per subset, read depth as the response
+spearman_label <- \(marker_name, variable_name) microscopy_spearman |>
+        filter(marker == marker_name, response == "n_reads", microscopy == variable_name) |>
+        arrange(subset) |>
+        (\(x) sprintf("%s: rho = %.2f, p = %.1e, n = %d", x$subset, x$rho, x$p, x$n))() |>
+        paste(collapse = "\n") |>
+        (\(s) paste0("Spearman (read depth)\n", s))()
+
+make_microscopy_panel <- function(depth_tbl, marker_name, variable_name, y_ylim) {
+        make_scatter(depth_tbl, variable_name, "n_reads",
+                     y_ylim        = y_ylim,
+                     # flowers with a value of this variable, as a number (continuous x)
+                     filter_fn     = \(x) flower_fn_ph(x) |>
+                             filter(!is.na(.data[[variable_name]])) |>
+                             mutate(across(all_of(variable_name), as_number)),
+                     x_label       = MICROSCOPY_VARIABLES[[variable_name]],
+                     y_label       = "Read depth (final)",
+                     y_labels      = label_number(big.mark = ""),   # 100000, not 1e+05
+                     colour_levels = flower_lvl,
+                     # jitter only the ordinal score; 0.15 keeps the score columns apart
+                     jitter_width  = if (variable_name == "fungal_colonization_score") 0.15 else 0) +
+                labs(subtitle = spearman_label(marker_name, variable_name)) +
+                theme(plot.subtitle = element_text(size = 8))   # size of the Spearman summary
+}
+
+microscopy_ylim <- c(0, shared_depth_ylim(flower_fn_ph))
 
 # Panel tags A-F run left to right, top to bottom
 fig5 <- wrap_plots(
-        c16_dna + ggtitle("16S — Bacteria"),
-        cIT_dna + ggtitle("ITS1 — Fungi") + labs(y = NULL) + HIDE_Y_AXIS,
-        c16_pi,
-        cIT_pi  + labs(y = NULL) + HIDE_Y_AXIS,
-        c16_cal,
-        cIT_cal + labs(y = NULL) + HIDE_Y_AXIS,
+        make_microscopy_panel(depth_16S,  "16S",  "pi_clsm", microscopy_ylim) +
+                ggtitle("16S — Bacteria"),
+        make_microscopy_panel(depth_ITS1, "ITS1", "pi_clsm", microscopy_ylim) +
+                ggtitle("ITS1 — Fungi") + labs(y = NULL) + HIDE_Y_AXIS,
+        make_microscopy_panel(depth_16S,  "16S",  "callose_plug_index", microscopy_ylim),
+        make_microscopy_panel(depth_ITS1, "ITS1", "callose_plug_index", microscopy_ylim) +
+                labs(y = NULL) + HIDE_Y_AXIS,
+        make_microscopy_panel(depth_16S,  "16S",  "fungal_colonization_score", microscopy_ylim),
+        make_microscopy_panel(depth_ITS1, "ITS1", "fungal_colonization_score", microscopy_ylim) +
+                labs(y = NULL) + HIDE_Y_AXIS,
         ncol = 2
 ) +
         plot_layout(guides = "collect") +
@@ -630,13 +676,15 @@ fig5 <- wrap_plots(
         theme(legend.position = "right")
 
 print(fig5)
-ggsave(file.path(RESULTS_DIR, "figures", "04_read_retention_covariates.png"),
-       plot = fig5, width = 12, height = 12, dpi = 300)
+ggsave(file.path(RESULTS_DIR, "figures", "04_microscopy_depth.png"),
+       plot = fig5, width = 12, height = 14, dpi = 300)
 
 ################################################################################
-# Figure 6 + table: bagged vs unbagged flowers in DNA yield and read depth
-#   Is amplicon DNA yield or sequencing depth confounded with the treatment?
-#   Three checks per marker and variable:
+# Figure 6 + table: DNA yield and read depth, and bagged vs unbagged flowers
+#   Row 1 — final read depth vs DNA concentration after PCR (Qubit HS, measured
+#           per marker after bead cleaning and pooling the triplicates); all samples
+#   Rows 2-3 — is amplicon DNA yield (row 2) or sequencing depth (row 3)
+#   confounded with the treatment? Three checks per marker and variable:
 #     - flowers: Mann-Whitney test (unpaired Wilcoxon), bagged vs unbagged
 #     - trees:   mean of the bagged vs mean of the unbagged flowers of each tree
 #                (3 + 3 by design), paired Wilcoxon test
@@ -645,7 +693,18 @@ ggsave(file.path(RESULTS_DIR, "figures", "04_read_retention_covariates.png"),
 #   summarise the tree means. The y range of each row is shared by 16S and ITS1.
 ################################################################################
 
-dir.create(file.path(RESULTS_DIR, "tables"), showWarnings = FALSE, recursive = TRUE)
+dna_depth_ylim <- c(0, shared_depth_ylim())
+
+c16_dna <- make_scatter(depth_16S,  "dna_concentration_hs_16s",  "n_reads",
+                        y_ylim   = dna_depth_ylim,
+                        x_label  = "DNA concentration after PCR (Qubit HS)",
+                        y_label  = "Read depth (final)",
+                        y_labels = label_number(big.mark = ""))
+cIT_dna <- make_scatter(depth_ITS1, "dna_concentration_hs_its1", "n_reads",
+                        y_ylim   = dna_depth_ylim,
+                        x_label  = "DNA concentration after PCR (Qubit HS)",
+                        y_label  = "Read depth (final)",
+                        y_labels = label_number(big.mark = ""))
 
 TREATMENT_VARIABLES <- c(dna     = "DNA concentration after PCR (Qubit HS)",
                          n_reads = "Read depth (final)")
@@ -719,9 +778,10 @@ make_paired <- function(marker_name, variable_name, y_ylim) {
                 ggplot(aes(x = sample_type, y = tree_mean)) +
                 # One line per tree; colour/alpha set how strongly the lines show
                 geom_line(aes(group = tree_id), colour = "grey60", alpha = 0.5) +
-                # width: box width; alpha: box fill transparency (lines show through)
+                # width: box width; alpha: box fill transparency (lines show through);
+                # no legend: the x-axis already names the treatment
                 geom_boxplot(aes(fill = sample_type), width = 0.4,
-                             outlier.shape = NA, alpha = 0.7) +
+                             outlier.shape = NA, alpha = 0.7, show.legend = FALSE) +
                 scale_fill_manual(values = SAMPLE_TYPE_PALETTE, name = "Sample type") +
                 scale_x_discrete(labels = flower_lbl) +
                 scale_y_continuous(labels = label_number(big.mark = "")) +  # 100000, not 1e+05
@@ -745,11 +805,12 @@ row_ylim <- \(variable_name) tree_means |>
         max() |>
         (\(m) c(0, m * 1.05))()
 
-# Panel tags A-D run left to right, top to bottom
+# Panel tags A-F run left to right, top to bottom
 fig6 <- wrap_plots(
-        make_paired("16S",  "dna",     row_ylim("dna")) + ggtitle("16S — Bacteria"),
-        make_paired("ITS1", "dna",     row_ylim("dna")) + ggtitle("ITS1 — Fungi") +
-                labs(y = NULL) + HIDE_Y_AXIS,
+        c16_dna + ggtitle("16S — Bacteria"),
+        cIT_dna + ggtitle("ITS1 — Fungi") + labs(y = NULL) + HIDE_Y_AXIS,
+        make_paired("16S",  "dna",     row_ylim("dna")),
+        make_paired("ITS1", "dna",     row_ylim("dna")) + labs(y = NULL) + HIDE_Y_AXIS,
         make_paired("16S",  "n_reads", row_ylim("n_reads")),
         make_paired("ITS1", "n_reads", row_ylim("n_reads")) + labs(y = NULL) + HIDE_Y_AXIS,
         ncol = 2
@@ -760,6 +821,183 @@ fig6 <- wrap_plots(
 
 print(fig6)
 ggsave(file.path(RESULTS_DIR, "figures", "04_treatment_dna_depth.png"),
-       plot = fig6, width = 11, height = 10, dpi = 300)
+       plot = fig6, width = 12, height = 15, dpi = 300)
+
+################################################################################
+# Figure 7 + table: batch checks of DNA yield and read depth (flowers only)
+#   Within a farm, bagged and unbagged flowers were extracted (and amplified for
+#   ITS1) in separate batches, so treatment and batch are aligned. Two parts of
+#   the design break this alignment; both are found from the metadata below:
+#   (a) the one extraction batch that holds both treatments (rows 1-2).
+#       Does unbagged > bagged hold inside this batch? Boxes: the farm's flowers
+#       from its own single-treatment batches; points: the mixed-batch flowers.
+#   (b) farms whose bagged and unbagged flowers share one 16S PCR batch (row 3).
+#       Is the 16S DNA gap similar in these farms and in the farms with
+#       separate 16S PCR batches? (No ITS1 PCR batch holds both treatments.)
+#   Tests are descriptive: few flowers in (a), few farms in (b).
+################################################################################
+
+flowers_16S <- depth_16S |> filter(sample_type %in% flower_lvl)
+
+# Batches that hold both treatments of the same farm
+mixed_extraction_batch <- flowers_16S |>
+        mutate(extraction_batch = as.character(extraction_batch)) |>
+        group_by(extraction_batch) |>
+        filter(n_distinct(sample_type) == 2) |>
+        pull(extraction_batch) |>
+        unique()
+shared_16S_pcr_farms <- flowers_16S |>
+        group_by(farm_id, pcr_batch_16s) |>
+        filter(n_distinct(sample_type) == 2) |>
+        pull(farm_id) |>
+        unique() |>
+        as.character()
+
+message("Mixed extraction batch: ", paste(mixed_extraction_batch, collapse = ", "),
+        " | farms with a shared 16S PCR batch: ", paste(shared_16S_pcr_farms, collapse = ", "))
+
+# One row per flower, marker and variable
+batch_flowers <- bind_rows(
+        depth_16S  |> transmute(marker = "16S",  sample_type, farm_id,
+                                extraction_batch = as.character(extraction_batch),
+                                dna = dna_concentration_hs_16s, n_reads),
+        depth_ITS1 |> transmute(marker = "ITS1", sample_type, farm_id,
+                                extraction_batch = as.character(extraction_batch),
+                                dna = dna_concentration_hs_its1, n_reads)
+) |>
+        filter(sample_type %in% flower_lvl) |>
+        mutate(mixed_batch = extraction_batch %in% mixed_extraction_batch) |>
+        pivot_longer(c(dna, n_reads), names_to = "variable", values_to = "value") |>
+        filter(!is.na(value))
+
+mixed_batch_farms <- batch_flowers |> filter(mixed_batch) |> pull(farm_id) |> unique()
+
+# Bagged vs unbagged summary of grouped flowers; exact = FALSE as above
+summarise_treatment <- \(x) x |>
+        summarise(
+                n_bagged              = sum(sample_type == "bagged_flower"),
+                n_unbagged            = sum(sample_type == "unbagged_flower"),
+                median_bagged         = median(value[sample_type == "bagged_flower"]),
+                median_unbagged       = median(value[sample_type == "unbagged_flower"]),
+                ratio_unbagged_bagged = median_unbagged / median_bagged,
+                p_mann_whitney        = wilcox.test(value ~ sample_type, exact = FALSE)$p.value,
+                .groups = "drop"
+        )
+
+batch_tests <- bind_rows(
+        # (a) mixed extraction batch: per farm and both farms together
+        batch_flowers |>
+                filter(mixed_batch) |>
+                (\(x) bind_rows(x, mutate(x, farm_id = "both")))() |>
+                group_by(marker, variable, farm_id) |>
+                summarise_treatment() |>
+                mutate(check = "mixed extraction batch"),
+        # (b) 16S DNA: per farm, then per PCR group (farms pooled)
+        batch_flowers |>
+                filter(marker == "16S", variable == "dna") |>
+                mutate(pcr_group = if_else(farm_id %in% shared_16S_pcr_farms,
+                                           "shared 16S PCR batch",
+                                           "separate 16S PCR batches")) |>
+                (\(x) bind_rows(x, mutate(x, farm_id = paste("all:", pcr_group))))() |>
+                group_by(marker, variable, pcr_group, farm_id) |>
+                summarise_treatment() |>
+                mutate(check = "16S PCR batch")
+) |>
+        relocate(check)
+
+print(batch_tests, n = Inf, width = Inf)
+write_csv(batch_tests, file.path(RESULTS_DIR, "tables", "04_batch_checks_dna_depth.csv"))
+
+# (a) panel: boxes of the farm's own-batch flowers, points of the mixed-batch flowers
+make_mixed_batch_panel <- function(marker_name, variable_name, y_ylim) {
+        stats <- batch_tests |>
+                filter(check == "mixed extraction batch", marker == marker_name,
+                       variable == variable_name, farm_id == "both")
+
+        batch_flowers |>
+                filter(marker == marker_name, variable == variable_name,
+                       farm_id %in% mixed_batch_farms) |>
+                ggplot(aes(x = farm_id, y = value, fill = sample_type)) +
+                # alpha: box fill transparency, so the mixed-batch points stand out
+                geom_boxplot(data = \(d) filter(d, !mixed_batch),
+                             position = position_dodge(width = 0.8), width = 0.7,
+                             outlier.shape = NA, alpha = 0.4) +
+                # size: mixed-batch point size; jitter.width spreads the 3 points of a group
+                geom_point(data = \(d) filter(d, mixed_batch),
+                           position = position_jitterdodge(jitter.width = 0.15,
+                                                           dodge.width  = 0.8, seed = 1),
+                           shape = 21, size = 3, colour = "black") +
+                scale_fill_manual(values = SAMPLE_TYPE_PALETTE, limits = flower_lvl,
+                                  name = "Sample type") +
+                scale_y_continuous(labels = label_number(big.mark = "")) +
+                coord_cartesian(ylim = y_ylim) +
+                labs(x        = "Farm",
+                     y        = TREATMENT_VARIABLES[[variable_name]],
+                     subtitle = sprintf(paste0("Mixed batch %s, both farms: unbagged / bagged ",
+                                               "median = %.2f,\nMann-Whitney p = %.2f ",
+                                               "(n = %d + %d; descriptive)"),
+                                        paste(mixed_extraction_batch, collapse = ", "),
+                                        stats$ratio_unbagged_bagged, stats$p_mann_whitney,
+                                        stats$n_bagged, stats$n_unbagged)) +
+                theme_bw() +
+                theme(plot.subtitle = element_text(size = 8))   # size of the test summary
+}
+
+# Row y ceiling for (a): the highest value of either marker in the mixed-batch farms
+mixed_row_ylim <- \(variable_name) batch_flowers |>
+        filter(variable == variable_name, farm_id %in% mixed_batch_farms) |>
+        pull(value) |>
+        max() |>
+        (\(m) c(0, m * 1.05))()
+
+# (b) panel: 16S DNA by farm and treatment, farms grouped by 16S PCR batch layout
+pcr_group_stats <- batch_tests |> filter(check == "16S PCR batch", str_starts(farm_id, "all:"))
+
+p_pcr_16S <- batch_flowers |>
+        filter(marker == "16S", variable == "dna") |>
+        mutate(farm_id   = factor(farm_id, levels = farm_levels),
+               pcr_group = if_else(farm_id %in% shared_16S_pcr_farms,
+                                   "shared 16S PCR batch", "separate 16S PCR batches") |>
+                       factor(levels = c("shared 16S PCR batch", "separate 16S PCR batches"))) |>
+        ggplot(aes(x = farm_id, y = value, fill = sample_type)) +
+        # same alpha as panels A-D; no legend: the colours match the legend of A-D
+        geom_boxplot(position = position_dodge(width = 0.8), width = 0.7,
+                     alpha = 0.4, show.legend = FALSE) +
+        scale_fill_manual(values = SAMPLE_TYPE_PALETTE, limits = flower_lvl,
+                          name = "Sample type") +
+        # strip at the bottom, below the farm labels (as in figure 3)
+        facet_grid(. ~ pcr_group, scales = "free_x", space = "free_x", switch = "x") +
+        labs(x        = "Farm",
+             y        = TREATMENT_VARIABLES[["dna"]],
+             title    = "16S — DNA by 16S PCR batch layout",
+             subtitle = paste(sprintf("%s: unbagged / bagged median = %.2f",
+                                      str_remove(pcr_group_stats$farm_id, "all: "),
+                                      pcr_group_stats$ratio_unbagged_bagged),
+                              collapse = "\n")) +
+        theme_bw() +
+        theme(strip.placement  = "outside",
+              strip.background = element_blank(),
+              plot.subtitle    = element_text(size = 8))
+
+# Panel tags A-E run left to right, top to bottom
+fig7 <- (
+        (make_mixed_batch_panel("16S",  "dna", mixed_row_ylim("dna")) +
+                 ggtitle("16S — Bacteria")) |
+        (make_mixed_batch_panel("ITS1", "dna", mixed_row_ylim("dna")) +
+                 ggtitle("ITS1 — Fungi") + labs(y = NULL) + HIDE_Y_AXIS)
+) /
+        (
+        make_mixed_batch_panel("16S",  "n_reads", mixed_row_ylim("n_reads")) |
+        (make_mixed_batch_panel("ITS1", "n_reads", mixed_row_ylim("n_reads")) +
+                 labs(y = NULL) + HIDE_Y_AXIS)
+) /
+        p_pcr_16S +
+        plot_layout(guides = "collect") +
+        plot_annotation(tag_levels = "A") &
+        theme(legend.position = "right")
+
+print(fig7)
+ggsave(file.path(RESULTS_DIR, "figures", "04_batch_checks_dna_depth.png"),
+       plot = fig7, width = 12, height = 15, dpi = 300)
 
 message("04 done")
