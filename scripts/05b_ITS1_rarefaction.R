@@ -2,13 +2,17 @@
 library(here)
 library(phyloseq)
 
+# Data version switch: CFM_VERSION, EXPORT_DIR, RESULTS_DIR
+source(here("scripts", "utils_paths.R"))
+
 
 # ---- Load intermediate objects (saved by 01b) ----
-# ps_ITS1_raw      <- readRDS(here("results", "rds", "ps_ITS1_raw.rds"))
-# ps_ITS1_decontam <- readRDS(here("results", "rds", "ps_ITS1_decontam.rds"))
-# ps_ITS1_fungi    <- readRDS(here("results", "rds", "ps_ITS1_fungi.rds"))
-# decontam_prev05_ITS1  <- readRDS(here("results", "rds", "decontam_prev05_ITS1.rds"))
-ps_ITS1_fungi_biosamples    <- readRDS(here("results", "rds", "ps_ITS1_fungi_biosamples.rds"))
+# ps_ITS1_raw      <- readRDS(file.path(RESULTS_DIR, "rds", "ps_ITS1_raw.rds"))
+# ps_ITS1_decontam <- readRDS(file.path(RESULTS_DIR, "rds", "ps_ITS1_decontam.rds"))
+# ps_ITS1_fungi    <- readRDS(file.path(RESULTS_DIR, "rds", "ps_ITS1_fungi.rds"))
+# decontam_prev050_ITS1  <- readRDS(file.path(RESULTS_DIR, "rds", "decontam_prev050_ITS1.rds"))
+# QC covers all 294 sequenced flowers, including the sampling deviations
+ps_ITS1_fungi_biosamples    <- readRDS(file.path(RESULTS_DIR, "rds", "ps_ITS1_fungi_biosamples_with_deviations.rds"))
 
 # Metadata as plain data.frame (needed for joins by sample_id)
 # metadata <- sample_data(ps_ITS1_raw) |>
@@ -16,8 +20,8 @@ ps_ITS1_fungi_biosamples    <- readRDS(here("results", "rds", "ps_ITS1_fungi_bio
 #         (\(x) { class(x) <- "data.frame"; x })()
 
 # ---- Output directories ----
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
-dir.create(here("results", "tables"),  showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "tables"),  showWarnings = FALSE, recursive = TRUE)
 
 ################################################################################
 ###################### Diagnostic rarefaction curves ###########################
@@ -49,7 +53,7 @@ pal <- c(bagged_flower = "#4C72B0", unbagged_flower = "#DD8452")
 curve_cols <- pal[as.character(metadata_for_rarecurve[[color_var]])]
 
 # Rarefaction curves — base R graphics, saved with png()/dev.off()
-png(here("results", "figures", "05b_ITS1_rarefaction_curves.png"),
+png(file.path(RESULTS_DIR, "figures", "05b_ITS1_rarefaction_curves.png"),
     width = 10, height = 7, units = "in", res = 300)
 
 vegan::rarecurve(
@@ -86,7 +90,7 @@ goods_df <- data.frame(
         sample_type    = metadata_for_rarecurve[names(goods_cov), "sample_type"]
 )
 write.csv(goods_df,
-          here("results", "tables", "05b_ITS1_goods_coverage.csv"),
+          file.path(RESULTS_DIR, "tables", "05b_ITS1_goods_coverage.csv"),
           row.names = FALSE)
 
 message("05b done")

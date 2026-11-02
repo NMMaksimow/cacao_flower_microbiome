@@ -3,6 +3,9 @@ library(here)
 library(phyloseq)
 library(vegan)
 
+# Data version switch: CFM_VERSION, EXPORT_DIR, RESULTS_DIR
+source(here("scripts", "utils_paths.R"))
+
 # ---- Parameters ----
 # Farm order and management labels used throughout the project
 FARM_LEVELS <- c("ib", "vr", "sa", "kk", "mt", "vi", "yb")
@@ -21,10 +24,10 @@ DEPTH_ITS1_SHALLOW <- 5000
 DEPTH_ITS1_DEEP    <- 15000
 
 # ---- Load data ----
-ps_16S  <- readRDS(here("results", "rds", "ps_16S_bacteria_biosamples.rds"))
-ps_ITS1 <- readRDS(here("results", "rds", "ps_ITS1_fungi_biosamples.rds"))
+ps_16S  <- readRDS(file.path(RESULTS_DIR, "rds", "ps_16S_bacteria_biosamples.rds"))
+ps_ITS1 <- readRDS(file.path(RESULTS_DIR, "rds", "ps_ITS1_fungi_biosamples.rds"))
 
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
 
 ################################################################################
 # Build per-farm matrices — pass 1: collect shared y-limits per marker row
@@ -73,7 +76,7 @@ xlim_ITS1 <- c(0, max_depth_ITS1)
 #   mar = per-panel margins; mar[3] tightened for rows 2+ (no panel title row)
 ################################################################################
 
-png(here("results", "figures", "05c_rarefaction_by_farm.png"),
+png(file.path(RESULTS_DIR, "figures", "05c_rarefaction_by_farm.png"),
     width = 21, height = 10, units = "in", res = 300)
 
 par(mfrow = c(2, length(FARM_LEVELS)),

@@ -5,13 +5,16 @@ library(phyloseq)
 library(scales)
 library(ggtext)    # element_markdown() for bold group headers in legend
 
+# Data version switch: CFM_VERSION, EXPORT_DIR, RESULTS_DIR
+source(here("scripts", "utils_paths.R"))
+
 # ---- Load intermediate objects (saved by 01b) ----
-ps_ITS1_otu97_raw      <- readRDS(here("results", "rds", "ps_ITS1_otu97_raw.rds"))
-ps_ITS1_otu97_decontam <- readRDS(here("results", "rds", "ps_ITS1_otu97_decontam.rds"))
-ps_ITS1_otu97_fungi    <- readRDS(here("results", "rds", "ps_ITS1_otu97_fungi.rds"))
+ps_ITS1_otu97_raw      <- readRDS(file.path(RESULTS_DIR, "rds", "ps_ITS1_otu97_raw.rds"))
+ps_ITS1_otu97_decontam <- readRDS(file.path(RESULTS_DIR, "rds", "ps_ITS1_otu97_decontam.rds"))
+ps_ITS1_otu97_fungi    <- readRDS(file.path(RESULTS_DIR, "rds", "ps_ITS1_otu97_fungi.rds"))
 
 # ---- Output directories ----
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
 
 ################################################################################
 ##########  Effect of decontamination on control samples  ######################
@@ -226,5 +229,5 @@ fig_control_bars_ITS1 <- ggplot(
         common_theme +
         labs(y = "Read count", x = NULL)
 
-ggsave(here("results", "figures", "02b_ITS1_otu97_controls_pipeline_stages.png"),
+ggsave(file.path(RESULTS_DIR, "figures", "02b_ITS1_otu97_controls_pipeline_stages.png"),
        fig_control_bars_ITS1, width = 16, height = 11, dpi = 300)

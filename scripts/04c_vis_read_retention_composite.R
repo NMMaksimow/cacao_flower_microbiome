@@ -6,16 +6,19 @@ library(patchwork)
 library(scales)
 library(ggtext)
 
+# Data version switch: CFM_VERSION, EXPORT_DIR, RESULTS_DIR
+source(here("scripts", "utils_paths.R"))
+
 # ---- Load objects ----
-ps_16S_raw      <- readRDS(here("results", "rds", "ps_16S_raw.rds"))
-ps_16S_decontam <- readRDS(here("results", "rds", "ps_16S_decontam.rds"))
-ps_16S_bacteria <- readRDS(here("results", "rds", "ps_16S_bacteria.rds"))
+ps_16S_raw      <- readRDS(file.path(RESULTS_DIR, "rds", "ps_16S_raw.rds"))
+ps_16S_decontam <- readRDS(file.path(RESULTS_DIR, "rds", "ps_16S_decontam.rds"))
+ps_16S_bacteria <- readRDS(file.path(RESULTS_DIR, "rds", "ps_16S_bacteria.rds"))
 
-ps_ITS1_raw      <- readRDS(here("results", "rds", "ps_ITS1_raw.rds"))
-ps_ITS1_decontam <- readRDS(here("results", "rds", "ps_ITS1_decontam.rds"))
-ps_ITS1_fungi    <- readRDS(here("results", "rds", "ps_ITS1_fungi.rds"))
+ps_ITS1_raw      <- readRDS(file.path(RESULTS_DIR, "rds", "ps_ITS1_raw.rds"))
+ps_ITS1_decontam <- readRDS(file.path(RESULTS_DIR, "rds", "ps_ITS1_decontam.rds"))
+ps_ITS1_fungi    <- readRDS(file.path(RESULTS_DIR, "rds", "ps_ITS1_fungi.rds"))
 
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
 
 ################################################################################
 # Shared constants
@@ -287,7 +290,7 @@ make_composite <- function(stack_16S, stack_ITS1, box_16S, box_ITS1,
         theme(legend.position = "right")
 
         print(fig)
-        ggsave(here("results", "figures", filename),
+        ggsave(file.path(RESULTS_DIR, "figures", filename),
                plot = fig, width = width, height = height, dpi = 300)
         invisible(fig)
 }
@@ -334,7 +337,7 @@ plot_layout(guides = "collect") &
 theme(legend.position = "right")
 
 print(fig1)
-ggsave(here("results", "figures", "04c_composite_sublibrary.png"),
+ggsave(file.path(RESULTS_DIR, "figures", "04c_composite_sublibrary.png"),
        plot = fig1, width = 16, height = 10, dpi = 300)
 
 ################################################################################
@@ -524,7 +527,7 @@ fig4 <- (top_row / bot_row) +
         theme(legend.position = "right")
 
 print(fig4)
-ggsave(here("results", "figures", "04c_composite_phenotypes.png"),
+ggsave(file.path(RESULTS_DIR, "figures", "04c_composite_phenotypes.png"),
        plot = fig4, width = 28, height = 10, dpi = 300)
 
 message("04c done")

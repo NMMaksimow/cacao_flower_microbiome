@@ -6,12 +6,15 @@ library(patchwork)
 library(scales)
 library(ggtext)    # for element_markdown() — bold text in legend labels
 
+# Data version switch: CFM_VERSION, EXPORT_DIR, RESULTS_DIR
+source(here("scripts", "utils_paths.R"))
+
 # ---- Load intermediate objects (saved by 01b) ----
-ps_ITS1_otu97_fungi    <- readRDS(here("results", "rds", "ps_ITS1_otu97_fungi.rds"))
+ps_ITS1_otu97_fungi    <- readRDS(file.path(RESULTS_DIR, "rds", "ps_ITS1_otu97_fungi.rds"))
 
 # ---- Output directories ----
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
-dir.create(here("results", "tables"),  showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "tables"),  showWarnings = FALSE, recursive = TRUE)
 
 ################################################################################
 #### Mock community: expected vs observed (D6300 ZymoBIOMICS, 2 fungi) ########
@@ -145,5 +148,5 @@ fig_mock_ITS1 <- ggplot(mock_plot_data,
 # Save
 ################################################################################
 
-ggsave(here("results", "figures", "03b_ITS1_otu97_mock_community_exp_obs.png"),
+ggsave(file.path(RESULTS_DIR, "figures", "03b_ITS1_otu97_mock_community_exp_obs.png"),
        fig_mock_ITS1, width = 8, height = 5, dpi = 300)

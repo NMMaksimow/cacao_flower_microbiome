@@ -6,15 +6,18 @@ library(patchwork)
 library(scales)
 library(ggtext)    # for element_markdown() — bold text in legend labels
 
+# Data version switch: CFM_VERSION, EXPORT_DIR, RESULTS_DIR
+source(here("scripts", "utils_paths.R"))
+
 # ---- Load intermediate objects (saved by 01a) ----
-ps_16S_raw      <- readRDS(here("results", "rds", "ps_16S_raw.rds"))
-ps_16S_decontam <- readRDS(here("results", "rds", "ps_16S_decontam.rds"))
-ps_16S_bacteria <- readRDS(here("results", "rds", "ps_16S_bacteria.rds"))
-# decontam_prev055_16S  <- readRDS(here("results", "rds", "decontam_prev055_16S.rds"))
+ps_16S_raw      <- readRDS(file.path(RESULTS_DIR, "rds", "ps_16S_raw.rds"))
+ps_16S_decontam <- readRDS(file.path(RESULTS_DIR, "rds", "ps_16S_decontam.rds"))
+ps_16S_bacteria <- readRDS(file.path(RESULTS_DIR, "rds", "ps_16S_bacteria.rds"))
+# decontam_prev055_16S  <- readRDS(file.path(RESULTS_DIR, "rds", "decontam_prev055_16S.rds"))
 
 # ---- Output directories ----
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
-dir.create(here("results", "tables"),  showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "tables"),  showWarnings = FALSE, recursive = TRUE)
 
 ################################################################################
 #### Mock community: expected vs observed (D6300 ZymoBIOMICS, 8 bacteria) ######
@@ -24,17 +27,34 @@ dir.create(here("results", "tables"),  showWarnings = FALSE, recursive = TRUE)
 # Notes on SILVA taxonomy quirks:
 #   - Salmonella is not annotated to genus level in SILVA → represented at Family level as g__NA.
 #   - Escherichia coli appears as g__Escherichia-Shigella (SILVA complex genus).
+#   - SILVA 144 (v2) renames three genera: Lactobacillus fermentum is
+#     Limosilactobacillus; Staphylococcus and Enterococcus carry the paraphyly mark
+#     "--other", and Enterococcus moved to Streptococcaceae.
+#   - v2 also assigns 2 mock ASVs to g__Leclercia-Silvania-Enterobacter--other
+#     (s__Enterobacter_ludwigii, ~15k reads); not a D6300 member, so it falls in "Other".
 expected_mock_16S <- tibble(
-        Family_Genus = c(
-                "f__Listeriaceae | g__Listeria",
-                "f__Bacillaceae | g__Bacillus",
-                "f__Staphylococcaceae | g__Staphylococcus",
-                "f__Lactobacillaceae | g__Lactobacillus",
-                "f__Enterococcaceae | g__Enterococcus",
-                "f__Pseudomonadaceae | g__Pseudomonas",
-                "f__Enterobacteriaceae | g__Escherichia-Shigella",
-                "f__Enterobacteriaceae | g__Unassigned"   # Salmonella
-        ),
+        Family_Genus = list(
+                v1 = c(
+                        "f__Listeriaceae | g__Listeria",
+                        "f__Bacillaceae | g__Bacillus",
+                        "f__Staphylococcaceae | g__Staphylococcus",
+                        "f__Lactobacillaceae | g__Lactobacillus",
+                        "f__Enterococcaceae | g__Enterococcus",
+                        "f__Pseudomonadaceae | g__Pseudomonas",
+                        "f__Enterobacteriaceae | g__Escherichia-Shigella",
+                        "f__Enterobacteriaceae | g__Unassigned"   # Salmonella
+                ),
+                v2 = c(
+                        "f__Listeriaceae | g__Listeria",
+                        "f__Bacillaceae | g__Bacillus",
+                        "f__Staphylococcaceae | g__Staphylococcus--other",
+                        "f__Lactobacillaceae | g__Limosilactobacillus",
+                        "f__Streptococcaceae | g__Enterococcus--other",
+                        "f__Pseudomonadaceae | g__Pseudomonas",
+                        "f__Enterobacteriaceae | g__Escherichia-Shigella",
+                        "f__Enterobacteriaceae | g__Unassigned"   # Salmonella
+                )
+        )[[CFM_VERSION]],
         Abundance = rep(0.125, 8),
         Type      = "Expected",
         Sample    = "Expected"
@@ -101,15 +121,13 @@ x_labels <- c("Expected", obs_labels)
 
 # Legend labels: Family | Genus on line 1, expected organism (bold) on line 2.
 # FIXME Replace XXX with the species name from the ZymoBIOMICS D6300 certificate.
+# Species follow the order of expected_mock_16S, so the labels match either version.
 fill_labels_16S <- c(
-        "f__Listeriaceae | g__Listeria<br>*Listeria monocytogenes*",
-        "f__Bacillaceae | g__Bacillus<br>*Bacillus subtilis*",
-        "f__Staphylococcaceae | g__Staphylococcus<br>*Staphylococcus aureus*",
-        "f__Lactobacillaceae | g__Lactobacillus<br>*Lactobacillus fermentum*",
-        "f__Enterococcaceae | g__Enterococcus<br>*Enterococcus faecalis*",
-        "f__Pseudomonadaceae | g__Pseudomonas<br>*Pseudomonas aeruginosa*",
-        "f__Enterobacteriaceae | g__Escherichia-Shigella<br>*Escherichia coli*",
-        "f__Enterobacteriaceae | g__Unassigned<br>*Salmonella enterica*",   # Salmonella
+        paste0(expected_mock_16S$Family_Genus, "<br>*",
+               c("Listeria monocytogenes", "Bacillus subtilis", "Staphylococcus aureus",
+                 "Lactobacillus fermentum", "Enterococcus faecalis",
+                 "Pseudomonas aeruginosa", "Escherichia coli", "Salmonella enterica"),
+               "*"),
         "Other"
 )
 
@@ -154,5 +172,5 @@ fig_mock_16S <- ggplot(mock_plot_data,
 # Save
 ################################################################################
 
-ggsave(here("results", "figures", "03a_16S_mock_community_exp_obs.png"),
+ggsave(file.path(RESULTS_DIR, "figures", "03a_16S_mock_community_exp_obs.png"),
        fig_mock_16S, width = 9, height = 5, dpi = 300)

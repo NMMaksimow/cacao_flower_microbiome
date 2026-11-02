@@ -5,13 +5,16 @@ library(phyloseq)
 library(scales)
 library(ggtext)    # element_markdown() for bold group headers in legend
 
+# Data version switch: CFM_VERSION, EXPORT_DIR, RESULTS_DIR
+source(here("scripts", "utils_paths.R"))
+
 # ---- Load intermediate objects (saved by 01a) ----
-ps_16S_raw      <- readRDS(here("results", "rds", "ps_16S_raw.rds"))
-ps_16S_decontam <- readRDS(here("results", "rds", "ps_16S_decontam.rds"))
-ps_16S_bacteria <- readRDS(here("results", "rds", "ps_16S_bacteria.rds"))
+ps_16S_raw      <- readRDS(file.path(RESULTS_DIR, "rds", "ps_16S_raw.rds"))
+ps_16S_decontam <- readRDS(file.path(RESULTS_DIR, "rds", "ps_16S_decontam.rds"))
+ps_16S_bacteria <- readRDS(file.path(RESULTS_DIR, "rds", "ps_16S_bacteria.rds"))
 
 # ---- Output directories ----
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
 
 ################################################################################
 ##########  Effect of decontamination on control samples  ######################
@@ -20,16 +23,31 @@ dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
 # ── Expected mock community taxa (Family | Genus, SILVA taxonomy) ─────────────
 # Used to assign taxa to the "Mock community" legend group.
 # Notes: Salmonella → g__Unassigned; E. coli → g__Escherichia-Shigella in SILVA.
-mock_expected_16S <- c(
-        "f__Listeriaceae | g__Listeria",
-        "f__Bacillaceae | g__Bacillus",
-        "f__Staphylococcaceae | g__Staphylococcus",
-        "f__Lactobacillaceae | g__Lactobacillus",
-        "f__Enterococcaceae | g__Enterococcus",
-        "f__Pseudomonadaceae | g__Pseudomonas",
-        "f__Enterobacteriaceae | g__Escherichia-Shigella",
-        "f__Enterobacteriaceae | g__Unassigned"   # Salmonella
-)
+# Names differ between SILVA 138 (v1) and SILVA 144 (v2): Lactobacillus fermentum is
+# Limosilactobacillus, Staphylococcus and Enterococcus carry the paraphyly mark
+# "--other", and Enterococcus moved to Streptococcaceae.
+mock_expected_16S <- list(
+        v1 = c(
+                "f__Listeriaceae | g__Listeria",
+                "f__Bacillaceae | g__Bacillus",
+                "f__Staphylococcaceae | g__Staphylococcus",
+                "f__Lactobacillaceae | g__Lactobacillus",
+                "f__Enterococcaceae | g__Enterococcus",
+                "f__Pseudomonadaceae | g__Pseudomonas",
+                "f__Enterobacteriaceae | g__Escherichia-Shigella",
+                "f__Enterobacteriaceae | g__Unassigned"   # Salmonella
+        ),
+        v2 = c(
+                "f__Listeriaceae | g__Listeria",
+                "f__Bacillaceae | g__Bacillus",
+                "f__Staphylococcaceae | g__Staphylococcus--other",
+                "f__Lactobacillaceae | g__Limosilactobacillus",
+                "f__Streptococcaceae | g__Enterococcus--other",
+                "f__Pseudomonadaceae | g__Pseudomonas",
+                "f__Enterobacteriaceae | g__Escherichia-Shigella",
+                "f__Enterobacteriaceae | g__Unassigned"   # Salmonella
+        )
+)[[CFM_VERSION]]
 
 # ── Long-table helper ────────────────────────────────────────────────────────
 # Melts a phyloseq object (control samples only) to a tidy table.
@@ -234,5 +252,5 @@ fig_control_bars_16S <- ggplot(
         common_theme +
         labs(y = "Read count", x = NULL)
 
-ggsave(here("results", "figures", "02a_16S_controls_pipeline_stages.png"),
+ggsave(file.path(RESULTS_DIR, "figures", "02a_16S_controls_pipeline_stages.png"),
        fig_control_bars_16S, width = 16, height = 11, dpi = 300)

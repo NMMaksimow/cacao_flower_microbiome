@@ -5,12 +5,16 @@ library(phyloseq)
 library(patchwork)
 library(scales)
 
+# Data version switch: CFM_VERSION, EXPORT_DIR, RESULTS_DIR
+source(here("scripts", "utils_paths.R"))
+
 # ---- Load intermediate objects (saved by 01a) ----
-ps_16S_raw              <- readRDS(here("results", "rds", "ps_16S_raw.rds"))
-ps_16S_decontam         <- readRDS(here("results", "rds", "ps_16S_decontam.rds"))
-ps_16S_bacteria         <- readRDS(here("results", "rds", "ps_16S_bacteria.rds"))
-ps_16S_bacteria_biosamples <- readRDS(here("results", "rds", "ps_16S_bacteria_biosamples.rds"))
-decontam_16S_results          <- readRDS(here("results", "rds", "decontam_prev055_16S.rds"))
+ps_16S_raw              <- readRDS(file.path(RESULTS_DIR, "rds", "ps_16S_raw.rds"))
+ps_16S_decontam         <- readRDS(file.path(RESULTS_DIR, "rds", "ps_16S_decontam.rds"))
+ps_16S_bacteria         <- readRDS(file.path(RESULTS_DIR, "rds", "ps_16S_bacteria.rds"))
+# QC covers all 294 sequenced flowers, including the sampling deviations
+ps_16S_bacteria_biosamples <- readRDS(file.path(RESULTS_DIR, "rds", "ps_16S_bacteria_biosamples_with_deviations.rds"))
+decontam_16S_results          <- readRDS(file.path(RESULTS_DIR, "rds", "decontam_prev055_16S.rds"))
 
 # Metadata as plain data.frame (needed for joins by sample_id)
 metadata <- sample_data(ps_16S_raw) |>
@@ -18,8 +22,8 @@ metadata <- sample_data(ps_16S_raw) |>
         (\(x) { class(x) <- "data.frame"; x })()
 
 # ---- Output directories ----
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
-dir.create(here("results", "tables"),  showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "tables"),  showWarnings = FALSE, recursive = TRUE)
 
 
 ################################################################################
@@ -203,7 +207,7 @@ plot_read_retention_stacked_16S <-
 # ---- Do decontamination and off-target sequences removal affect experimentla groups and phenotypes differently? ----
 # Plot decontamination and off-target filtering results by sublibrary_id
 p_ret_sublibrary <- plot_read_retention_stacked_16S(grouping_variable = "sublibrary_id")
-ggsave(here("results", "figures", "04a_16S_read_retention_by_sublibrary.png"),
+ggsave(file.path(RESULTS_DIR, "figures", "04a_16S_read_retention_by_sublibrary.png"),
        plot = p_ret_sublibrary, width = 10, height = 5, dpi = 300)
 
 # Plot decontamination and off-target filtering results by sample type
@@ -216,7 +220,7 @@ p_ret_sample_type <- plot_read_retention_stacked_16S(
                             "unbagged_flower"
         )
 )
-ggsave(here("results", "figures", "04a_16S_read_retention_by_sample_type.png"),
+ggsave(file.path(RESULTS_DIR, "figures", "04a_16S_read_retention_by_sample_type.png"),
        plot = p_ret_sample_type, width = 8, height = 5, dpi = 300)
 
 # Plot decontamination and off-target filtering results by farm_id with management_type facets (only biological samples)
@@ -232,7 +236,7 @@ p_ret_farm_mgmt <- plot_read_retention_stacked_16S(
                                 !is.na(sample_type)
                 )
 )
-ggsave(here("results", "figures", "04a_16S_read_retention_by_farm_management.png"),
+ggsave(file.path(RESULTS_DIR, "figures", "04a_16S_read_retention_by_farm_management.png"),
        plot = p_ret_farm_mgmt, width = 10, height = 5, dpi = 300)
 
 # Plot decontamination and off-target filtering results by is_pollination_clsm (only phenotyped flowers)
@@ -245,7 +249,7 @@ p_ret_pollination <- plot_read_retention_stacked_16S(
                         !is.na(is_pollination_clsm)
                 )
 )
-ggsave(here("results", "figures", "04a_16S_read_retention_by_pollination.png"),
+ggsave(file.path(RESULTS_DIR, "figures", "04a_16S_read_retention_by_pollination.png"),
        plot = p_ret_pollination, width = 6, height = 5, dpi = 300)
 
 # Plot decontamination and off-target filtering results by is_germination (only phenotyped flowers)
@@ -258,7 +262,7 @@ p_ret_germination <- plot_read_retention_stacked_16S(
                         !is.na(is_germination)
                 )
 )
-ggsave(here("results", "figures", "04a_16S_read_retention_by_germination.png"),
+ggsave(file.path(RESULTS_DIR, "figures", "04a_16S_read_retention_by_germination.png"),
        plot = p_ret_germination, width = 6, height = 5, dpi = 300)
 
 # Does sequencing depth confound pollination intensity? No
@@ -281,7 +285,7 @@ p_scatter_pi <- read_retention_loss_table_16S |>
                 y = "Fraction of raw reads retained"
         ) +
         theme_bw()
-ggsave(here("results", "figures", "04a_16S_depth_vs_pi_clsm.png"),
+ggsave(file.path(RESULTS_DIR, "figures", "04a_16S_depth_vs_pi_clsm.png"),
        plot = p_scatter_pi, width = 6, height = 5, dpi = 300)
 
 # Does sequencing depth confound callose_plug_index? No
@@ -304,7 +308,7 @@ p_scatter_callose <- read_retention_loss_table_16S |>
                 y = "Fraction of raw reads retained"
         ) +
         theme_bw()
-ggsave(here("results", "figures", "04a_16S_depth_vs_callose_plug_index.png"),
+ggsave(file.path(RESULTS_DIR, "figures", "04a_16S_depth_vs_callose_plug_index.png"),
        plot = p_scatter_callose, width = 6, height = 5, dpi = 300)
 
 
@@ -333,7 +337,7 @@ p_box_sublibrary <- dplyr::bind_rows(
                 ),
                 legend.position = "bottom"
         )
-ggsave(here("results", "figures", "04a_16S_depth_boxplot_by_sublibrary.png"),
+ggsave(file.path(RESULTS_DIR, "figures", "04a_16S_depth_boxplot_by_sublibrary.png"),
        plot = p_box_sublibrary, width = 10, height = 5, dpi = 300)
 
 # sample_type
@@ -361,7 +365,7 @@ p_box_sample_type <- dplyr::bind_rows(
         ggplot(aes(x = sample_type, y = n_reads)) +
         geom_boxplot() +
         theme_bw()
-ggsave(here("results", "figures", "04a_16S_depth_boxplot_by_sample_type.png"),
+ggsave(file.path(RESULTS_DIR, "figures", "04a_16S_depth_boxplot_by_sample_type.png"),
        plot = p_box_sample_type, width = 7, height = 5, dpi = 300)
 
 # bagged Vs unbagged
@@ -382,7 +386,7 @@ p_box_treatment <- dplyr::bind_rows(
         ggplot(aes(x = sample_type, y = n_reads)) +
         geom_boxplot() +
         theme_bw()
-ggsave(here("results", "figures", "04a_16S_depth_boxplot_by_flower_treatment.png"),
+ggsave(file.path(RESULTS_DIR, "figures", "04a_16S_depth_boxplot_by_flower_treatment.png"),
        plot = p_box_treatment, width = 5, height = 5, dpi = 300)
 
 # farm_id by management_type (faceted, no legend)
@@ -422,7 +426,7 @@ p_box_farm <- dplyr::bind_rows(
                 strip.background = element_blank(),
                 axis.text.x      = element_text(margin = margin(t = 5))
         )
-ggsave(here("results", "figures", "04a_16S_depth_boxplot_by_farm.png"),
+ggsave(file.path(RESULTS_DIR, "figures", "04a_16S_depth_boxplot_by_farm.png"),
        plot = p_box_farm, width = 9, height = 5, dpi = 300)
 
 # sequencing depth by farm_id and sample_type (bagged vs unbagged within each farm)
@@ -465,7 +469,7 @@ p_depth_farm_type <- dplyr::bind_rows(
                 axis.text.x      = element_text(margin = margin(t = 5)),
                 legend.position  = "bottom"
         )
-ggsave(here("results", "figures", "04a_16S_depth_boxplot_by_farm_and_sample_type.png"),
+ggsave(file.path(RESULTS_DIR, "figures", "04a_16S_depth_boxplot_by_farm_and_sample_type.png"),
        plot = p_depth_farm_type, width = 9, height = 5, dpi = 300)
 
 # is_pollination_clsm
@@ -486,7 +490,7 @@ p_box_pollination <- dplyr::bind_rows(
         ggplot(aes(x = is_pollination_clsm, y = n_reads)) +
         geom_boxplot() +
         theme_bw()
-ggsave(here("results", "figures", "04a_16S_depth_boxplot_by_pollination.png"),
+ggsave(file.path(RESULTS_DIR, "figures", "04a_16S_depth_boxplot_by_pollination.png"),
        plot = p_box_pollination, width = 5, height = 5, dpi = 300)
 
 # is_germination
@@ -507,7 +511,7 @@ p_box_germination <- dplyr::bind_rows(
         ggplot(aes(x = is_germination, y = n_reads)) +
         geom_boxplot() +
         theme_bw()
-ggsave(here("results", "figures", "04a_16S_depth_boxplot_by_germination.png"),
+ggsave(file.path(RESULTS_DIR, "figures", "04a_16S_depth_boxplot_by_germination.png"),
        plot = p_box_germination, width = 5, height = 5, dpi = 300)
 
 # ---- Is there correlation between DNA concentration and sequencing depth? ----
@@ -529,7 +533,7 @@ p_scatter_dna <- dplyr::bind_rows(
         ggplot(aes(x = dna_concentration_hs_16s , y = n_reads, color = sample_type)) +
         geom_point() +
         theme_bw()
-ggsave(here("results", "figures", "04a_16S_depth_vs_dna_concentration.png"),
+ggsave(file.path(RESULTS_DIR, "figures", "04a_16S_depth_vs_dna_concentration.png"),
        plot = p_scatter_dna, width = 7, height = 5, dpi = 300)
 
 message("04a done")
