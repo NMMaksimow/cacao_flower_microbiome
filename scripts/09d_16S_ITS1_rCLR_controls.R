@@ -57,6 +57,9 @@ library(tidyverse)
 library(phyloseq)
 library(vegan)      # vegdist(), capscale(), adonis2(), betadisper(), ordiplot()
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
 # ---- 2. Load pre-decontam objects and label the processing day --------------
 
 # Sample ID prefix encodes treatment: c = bagged, p = unbagged. Verified against
@@ -65,7 +68,7 @@ library(vegan)      # vegdist(), capscale(), adonis2(), betadisper(), ordiplot()
 # label that works for every control type.
 ps_list <- MARKERS |>
   imap(\(obj, marker) {
-    ps <- readRDS(here("results", "rds", paste0(obj, ".rds")))
+    ps <- readRDS(file.path(RESULTS_DIR, "rds", paste0(obj, ".rds")))
     keep <- sample_names(ps)[
       as(sample_data(ps), "data.frame")$sample_type %in% names(CONTROL_TYPES)
     ]
@@ -161,8 +164,8 @@ grid_results <- expand_grid(
              use_filter = use_filter, depth_min = depth_min, .before = 1)
   })
 
-dir.create(here("results", "tables"), showWarnings = FALSE, recursive = TRUE)
-write_csv(grid_results, here("results", "tables", "09d_controls_permanova.csv"))
+dir.create(file.path(RESULTS_DIR, "tables"), showWarnings = FALSE, recursive = TRUE)
+write_csv(grid_results, file.path(RESULTS_DIR, "tables", "09d_controls_permanova.csv"))
 
 # Per-control depth and observed richness, so a reader can judge data quality.
 # sample_data() already carries a column called sample_id, so the row names go into
@@ -177,14 +180,14 @@ imap_dfr(ps_list, \(ps, marker) {
            observed_taxa = as.integer(colSums(otu_table(ps) > 0)[rownames(md)]))
   }) |>
   arrange(marker, sample_type, control_id) |>
-  write_csv(here("results", "tables", "09d_controls_depth_richness.csv"))
+  write_csv(file.path(RESULTS_DIR, "tables", "09d_controls_depth_richness.csv"))
 
 # ---- 5. Figure 1: ordinations, 2 markers x 3 control types -----------------
 # Primary setting: prevalence filter on, no depth threshold.
 
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
 
-png(here("results", "figures", "09d_controls_rCLR_pcoa_by_day_type.png"),
+png(file.path(RESULTS_DIR, "figures", "09d_controls_rCLR_pcoa_by_day_type.png"),
     width = 14, height = 9, units = "in", res = 300)
 
 # mfrow: 2 marker rows x 3 control-type columns
@@ -319,7 +322,7 @@ p_heat <- grid_results |>
   theme_bw(base_size = 10) +
   theme(axis.text.x = element_text(angle = 20, hjust = 1))
 
-ggsave(here("results", "figures", "09d_controls_perm_heatmap.png"),
+ggsave(file.path(RESULTS_DIR, "figures", "09d_controls_perm_heatmap.png"),
        plot = p_heat, width = 9, height = 6, dpi = 300)
 
 cat("\nDone. Wrote 2 figures and 2 tables.\n")

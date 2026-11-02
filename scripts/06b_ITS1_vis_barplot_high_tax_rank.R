@@ -19,6 +19,9 @@ library(phyloseq)
 library(scales)
 library(ggh4x)       # facet_nested()
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
 # ── 0. Parameters ─────────────────────────────────────────────────────────────
 
 RA_THRESHOLD_PHYLUM <- 0.005    # Phyla with mean RA < 1% → "Other"
@@ -29,7 +32,7 @@ FARM_LEVELS <- c("ib", "vr", "sa", "kk", "mt", "vi", "yb")
 # ── 1. Load data (OTU97 — main analysis) ──────────────────────────────────────
 
 ps_ITS1_otu97_fungi_biosamples <- readRDS(
-        here("results", "rds", "ps_ITS1_otu97_fungi_biosamples.rds")
+        file.path(RESULTS_DIR, "rds", paste0("ps_ITS1_otu97_fungi_biosamples", BIOSAMPLE_SUFFIX, ".rds"))
 )
 
 cat(sprintf("Loaded (OTU97): %d taxa × %d samples\n",
@@ -166,7 +169,7 @@ figA <- ggplot(figA_tbl, aes(x = farm_id, y = Abundance, fill = Phylum_plot)) +
 print(figA)
 
 ggsave(
-        here("results", "figures", "06b_ITS1_barplot_phylum_by_farm_mean.png"),
+        file.path(RESULTS_DIR, "figures", paste0("06b_ITS1_barplot_phylum_by_farm_mean", SET_TAG, ".png")),
         plot = figA, width = 12, height = 8, dpi = 300
 )
 cat("Saved: 06b_ITS1_barplot_phylum_by_farm_mean.png\n")
@@ -222,7 +225,7 @@ figB <- ggplot(figB_tbl, aes(x = tree_id, y = Abundance, fill = Phylum_plot)) +
 print(figB)
 
 ggsave(
-        here("results", "figures", "06b_ITS1_barplot_phylum_by_farm_tree_level.png"),
+        file.path(RESULTS_DIR, "figures", paste0("06b_ITS1_barplot_phylum_by_farm_tree_level", SET_TAG, ".png")),
         plot = figB, width = 28, height = 8, dpi = 300
 )
 cat("Saved: 06b_ITS1_barplot_phylum_by_farm_tree_level.png\n")
@@ -283,7 +286,7 @@ figC <- ggplot(figC_tbl, aes(x = flower_id, y = Abundance, fill = Phylum_plot)) 
 print(figC)
 
 ggsave(
-        here("results", "figures", "06b_ITS1_barplot_phylum_by_farm_flower_level.png"),
+        file.path(RESULTS_DIR, "figures", paste0("06b_ITS1_barplot_phylum_by_farm_flower_level", SET_TAG, ".png")),
         plot = figC, width = 36, height = 8, dpi = 300
 )
 cat("Saved: 06b_ITS1_barplot_phylum_by_farm_flower_level.png\n")

@@ -24,8 +24,11 @@ library(tidyverse)
 library(phyloseq)
 library(vegan)   # capscale(), ordiplot(), ordiellipse(), scores()
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
 # ---- 2. Load data --------------------------------------------------------
-ps <- readRDS(here("results", "rds", "ps_ITS1_otu97_fungi_biosamples.rds")) |>
+ps <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ps_ITS1_otu97_fungi_biosamples", BIOSAMPLE_SUFFIX, ".rds"))) |>
   subset_samples(sample_type %in% c("bagged_flower", "unbagged_flower"))
 
 ps_prev <- ps |>
@@ -33,8 +36,8 @@ ps_prev <- ps |>
     rowSums(otu_table(x) > 0) / nsamples(x) >= PREV_THRESHOLD, x
   ))()
 
-dist_list <- readRDS(here("results", "rds", "ITS1_otu97_dist_list.rds"))
-meta_list <- readRDS(here("results", "rds", "ITS1_otu97_meta_list.rds"))
+dist_list <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ITS1_otu97_dist_list", BIOSAMPLE_SUFFIX, ".rds")))
+meta_list <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ITS1_otu97_meta_list", BIOSAMPLE_SUFFIX, ".rds")))
 
 missing_keys <- setdiff(DIST_LEVELS, names(dist_list))
 if (length(missing_keys) > 0) {
@@ -62,9 +65,9 @@ if (length(missing_meta) > 0) {
 # Aitchison distances use all samples; rarefied distances (BC, Jaccard) use only
 # samples that survived rarefaction — panel n may differ from the first row.
 
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
 
-png(here("results", "figures", "09b_ITS1_pcoa_per_farm_shared_lim.png"),
+png(file.path(RESULTS_DIR, "figures", paste0("09b_ITS1_pcoa_per_farm_shared_lim", SET_TAG, ".png")),
     width = 20, height = 11, units = "in", res = 300)
 
 # mfrow: 4 distance rows × 7 farm columns

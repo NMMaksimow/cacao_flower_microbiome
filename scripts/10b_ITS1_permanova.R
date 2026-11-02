@@ -16,11 +16,14 @@ library(tidyverse)
 library(vegan)
 library(permute)   # how() for blocked permutations; preserves term names in adonis2
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
 # ---- 2. Load distance matrices -------------------------------------------
 # Computed and saved by 08b_ITS1_pcoa_global.R.
 # Re-run 08b if these files are missing or outdated.
-dist_list <- readRDS(here("results", "rds", "ITS1_otu97_dist_list.rds"))
-meta_list <- readRDS(here("results", "rds", "ITS1_otu97_meta_list.rds"))
+dist_list <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ITS1_otu97_dist_list", BIOSAMPLE_SUFFIX, ".rds")))
+meta_list <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ITS1_otu97_meta_list", BIOSAMPLE_SUFFIX, ".rds")))
 
 # Rarefaction settings saved by 08b; used in figure captions
 rarefy    <- attr(dist_list, "rarefy")
@@ -252,8 +255,8 @@ results_permdisp <- lapply(names(dist_list), \(dname) {
 }) |> bind_rows()
 
 # ---- 7. Visualisation ----------------------------------------------------
-dir.create(here("results", "tables"),  showWarnings = FALSE, recursive = TRUE)
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "tables"),  showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
 
 # Figure A: per-farm significance heatmap (farm × distance; fill = PERMANOVA R²)
 # Label = BH-adjusted p; "*" = p_adj < ALPHA.
@@ -297,7 +300,7 @@ p_farm <- heatmap_data |>
         # caption: left-aligned, smaller font
         plot.caption = element_text(hjust = 0, size = 7))
 
-ggsave(here("results", "figures", "10b_ITS1_perm_farm_heatmap.png"),
+ggsave(file.path(RESULTS_DIR, "figures", paste0("10b_ITS1_perm_farm_heatmap", SET_TAG, ".png")),
        plot = p_farm, width = 9, height = 5, dpi = 300)
 
 # Figure B: combined model R² bar chart (term × distance; one panel per distance)
@@ -341,18 +344,18 @@ p_comb <- results_combined |>
         axis.text.x  = element_text(angle = 30, hjust = 1),
         plot.caption = element_text(hjust = 0, size = 7))
 
-ggsave(here("results", "figures", "10b_ITS1_perm_combined_r2.png"),
+ggsave(file.path(RESULTS_DIR, "figures", paste0("10b_ITS1_perm_combined_r2", SET_TAG, ".png")),
        plot = p_comb, width = 12, height = 6, dpi = 300)
 
 # ---- 8. Save outputs -----------------------------------------------------
 write_csv(results_perm_farm,
-          here("results", "tables", "10b_ITS1_permanova_per_farm.csv"))
+          file.path(RESULTS_DIR, "tables", paste0("10b_ITS1_permanova_per_farm", SET_TAG, ".csv")))
 write_csv(results_combined,
-          here("results", "tables", "10b_ITS1_permanova_combined.csv"))
+          file.path(RESULTS_DIR, "tables", paste0("10b_ITS1_permanova_combined", SET_TAG, ".csv")))
 write_csv(results_permdisp,
-          here("results", "tables", "10b_ITS1_permdisp.csv"))
+          file.path(RESULTS_DIR, "tables", paste0("10b_ITS1_permdisp", SET_TAG, ".csv")))
 write_csv(results_permdisp_farm,
-          here("results", "tables", "10b_ITS1_permdisp_per_farm.csv"))
+          file.path(RESULTS_DIR, "tables", paste0("10b_ITS1_permdisp_per_farm", SET_TAG, ".csv")))
 
 cat("\nCombined PERMANOVA:\n")
 print(results_combined)

@@ -15,15 +15,18 @@ library(here)
 library(tidyverse)
 library(vegan)   # capscale(), ordiplot(), ordiellipse(), scores()
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
 # ---- 2. Load data --------------------------------------------------------
 # Only the CLR slice is needed from each marker's RDS; no phyloseq loading required.
-dist_list_16s <- readRDS(here("results", "rds", "16S_dist_list.rds"))
-meta_list_16s <- readRDS(here("results", "rds", "16S_meta_list.rds"))
+dist_list_16s <- readRDS(file.path(RESULTS_DIR, "rds", paste0("16S_dist_list", BIOSAMPLE_SUFFIX, ".rds")))
+meta_list_16s <- readRDS(file.path(RESULTS_DIR, "rds", paste0("16S_meta_list", BIOSAMPLE_SUFFIX, ".rds")))
 
-dist_list_its <- readRDS(here("results", "rds", "ITS1_otu97_dist_list.rds"))
-meta_list_its <- readRDS(here("results", "rds", "ITS1_otu97_meta_list.rds"))
+dist_list_its <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ITS1_otu97_dist_list", BIOSAMPLE_SUFFIX, ".rds")))
+meta_list_its <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ITS1_otu97_meta_list", BIOSAMPLE_SUFFIX, ".rds")))
 
-for (rds_name in c("16S_dist_list.rds", "ITS1_otu97_dist_list.rds")) {
+for (rds_name in c(paste0("16S_dist_list", BIOSAMPLE_SUFFIX, ".rds"), paste0("ITS1_otu97_dist_list", BIOSAMPLE_SUFFIX, ".rds"))) {
   obj  <- if (grepl("16S", rds_name)) dist_list_16s else dist_list_its
   label <- if (grepl("16S", rds_name)) "08a" else "08b"
   if (!DIST %in% names(obj))
@@ -43,9 +46,9 @@ m_its  <- meta_list_its[[DIST]]
 # (farm/management already visible in row 1 above each column).
 # Ellipses: kind="sd", conf=0.865 → 2-sigma, matches Python confidence_ellipse(n_std=2).
 
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
 
-png(here("results", "figures", "10d_16S_ITS1_CLR_pcoa_by_farm.png"),
+png(file.path(RESULTS_DIR, "figures", paste0("10d_16S_ITS1_CLR_pcoa_by_farm", SET_TAG, ".png")),
     width = 20, height = 9, units = "in", res = 300)
 
 # mfrow: 2 marker rows × 7 farm columns

@@ -43,29 +43,32 @@ library(vegan)
 library(ggrepel)    # non-overlapping labels for thin segments
 library(patchwork)  # combine panels A and B
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
 # ---- 2. Load CLR distances -----------------------------------------------
 # Computed by 08a/08b. Only the primary metric is used.
 clr <- names(MARKERS) |>
   set_names() |>
   lapply(\(mk) list(
-    d    = readRDS(here("results", "rds", paste0(MARKERS[[mk]], "_dist_list.rds")))[[DIST]],
-    meta = readRDS(here("results", "rds", paste0(MARKERS[[mk]], "_meta_list.rds")))[[DIST]]
+    d    = readRDS(file.path(RESULTS_DIR, "rds", paste0(MARKERS[[mk]], "_dist_list", BIOSAMPLE_SUFFIX, ".rds")))[[DIST]],
+    meta = readRDS(file.path(RESULTS_DIR, "rds", paste0(MARKERS[[mk]], "_meta_list", BIOSAMPLE_SUFFIX, ".rds")))[[DIST]]
   ))
 
 # ---- 3. Load test results from 10a/10b -----------------------------------
 # p-values come from the tree-level tests in 10a/10b, so the figure matches the
 # manuscript table. SumOfSqs is kept for the consistency check in section 4.
 tests <- names(MARKERS) |>
-  lapply(\(mk) read_csv(here("results", "tables",
-                             paste0(TABLE_PREFIX[[mk]], "_permanova_combined.csv")),
+  lapply(\(mk) read_csv(file.path(RESULTS_DIR, "tables",
+                             paste0(TABLE_PREFIX[[mk]], "_permanova_combined", SET_TAG, ".csv")),
                         show_col_types = FALSE) |>
            filter(distance == DIST, level %in% c("tree", "tree_x_treatment")) |>
            transmute(marker = mk, term, level, SS_centroid = SumOfSqs, p = `Pr(>F)`)) |>
   bind_rows()
 
 permdisp <- names(MARKERS) |>
-  lapply(\(mk) read_csv(here("results", "tables",
-                             paste0(TABLE_PREFIX[[mk]], "_permdisp.csv")),
+  lapply(\(mk) read_csv(file.path(RESULTS_DIR, "tables",
+                             paste0(TABLE_PREFIX[[mk]], "_permdisp", SET_TAG, ".csv")),
                         show_col_types = FALSE) |>
            filter(distance == DIST) |>
            mutate(marker = mk)) |>
@@ -118,8 +121,8 @@ disp <- names(MARKERS) |>
   bind_rows()
 
 # ---- 6. Figure -----------------------------------------------------------
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
-dir.create(here("results", "tables"),  showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "tables"),  showWarnings = FALSE, recursive = TRUE)
 
 # Panel A data: segment midpoints computed by hand so that small segments can be
 # labelled outside the bar. Stack starts from the bottom component (last level).
@@ -197,13 +200,13 @@ fig <- (p_bar + p_disp) +
     theme      = theme(plot.caption = element_text(hjust = 0, size = 7))
   )
 
-ggsave(here("results", "figures", "10c_16S_ITS1_CLR_global_permanova.png"),
+ggsave(file.path(RESULTS_DIR, "figures", paste0("10c_16S_ITS1_CLR_global_permanova", SET_TAG, ".png")),
        plot = fig, width = 12, height = 5.5, dpi = 300)
 
 # ---- 7. Save outputs -----------------------------------------------------
 partition |>
   mutate(component = COMPONENTS[term]) |>
   dplyr::select(marker, term, component, df, SS, proportion, p) |>
-  write_csv(here("results", "tables", "10c_16S_ITS1_CLR_variance_partition.csv"))
+  write_csv(file.path(RESULTS_DIR, "tables", paste0("10c_16S_ITS1_CLR_variance_partition", SET_TAG, ".csv")))
 
 message("Done. Figure and variance partition table saved.")

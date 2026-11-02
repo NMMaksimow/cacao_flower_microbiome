@@ -81,8 +81,11 @@ library(phyloseq)
 library(vegan)          # capscale(), vegdist(), scores(), ordiplot(), ordiellipse()
 library(zCompositions)  # cmultRepl() for multiplicative zero replacement (CLR pipeline)
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
 # ---- 2. Load & filter ----------------------------------------------------
-ps <- readRDS(here("results", "rds", "ps_16S_bacteria_biosamples.rds")) |>
+ps <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ps_16S_bacteria_biosamples", BIOSAMPLE_SUFFIX, ".rds"))) |>
   subset_samples(sample_type %in% c("bagged_flower", "unbagged_flower"))
 
 # Global prevalence filter: keep features present in >= 10% of all biosamples.
@@ -190,8 +193,8 @@ meta_list <- list(
   unifrac_u      = meta_rare
 )
 
-saveRDS(dist_list, here("results", "rds", "16S_dist_list.rds"))
-saveRDS(meta_list, here("results", "rds", "16S_meta_list.rds"))
+saveRDS(dist_list, file.path(RESULTS_DIR, "rds", paste0("16S_dist_list", BIOSAMPLE_SUFFIX, ".rds")))
+saveRDS(meta_list, file.path(RESULTS_DIR, "rds", paste0("16S_meta_list", BIOSAMPLE_SUFFIX, ".rds")))
 
 # ---- 4. Global PCoA — all samples across all distance metrics ------------
 # Layout: rows = distance metrics, columns = coloring variables.
@@ -202,7 +205,7 @@ saveRDS(meta_list, here("results", "rds", "16S_meta_list.rds"))
 #   - points-only for fungal_colonization_score (ordinal, 7 levels incl. NA)
 # Axis limits computed from the full ordination; consistent across colour panels in a row.
 
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
 
 n_rows <- length(DIST_LEVELS)
 n_cols <- length(COLOR_VARS)
@@ -211,7 +214,7 @@ n_cols <- length(COLOR_VARS)
 # Panel width ~4.2 in, panel height ~3.5 in + margins
 # oma[2] = 5 lines: left outer margin for vertical distance-metric row labels
 # oma[3] = 2.5 lines: top for overall title
-png(here("results", "figures", "08a_16S_pcoa_global.png"),
+png(file.path(RESULTS_DIR, "figures", paste0("08a_16S_pcoa_global", SET_TAG, ".png")),
     width = 26, height = 22, units = "in", res = 300)
 
 par(mfrow = c(n_rows, n_cols),

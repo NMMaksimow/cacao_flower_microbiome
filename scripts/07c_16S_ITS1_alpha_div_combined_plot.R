@@ -4,6 +4,9 @@ library(tidyverse)
 library(ggh4x)
 library(patchwork)
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
 # ---- Parameters ----
 FARM_LEVELS <- c("ib", "vr", "sa", "kk", "mt", "vi", "yb")
 
@@ -23,16 +26,16 @@ MGMT_LABELLER <- as_labeller(c(
 ))
 
 # ---- Load pre-computed data (produced by 07a / 07b) ----
-alpha_16S_10k  <- readRDS(here("results", "rds", "alpha_16S_10k_999iters_summary.rds"))
-alpha_ITS1_15k <- readRDS(here("results", "rds", "alpha_ITS1_otu97_15k_999iters_summary.rds"))
+alpha_16S_10k  <- readRDS(file.path(RESULTS_DIR, "rds", paste0("alpha_16S_10k_999iters_summary", BIOSAMPLE_SUFFIX, ".rds")))
+alpha_ITS1_15k <- readRDS(file.path(RESULTS_DIR, "rds", paste0("alpha_ITS1_otu97_15k_999iters_summary", BIOSAMPLE_SUFFIX, ".rds")))
 
 # Per-farm LMM results: cols farm, metric, estimate, se, t_value, p_raw, p_adj, stars
-lmm_16S_10k  <- read_csv(here("results", "tables", "07a_10k_lmm_per_farm.csv"),
+lmm_16S_10k  <- read_csv(file.path(RESULTS_DIR, "tables", paste0("07a_10k_lmm_per_farm", SET_TAG, ".csv")),
                           show_col_types = FALSE)
-lmm_ITS1_15k <- read_csv(here("results", "tables", "07b_15k_lmm_per_farm.csv"),
+lmm_ITS1_15k <- read_csv(file.path(RESULTS_DIR, "tables", paste0("07b_15k_lmm_per_farm", SET_TAG, ".csv")),
                           show_col_types = FALSE)
 
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
 
 ################################################################################
 #### Helpers ###################################################################
@@ -166,7 +169,7 @@ p_panel1 <- p_panel1 +
         caption  = "Farms ordered left to right: inside forest to full sun (deforestation gradient)"
     )
 
-ggsave(here("results", "figures", "07c_panel1_lmm_16S_ITS1.png"),
+ggsave(file.path(RESULTS_DIR, "figures", paste0("07c_panel1_lmm_16S_ITS1", SET_TAG, ".png")),
        plot = p_panel1, width = 20, height = 10, dpi = 300)
 
 ################################################################################
@@ -200,7 +203,7 @@ p_panel2 <- (
         caption  = "Farms ordered left to right: inside forest to full sun; management type in strip labels"
     )
 
-ggsave(here("results", "figures", "07c_panel2_pooled_16S_ITS1.png"),
+ggsave(file.path(RESULTS_DIR, "figures", paste0("07c_panel2_pooled_16S_ITS1", SET_TAG, ".png")),
        plot = p_panel2, width = 16, height = 10, dpi = 300)
 
 message("Done. Figures saved to results/figures/")

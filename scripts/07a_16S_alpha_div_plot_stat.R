@@ -11,6 +11,9 @@ library(ggh4x)
 library(patchwork)
 library(cowplot)
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
 # ---- Parameters ----
 # N_ITER and RAREFY_DEPTH* must match values used in 07a_16S_alpha_div_rarefaction.R
 N_ITER           <- 999
@@ -26,10 +29,10 @@ SAMPLE_TYPE_COLOURS <- c(bagged_flower = "#4C72B0", unbagged_flower = "#DD8452")
 SAMPLE_TYPE_LABELS  <- c(bagged_flower = "bagged", unbagged_flower = "unbagged")
 
 # ---- Input: load all four RDS outputs from rarefaction script ----
-alpha_iters_2k    <- readRDS(here("results", "rds", "alpha_16S_2k_999iters.rds"))
-alpha_summary_2k  <- readRDS(here("results", "rds", "alpha_16S_2k_999iters_summary.rds"))
-alpha_iters_10k   <- readRDS(here("results", "rds", "alpha_16S_10k_999iters.rds"))
-alpha_summary_10k <- readRDS(here("results", "rds", "alpha_16S_10k_999iters_summary.rds"))
+alpha_iters_2k    <- readRDS(file.path(RESULTS_DIR, "rds", paste0("alpha_16S_2k_999iters", BIOSAMPLE_SUFFIX, ".rds")))
+alpha_summary_2k  <- readRDS(file.path(RESULTS_DIR, "rds", paste0("alpha_16S_2k_999iters_summary", BIOSAMPLE_SUFFIX, ".rds")))
+alpha_iters_10k   <- readRDS(file.path(RESULTS_DIR, "rds", paste0("alpha_16S_10k_999iters", BIOSAMPLE_SUFFIX, ".rds")))
+alpha_summary_10k <- readRDS(file.path(RESULTS_DIR, "rds", paste0("alpha_16S_10k_999iters_summary", BIOSAMPLE_SUFFIX, ".rds")))
 
 ################################################################################
 #### Shared helpers ############################################################
@@ -789,7 +792,7 @@ icc_df_2k <- expand.grid(
     }))
 
 print(icc_df_2k)
-write_csv(icc_df_2k, here("results", "tables", "07a_2k_icc_within_tree.csv"))
+write_csv(icc_df_2k, file.path(RESULTS_DIR, "tables", paste0("07a_2k_icc_within_tree", SET_TAG, ".csv")))
 
 ################################################################################
 #### 9b. Per-farm LMM: bagged vs unbagged at flower level (1 | tree_id) ########
@@ -856,7 +859,7 @@ lmm_farm_df_2k <- expand.grid(
         )
     )
 
-write_csv(lmm_farm_df_2k, here("results", "tables", "07a_2k_lmm_per_farm.csv"))
+write_csv(lmm_farm_df_2k, file.path(RESULTS_DIR, "tables", paste0("07a_2k_lmm_per_farm", SET_TAG, ".csv")))
 
 # Star y-position: 5% above max flower-level value per farm × metric
 star_pos_lmm_2k <- alpha_summary_2k |>
@@ -967,7 +970,7 @@ lmm_farm_df_10k <- expand.grid(
         )
     )
 
-write_csv(lmm_farm_df_10k, here("results", "tables", "07a_10k_lmm_per_farm.csv"))
+write_csv(lmm_farm_df_10k, file.path(RESULTS_DIR, "tables", paste0("07a_10k_lmm_per_farm", SET_TAG, ".csv")))
 
 star_pos_lmm_10k <- alpha_summary_10k |>
     pivot_longer(cols = all_of(METRICS_LMM_FARM), names_to = "metric", values_to = "value") |>
@@ -1157,40 +1160,40 @@ p_lmm_farm_10k <- p_lmm_farm_10k + ggh4x::facetted_pos_scales(y = y_scales_lmm_1
 p_conv_comb_16S <- (p_conv_2k | p_conv_10k) +
     plot_annotation(title = "Rarefaction convergence diagnostic: 2k (left) vs 10k (right) — 16S")
 
-ggsave(here("results", "figures", "07a_conv_depth_comparison.png"),
+ggsave(file.path(RESULTS_DIR, "figures", paste0("07a_conv_depth_comparison", SET_TAG, ".png")),
        plot = p_conv_comb_16S, width = 20, height = 8, dpi = 300)
 
 # Hill diversity profile: side by side
 p_hill_comb_16S <- (p_hill_2k | p_hill_10k) +
     plot_annotation(title = "Hill diversity profile: 2k (left) vs 10k (right) — 16S")
 
-ggsave(here("results", "figures", "07a_hill_depth_comparison.png"),
+ggsave(file.path(RESULTS_DIR, "figures", paste0("07a_hill_depth_comparison", SET_TAG, ".png")),
        plot = p_hill_comb_16S, width = 18, height = 5, dpi = 300)
 
 # Farm management boxplots: stacked
 p_farm_comb_16S <- (p_farm_mgmt_2k / p_farm_mgmt_10k) +
     plot_annotation(title = "Alpha diversity by farm — 2k (top) vs 10k (bottom) — 16S")
 
-ggsave(here("results", "figures", "07a_farm_mgmt_depth_comparison.png"),
+ggsave(file.path(RESULTS_DIR, "figures", paste0("07a_farm_mgmt_depth_comparison", SET_TAG, ".png")),
        plot = p_farm_comb_16S, width = 17.5, height = 12, dpi = 300)
 
 # Marginal means — sample_type: stacked
 p_treat_comb_16S <- (p_treat_2k / p_treat_10k) +
     plot_annotation(title = "Marginal means (sample_type): 2k (top) vs 10k (bottom) — 16S")
 
-ggsave(here("results", "figures", "07a_marginal_treatment_depth_comparison.png"),
+ggsave(file.path(RESULTS_DIR, "figures", paste0("07a_marginal_treatment_depth_comparison", SET_TAG, ".png")),
        plot = p_treat_comb_16S, width = 18, height = 10, dpi = 300)
 
 # Overall sample_type boxplots (all farms pooled): stacked
 p_sample_type_comb_16S <- (p_sample_type_2k / p_sample_type_10k) +
     plot_annotation(title = "Alpha diversity (all farms): 2k (top) vs 10k (bottom) — 16S")
 
-ggsave(here("results", "figures", "07a_sample_type_depth_comparison.png"),
+ggsave(file.path(RESULTS_DIR, "figures", paste0("07a_sample_type_depth_comparison", SET_TAG, ".png")),
        plot = p_sample_type_comb_16S, width = 16, height = 10, dpi = 300)
 
 # LMM per-farm (bagged vs unbagged): stacked
 p_lmm_farm_comb_16S <- (p_lmm_farm_2k / p_lmm_farm_10k) +
     plot_annotation(title = "Per-farm LMM alpha diversity (bagged vs unbagged): 2k (top) vs 10k (bottom) — 16S")
 
-ggsave(here("results", "figures", "07a_lmm_farm_depth_comparison.png"),
+ggsave(file.path(RESULTS_DIR, "figures", paste0("07a_lmm_farm_depth_comparison", SET_TAG, ".png")),
        plot = p_lmm_farm_comb_16S, width = 18, height = 10, dpi = 300)

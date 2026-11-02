@@ -11,6 +11,9 @@ library(ggh4x)
 library(patchwork)
 library(cowplot)
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
 # ---- Parameters ----
 # N_ITER and RAREFY_DEPTH* must match values used in 07b_ITS1_alpha_div_rarefaction.R
 N_ITER           <- 999
@@ -26,16 +29,10 @@ SAMPLE_TYPE_COLOURS <- c(bagged_flower = "#4C72B0", unbagged_flower = "#DD8452")
 SAMPLE_TYPE_LABELS  <- c(bagged_flower = "bagged", unbagged_flower = "unbagged")
 
 # ---- Input: HPC run (no Chao1) ----
-alpha_iters_5k    <- readRDS(here("results", "rds", "alpha_ITS1_otu97_5k_999iters.rds"))
-alpha_summary_5k  <- readRDS(here("results", "rds", "alpha_ITS1_otu97_5k_999iters_summary.rds"))
-alpha_iters_15k   <- readRDS(here("results", "rds", "alpha_ITS1_otu97_15k_999iters.rds"))
-alpha_summary_15k <- readRDS(here("results", "rds", "alpha_ITS1_otu97_15k_999iters_summary.rds"))
-
-# ---- Local-run RDS (contain Chao1; loaded for reference, not used in plots or models) ----
-alpha_iters_5k_local    <- readRDS(here("results", "rds", "alpha_ITS1_otu97_5k_999iters_local_run.rds"))
-alpha_summary_5k_local  <- readRDS(here("results", "rds", "alpha_ITS1_otu97_5k_999iters_summary_local_run.rds"))
-alpha_iters_15k_local   <- readRDS(here("results", "rds", "alpha_ITS1_otu97_15k_999iters_local_run.rds"))
-alpha_summary_15k_local <- readRDS(here("results", "rds", "alpha_ITS1_otu97_15k_999iters_summary_local_run.rds"))
+alpha_iters_5k    <- readRDS(file.path(RESULTS_DIR, "rds", paste0("alpha_ITS1_otu97_5k_999iters", BIOSAMPLE_SUFFIX, ".rds")))
+alpha_summary_5k  <- readRDS(file.path(RESULTS_DIR, "rds", paste0("alpha_ITS1_otu97_5k_999iters_summary", BIOSAMPLE_SUFFIX, ".rds")))
+alpha_iters_15k   <- readRDS(file.path(RESULTS_DIR, "rds", paste0("alpha_ITS1_otu97_15k_999iters", BIOSAMPLE_SUFFIX, ".rds")))
+alpha_summary_15k <- readRDS(file.path(RESULTS_DIR, "rds", paste0("alpha_ITS1_otu97_15k_999iters_summary", BIOSAMPLE_SUFFIX, ".rds")))
 
 ################################################################################
 #### Shared helpers ############################################################
@@ -737,7 +734,7 @@ icc_df_5k <- expand.grid(
     }))
 
 print(icc_df_5k)
-write_csv(icc_df_5k, here("results", "tables", "07b_5k_icc_within_tree.csv"))
+write_csv(icc_df_5k, file.path(RESULTS_DIR, "tables", paste0("07b_5k_icc_within_tree", SET_TAG, ".csv")))
 
 ################################################################################
 #### 9b. Per-farm LMM: bagged vs unbagged at flower level (1 | tree_id) ########
@@ -802,7 +799,7 @@ lmm_farm_df_5k <- expand.grid(
         )
     )
 
-write_csv(lmm_farm_df_5k, here("results", "tables", "07b_5k_lmm_per_farm.csv"))
+write_csv(lmm_farm_df_5k, file.path(RESULTS_DIR, "tables", paste0("07b_5k_lmm_per_farm", SET_TAG, ".csv")))
 
 # Star y-position: 5% above max flower-level value per farm × metric
 star_pos_lmm_5k <- alpha_summary_5k |>
@@ -913,7 +910,7 @@ lmm_farm_df_15k <- expand.grid(
         )
     )
 
-write_csv(lmm_farm_df_15k, here("results", "tables", "07b_15k_lmm_per_farm.csv"))
+write_csv(lmm_farm_df_15k, file.path(RESULTS_DIR, "tables", paste0("07b_15k_lmm_per_farm", SET_TAG, ".csv")))
 
 star_pos_lmm_15k <- alpha_summary_15k |>
     pivot_longer(cols = all_of(METRICS_LMM_FARM), names_to = "metric", values_to = "value") |>
@@ -1098,40 +1095,40 @@ p_lmm_farm_15k <- p_lmm_farm_15k + ggh4x::facetted_pos_scales(y = y_scales_lmm_I
 p_conv_comb_ITS1 <- (p_conv_5k | p_conv_15k) +
     plot_annotation(title = "Rarefaction convergence diagnostic: 5k (left) vs 15k (right) — ITS1 OTU97")
 
-ggsave(here("results", "figures", "07b_conv_depth_comparison.png"),
+ggsave(file.path(RESULTS_DIR, "figures", paste0("07b_conv_depth_comparison", SET_TAG, ".png")),
        plot = p_conv_comb_ITS1, width = 20, height = 8, dpi = 300)
 
 # Hill diversity profile: side by side
 p_hill_comb_ITS1 <- (p_hill_5k | p_hill_15k) +
     plot_annotation(title = "Hill diversity profile: 5k (left) vs 15k (right) — ITS1 OTU97")
 
-ggsave(here("results", "figures", "07b_hill_depth_comparison.png"),
+ggsave(file.path(RESULTS_DIR, "figures", paste0("07b_hill_depth_comparison", SET_TAG, ".png")),
        plot = p_hill_comb_ITS1, width = 18, height = 5, dpi = 300)
 
 # Farm management boxplots: stacked
 p_farm_comb_ITS1 <- (p_farm_mgmt_5k / p_farm_mgmt_15k) +
     plot_annotation(title = "Alpha diversity by farm — 5k (top) vs 15k (bottom) — ITS1 OTU97")
 
-ggsave(here("results", "figures", "07b_farm_mgmt_depth_comparison.png"),
+ggsave(file.path(RESULTS_DIR, "figures", paste0("07b_farm_mgmt_depth_comparison", SET_TAG, ".png")),
        plot = p_farm_comb_ITS1, width = 14, height = 12, dpi = 300)
 
 # Marginal means — sample_type: stacked
 p_treat_comb_ITS1 <- (p_treat_5k / p_treat_15k) +
     plot_annotation(title = "Marginal means (sample_type): 5k (top) vs 15k (bottom) — ITS1 OTU97")
 
-ggsave(here("results", "figures", "07b_marginal_treatment_depth_comparison.png"),
+ggsave(file.path(RESULTS_DIR, "figures", paste0("07b_marginal_treatment_depth_comparison", SET_TAG, ".png")),
        plot = p_treat_comb_ITS1, width = 14, height = 10, dpi = 300)
 
 # Overall sample_type boxplots (all farms pooled): stacked
 p_sample_type_comb_ITS1 <- (p_sample_type_5k / p_sample_type_15k) +
     plot_annotation(title = "Alpha diversity (all farms): 5k (top) vs 15k (bottom) — ITS1 OTU97")
 
-ggsave(here("results", "figures", "07b_sample_type_depth_comparison.png"),
+ggsave(file.path(RESULTS_DIR, "figures", paste0("07b_sample_type_depth_comparison", SET_TAG, ".png")),
        plot = p_sample_type_comb_ITS1, width = 16, height = 10, dpi = 300)
 
 # LMM per-farm (bagged vs unbagged): stacked
 p_lmm_farm_comb_ITS1 <- (p_lmm_farm_5k / p_lmm_farm_15k) +
     plot_annotation(title = "Per-farm LMM alpha diversity (bagged vs unbagged): 5k (top) vs 15k (bottom) — ITS1 OTU97")
 
-ggsave(here("results", "figures", "07b_lmm_farm_depth_comparison.png"),
+ggsave(file.path(RESULTS_DIR, "figures", paste0("07b_lmm_farm_depth_comparison", SET_TAG, ".png")),
        plot = p_lmm_farm_comb_ITS1, width = 14, height = 10, dpi = 300)
