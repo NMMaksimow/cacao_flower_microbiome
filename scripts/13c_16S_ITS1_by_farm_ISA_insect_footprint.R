@@ -40,8 +40,11 @@ library(indicspecies)
 library(patchwork)
 library(vegan)
 
-ps_16s <- readRDS(here("results", "rds", "ps_16S_bacteria_biosamples.rds"))
-ps_its <- readRDS(here("results", "rds", "ps_ITS1_otu97_fungi_biosamples.rds"))
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
+ps_16s <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ps_16S_bacteria_biosamples", BIOSAMPLE_SUFFIX, ".rds")))
+ps_its <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ps_ITS1_otu97_fungi_biosamples", BIOSAMPLE_SUFFIX, ".rds")))
 
 cat(sprintf("16S loaded:  %d taxa x %d samples\n", ntaxa(ps_16s), nsamples(ps_16s)))
 cat(sprintf("ITS1 loaded: %d taxa x %d samples\n", ntaxa(ps_its), nsamples(ps_its)))
@@ -282,8 +285,8 @@ for (farm in FARM_LEVELS) {
 # ── 4. Save intermediate RDS before figure assembly ───────────────────────────
 
 cat("\n── 4. Saving intermediate RDS ───────────────────────────────────────────\n")
-dir.create(here("results", "rds"), showWarnings = FALSE, recursive = TRUE)
-saveRDS(results, here("results", "rds", "13c_ISA_by_farm_results.rds"))
+dir.create(file.path(RESULTS_DIR, "rds"), showWarnings = FALSE, recursive = TRUE)
+saveRDS(results, file.path(RESULTS_DIR, "rds", paste0("13c_ISA_by_farm_results", BIOSAMPLE_SUFFIX, ".rds")))
 cat("  Saved: 13c_ISA_by_farm_results.rds\n")
 
 # ── 5. Build per-farm panels ──────────────────────────────────────────────────
@@ -345,11 +348,11 @@ fig <- (row_16s / row_its) +
 
 cat("\n── 7. Saving outputs ────────────────────────────────────────────────────\n")
 
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
-dir.create(here("results", "tables"),  showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "tables"),  showWarnings = FALSE, recursive = TRUE)
 
 ggsave(
-        here("results", "figures", "13c_ISA_insect_footprint_by_farm.png"),
+        file.path(RESULTS_DIR, "figures", paste0("13c_ISA_insect_footprint_by_farm", SET_TAG, ".png")),
         plot   = fig,
         width  = 20,   # 7 columns x ~2.9 inches each
         height = 10,   # 2 rows x 5 inches each
@@ -377,8 +380,8 @@ if (nrow(csv_rows) > 0) {
                                         "Family", "Genus", "Species"))
                 ) |>
                 dplyr::arrange(marker, farm, p_adj) |>
-                readr::write_csv(here("results", "tables",
-                                      "13c_ISA_insect_footprint_by_farm.csv"))
+                readr::write_csv(file.path(RESULTS_DIR, "tables",
+                                      paste0("13c_ISA_insect_footprint_by_farm", SET_TAG, ".csv")))
         cat("  Saved: 13c_ISA_insect_footprint_by_farm.csv\n")
 } else {
         cat("  No significant indicators across all farms and markers.\n")

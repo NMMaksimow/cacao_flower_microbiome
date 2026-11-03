@@ -37,10 +37,23 @@
 
 # Genera with a documented insect-symbiont or insect-gut association. Reproductive
 # manipulators and obligate endosymbionts first, then bee/flower-visitor gut taxa.
-GUILD_GENERA <- c("Wolbachia", "Spiroplasma", "Rickettsia", "Arsenophonus",
-                  "Cardinium", "Sodalis", "Buchnera",
-                  "Serratia", "Lactobacillus", "Fructobacillus",
-                  "Gilliamella", "Snodgrassella", "Orbus", "Apibacter", "Bartonella")
+# Names per reference (selected by CFM_VERSION after utils_paths.R is sourced).
+# SILVA 144 (v2) renames: Wolbachia -> Candidatus_Neowolbachia, Arsenophonus ->
+# Candidatus_Phloeobacter, Candidatus_Cardinium -> Candidatus_Paenicardinium;
+# Lactobacillus is split into eight genera, all kept (the same ASVs as the v1 genus).
+GUILD_GENERA_BY_VERSION <- list(
+        v1 = c("Wolbachia", "Spiroplasma", "Rickettsia", "Arsenophonus",
+               "Cardinium", "Sodalis", "Buchnera",
+               "Serratia", "Lactobacillus", "Fructobacillus",
+               "Gilliamella", "Snodgrassella", "Orbus", "Apibacter", "Bartonella"),
+        v2 = c("Candidatus_Neowolbachia", "Spiroplasma", "Rickettsia",
+               "Candidatus_Phloeobacter", "Candidatus_Paenicardinium", "Sodalis", "Buchnera",
+               "Serratia", "Lactobacillus", "Limosilactobacillus", "Acetilactobacillus",
+               "Ligilactobacillus", "Lactiplantibacillus", "Lacticaseibacillus",
+               "Levilactobacillus", "Companilactobacillus", "Fructobacillus",
+               "Gilliamella", "Snodgrassella", "Orbus", "Apibacter", "Bartonella")
+)
+WOLBACHIA_BY_VERSION <- c(v1 = "Wolbachia", v2 = "Candidatus_Neowolbachia")
 
 # Detection threshold. Deliberately looser than the 10% prevalence used elsewhere in
 # the project: here rarity IS the phenomenon, and a 10% cut (>= 30 of 294 flowers)
@@ -60,11 +73,16 @@ library(tidyverse)
 library(phyloseq)
 library(patchwork)
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+GUILD_GENERA    <- GUILD_GENERA_BY_VERSION[[CFM_VERSION]]
+WOLBACHIA_GENUS <- WOLBACHIA_BY_VERSION[[CFM_VERSION]]
+
 # Taxonomy labels: deepest assigned rank, prefix kept, shared with 16a-18b.
 source(here("scripts", "utils_tax_label.R"))
 
-ps      <- readRDS(here("results", "rds", "ps_16S_bacteria_biosamples.rds"))
-ps_pre  <- readRDS(here("results", "rds", "ps_16S_raw.rds"))
+ps      <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ps_16S_bacteria_biosamples", BIOSAMPLE_SUFFIX, ".rds")))
+ps_pre  <- readRDS(file.path(RESULTS_DIR, "rds", "ps_16S_raw.rds"))
 
 cat(sprintf("Loaded: %d taxa x %d samples (post-decontam)\n", ntaxa(ps), nsamples(ps)))
 
@@ -225,7 +243,7 @@ for (i in seq_len(nrow(res_genus)))
 
 cat("\n── 7. Wolbachia ASVs ────────────────────────────────────────────────────\n")
 
-wol <- res$taxon[grepl("Wolbachia", res$genus)]
+wol <- res$taxon[grepl(WOLBACHIA_GENUS, res$genus)]
 if (length(wol) == 2) {
         cat(sprintf("  co-occurrence: %d flowers carry both, %d carry only one\n",
                     sum(det[wol[1], ] & det[wol[2], ]),
@@ -347,10 +365,10 @@ fig <- (p_asv / p_gen) +
 
 cat("\n── 10. Saving outputs ───────────────────────────────────────────────────\n")
 
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
-dir.create(here("results", "tables"),  showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "tables"),  showWarnings = FALSE, recursive = TRUE)
 
-ggsave(here("results", "figures", "16d_insect_symbiont_prevalence.png"),
+ggsave(file.path(RESULTS_DIR, "figures", paste0("16d_insect_symbiont_prevalence", SET_TAG, ".png")),
        plot = fig, width = 9, height = 7, dpi = 300)
 cat("  Saved: 16d_insect_symbiont_prevalence.png\n")
 
@@ -360,8 +378,8 @@ res |>
                       p_perm, q_perm, signif, or_bagged,
                       n_controls, sh_bagged, sh_unbag) |>
         dplyr::arrange(p_perm) |>
-        readr::write_csv(here("results", "tables",
-                              "16d_insect_symbiont_prevalence.csv"))
+        readr::write_csv(file.path(RESULTS_DIR, "tables",
+                              paste0("16d_insect_symbiont_prevalence", SET_TAG, ".csv")))
 cat("  Saved: 16d_insect_symbiont_prevalence.csv\n")
 
 cat(sprintf("\n16d done. %d of %d guild ASVs differ in detection (BH q < %.2f).\n",

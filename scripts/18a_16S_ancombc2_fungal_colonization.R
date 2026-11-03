@@ -32,11 +32,14 @@ library(phyloseq)
 library(ANCOMBC)
 library(ggrepel)
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
 # Taxonomy labels: deepest assigned rank, prefix kept, shared with the
 # other ANCOM-BC2 scripts so every figure names a taxon the same way.
 source(here("scripts", "utils_tax_label.R"))
 
-ps_raw <- readRDS(here("results", "rds", "ps_16S_bacteria_biosamples.rds"))
+ps_raw <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ps_16S_bacteria_biosamples", BIOSAMPLE_SUFFIX, ".rds")))
 
 cat(sprintf("Loaded: %d taxa x %d samples\n", ntaxa(ps_raw), nsamples(ps_raw)))
 
@@ -221,11 +224,11 @@ p <- plot_volcano(
 
 cat("\n── 6. Saving outputs ────────────────────────────────────────────────────\n")
 
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
-dir.create(here("results", "tables"),  showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "tables"),  showWarnings = FALSE, recursive = TRUE)
 
 ggsave(
-        here("results", "figures", "18a_ancombc2_fungal_colonization.png"),
+        file.path(RESULTS_DIR, "figures", paste0("18a_ancombc2_fungal_colonization", SET_TAG, ".png")),
         plot   = p,
         width  = 10,
         height = 7,
@@ -241,8 +244,8 @@ res |>
                       passed_ss = dplyr::all_of(ss_col),    # survived pseudo-count check
                       diff      = dplyr::all_of(diff_col)) |>  # both -- used for figures
         dplyr::arrange(q) |>
-        readr::write_csv(here("results", "tables",
-                              "18a_ancombc2_fungal_colonization.csv"))
+        readr::write_csv(file.path(RESULTS_DIR, "tables",
+                              paste0("18a_ancombc2_fungal_colonization", SET_TAG, ".csv")))
 cat("  Saved: 18a_ancombc2_fungal_colonization.csv\n")
 
 cat(sprintf("\n18a done. %d significant taxa (FDR < %.2f + sensitivity filter).\n",

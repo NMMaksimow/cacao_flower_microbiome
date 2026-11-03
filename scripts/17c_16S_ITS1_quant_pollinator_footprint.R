@@ -48,12 +48,15 @@ library(ANCOMBC)
 library(ggrepel)
 library(patchwork)
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
 # Taxonomy labels: deepest assigned rank, prefix kept, shared with the
 # other ANCOM-BC2 scripts so every figure names a taxon the same way.
 source(here("scripts", "utils_tax_label.R"))
 
-ps_16s <- readRDS(here("results", "rds", "ps_16S_bacteria_biosamples.rds"))
-ps_its <- readRDS(here("results", "rds", "ps_ITS1_otu97_fungi_biosamples.rds"))
+ps_16s <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ps_16S_bacteria_biosamples", BIOSAMPLE_SUFFIX, ".rds")))
+ps_its <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ps_ITS1_otu97_fungi_biosamples", BIOSAMPLE_SUFFIX, ".rds")))
 
 cat(sprintf("16S loaded:  %d taxa x %d samples\n", ntaxa(ps_16s), nsamples(ps_16s)))
 cat(sprintf("ITS1 loaded: %d taxa x %d samples\n", ntaxa(ps_its), nsamples(ps_its)))
@@ -488,11 +491,11 @@ fig_scatter_its <- plot_scatter_panels(scatter_its)
 
 cat("\n── 8. Saving outputs ────────────────────────────────────────────────────\n")
 
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
-dir.create(here("results", "tables"),  showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "tables"),  showWarnings = FALSE, recursive = TRUE)
 
 ggsave(
-        here("results", "figures", "17c_quant_pollinator_volcano.png"),
+        file.path(RESULTS_DIR, "figures", paste0("17c_quant_pollinator_volcano", SET_TAG, ".png")),
         plot   = fig_volcano,
         width  = 10,
         height = 12,   # 2 panels × 6 in each
@@ -502,7 +505,7 @@ cat("  Saved: 17c_quant_pollinator_volcano.png\n")
 
 if (!is.null(fig_scatter_16s)) {
         ggsave(
-                here("results", "figures", "17c_quant_pollinator_scatter_16S.png"),
+                file.path(RESULTS_DIR, "figures", paste0("17c_quant_pollinator_scatter_16S", SET_TAG, ".png")),
                 plot   = fig_scatter_16s,
                 width  = 12,
                 height = 8,
@@ -515,7 +518,7 @@ if (!is.null(fig_scatter_16s)) {
 
 if (!is.null(fig_scatter_its)) {
         ggsave(
-                here("results", "figures", "17c_quant_pollinator_scatter_ITS1.png"),
+                file.path(RESULTS_DIR, "figures", paste0("17c_quant_pollinator_scatter_ITS1", SET_TAG, ".png")),
                 plot   = fig_scatter_its,
                 width  = 12,
                 height = 8,
@@ -527,7 +530,7 @@ if (!is.null(fig_scatter_its)) {
 }
 
 ggsave(
-        here("results", "figures", "17c_quant_pollinator_sensitivity.png"),
+        file.path(RESULTS_DIR, "figures", paste0("17c_quant_pollinator_sensitivity", SET_TAG, ".png")),
         plot   = fig_sens,
         width  = 11,
         height = 6,
@@ -575,8 +578,8 @@ if (length(csv_rows) > 0) {
                                                slope_trim, q_trim, diff_trim, outcome),
                                  by = c("marker", "taxon")) |>
                 dplyr::arrange(marker, q) |>
-                readr::write_csv(here("results", "tables",
-                                      "17c_quant_pollinator_footprint.csv"))
+                readr::write_csv(file.path(RESULTS_DIR, "tables",
+                                      paste0("17c_quant_pollinator_footprint", SET_TAG, ".csv")))
         cat("  Saved: 17c_quant_pollinator_footprint.csv\n")
 } else {
         cat("  No results to save.\n")

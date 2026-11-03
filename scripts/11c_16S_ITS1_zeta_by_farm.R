@@ -16,9 +16,12 @@ library(here)
 library(tidyverse)
 library(patchwork)
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
 # ---- 2. Load RDS results -------------------------------------------------
-zeta_16s <- readRDS(here("results", "rds", "zeta_16S_by_farm.rds"))
-zeta_its <- readRDS(here("results", "rds", "zeta_ITS1_by_farm.rds"))
+zeta_16s <- readRDS(file.path(RESULTS_DIR, "rds", paste0("zeta_16S_by_farm", BIOSAMPLE_SUFFIX, ".rds")))
+zeta_its <- readRDS(file.path(RESULTS_DIR, "rds", paste0("zeta_ITS1_by_farm", BIOSAMPLE_SUFFIX, ".rds")))
 
 # ---- 3. Flatten to tidy tibbles ------------------------------------------
 # zeta_results[[farm]][[group]] stores a zetadiv object with:
@@ -83,14 +86,14 @@ run_model_fits <- function(zeta_list, farm_levels) {
   }))
 }
 
-dir.create(here("results", "tables"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "tables"), showWarnings = FALSE, recursive = TRUE)
 
 fits_16s <- run_model_fits(zeta_16s, FARM_LEVELS)
-write.csv(fits_16s, here("results", "tables", "11c_16S_zeta_model_fits.csv"),
+write.csv(fits_16s, file.path(RESULTS_DIR, "tables", paste0("11c_16S_zeta_model_fits", SET_TAG, ".csv")),
           row.names = FALSE)
 
 fits_its <- run_model_fits(zeta_its, FARM_LEVELS)
-write.csv(fits_its, here("results", "tables", "11c_ITS1_zeta_model_fits.csv"),
+write.csv(fits_its, file.path(RESULTS_DIR, "tables", paste0("11c_ITS1_zeta_model_fits", SET_TAG, ".csv")),
           row.names = FALSE)
 
 message("Model fit tables saved to results/tables/")
@@ -181,12 +184,12 @@ p_final <- (p_16s / p_its) +
   )
 
 # ---- 7. Save figure ------------------------------------------------------
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
 
 # Width 20 in × 7 farms works well; height 7 in gives each row ~3.5 in.
 # Increase height (e.g. 8) if y-axis labels or tick numbers feel crowded.
 ggsave(
-  here("results", "figures", "11c_16S_ITS1_zeta_by_farm.png"),
+  file.path(RESULTS_DIR, "figures", paste0("11c_16S_ITS1_zeta_by_farm", SET_TAG, ".png")),
   plot   = p_final,
   width  = 20,
   height = 7,

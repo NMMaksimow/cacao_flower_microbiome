@@ -17,11 +17,14 @@ library(tibble)
 library(tidyverse)
 library(patchwork)
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
 # ---- 2. Load phyloseq objects --------------------------------------------
-ps_16s <- readRDS(here("results", "rds", "ps_16S_bacteria_biosamples.rds")) |>
+ps_16s <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ps_16S_bacteria_biosamples", BIOSAMPLE_SUFFIX, ".rds"))) |>
   subset_samples(sample_type %in% c("bagged_flower", "unbagged_flower"))
 
-ps_its <- readRDS(here("results", "rds", "ps_ITS1_otu97_fungi_biosamples.rds")) |>
+ps_its <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ps_ITS1_otu97_fungi_biosamples", BIOSAMPLE_SUFFIX, ".rds"))) |>
   subset_samples(sample_type %in% c("bagged_flower", "unbagged_flower"))
 
 # ---- 3. Aggregation helper -----------------------------------------------
@@ -206,11 +209,11 @@ p_final <- (p_16s / p_its) +
     legend.title    = element_text(size = 9, face = "bold")
   )
 
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
 
 # Width 10 in: no farm facets, figure is narrower than 11c
 ggsave(
-  here("results", "figures", "12_16S_ITS1_zeta_grain.png"),
+  file.path(RESULTS_DIR, "figures", paste0("12_16S_ITS1_zeta_grain", SET_TAG, ".png")),
   plot   = p_final,
   width  = 10,
   height = 7,

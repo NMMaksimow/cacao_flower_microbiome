@@ -43,7 +43,10 @@ library(indicspecies)
 library(patchwork)
 library(vegan)
 
-ps_ITS1 <- readRDS(here("results", "rds", "ps_ITS1_otu97_fungi_biosamples.rds"))
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
+ps_ITS1 <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ps_ITS1_otu97_fungi_biosamples", BIOSAMPLE_SUFFIX, ".rds")))
 
 cat(sprintf("Loaded phyloseq: %d taxa x %d samples\n",
             ntaxa(ps_ITS1), nsamples(ps_ITS1)))
@@ -486,11 +489,11 @@ fig <- (p_high / p_low / p_unp) +
 
 cat("\n── 5. Saving outputs ────────────────────────────────────────────────────\n")
 
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
-dir.create(here("results", "tables"),  showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "tables"),  showWarnings = FALSE, recursive = TRUE)
 
 ggsave(
-        here("results", "figures", "14b_ISA_pollinator_footprint.png"),
+        file.path(RESULTS_DIR, "figures", paste0("14b_ISA_pollinator_footprint", SET_TAG, ".png")),
         plot   = fig,
         width  = 12,
         height = max(6, (n_hp + n_lp + n_unp) * 0.6 + 3),
@@ -504,8 +507,8 @@ if (nrow(hits_bvu) > 0) {
                               dplyr::starts_with("prev_"),
                               Kingdom:Species,
                               chi_p, pct_dominant_farm, farm_confounded) |>
-                readr::write_csv(here("results", "tables",
-                                      "14b_ISA_pollinator_footprint.csv"))
+                readr::write_csv(file.path(RESULTS_DIR, "tables",
+                                      paste0("14b_ISA_pollinator_footprint", SET_TAG, ".csv")))
         cat("  Saved: 14b_ISA_pollinator_footprint.csv\n")
 }
 

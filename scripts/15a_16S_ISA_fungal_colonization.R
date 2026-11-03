@@ -41,7 +41,10 @@ library(indicspecies)
 library(patchwork)
 library(vegan)
 
-ps_16S <- readRDS(here("results", "rds", "ps_16S_bacteria_biosamples.rds"))
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
+ps_16S <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ps_16S_bacteria_biosamples", BIOSAMPLE_SUFFIX, ".rds")))
 
 cat(sprintf("Loaded phyloseq: %d taxa x %d samples\n",
             ntaxa(ps_16S), nsamples(ps_16S)))
@@ -466,11 +469,11 @@ fig <- (p_high / p_low) +
 
 cat("\n── 5. Saving outputs ────────────────────────────────────────────────────\n")
 
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
-dir.create(here("results", "tables"),  showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "tables"),  showWarnings = FALSE, recursive = TRUE)
 
 ggsave(
-        here("results", "figures", "15a_ISA_fungal_colonization.png"),
+        file.path(RESULTS_DIR, "figures", paste0("15a_ISA_fungal_colonization", SET_TAG, ".png")),
         plot   = fig,
         width  = 12,
         height = max(6, (n_high + n_low) * 0.6 + 3),
@@ -484,8 +487,8 @@ if (nrow(hits_bvu) > 0) {
                               dplyr::starts_with("prev_"),
                               Kingdom:Species,
                               chi_p, pct_dominant_farm, farm_confounded) |>
-                readr::write_csv(here("results", "tables",
-                                      "15a_ISA_fungal_colonization.csv"))
+                readr::write_csv(file.path(RESULTS_DIR, "tables",
+                                      paste0("15a_ISA_fungal_colonization", SET_TAG, ".csv")))
         cat("  Saved: 15a_ISA_fungal_colonization.csv\n")
 }
 

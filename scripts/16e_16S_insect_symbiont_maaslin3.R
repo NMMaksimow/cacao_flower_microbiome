@@ -46,10 +46,20 @@
 
 # Guild definition -- KEEP IN SYNC WITH 16d. Duplicated rather than shared so each
 # script stays runnable on its own, which is the convention in this project.
-GUILD_GENERA <- c("Wolbachia", "Spiroplasma", "Rickettsia", "Arsenophonus",
-                  "Cardinium", "Sodalis", "Buchnera",
-                  "Serratia", "Lactobacillus", "Fructobacillus",
-                  "Gilliamella", "Snodgrassella", "Orbus", "Apibacter", "Bartonella")
+# Names per reference, selected by CFM_VERSION after utils_paths.R is sourced (see
+# 16d for the SILVA 144 renames).
+GUILD_GENERA_BY_VERSION <- list(
+        v1 = c("Wolbachia", "Spiroplasma", "Rickettsia", "Arsenophonus",
+               "Cardinium", "Sodalis", "Buchnera",
+               "Serratia", "Lactobacillus", "Fructobacillus",
+               "Gilliamella", "Snodgrassella", "Orbus", "Apibacter", "Bartonella"),
+        v2 = c("Candidatus_Neowolbachia", "Spiroplasma", "Rickettsia",
+               "Candidatus_Phloeobacter", "Candidatus_Paenicardinium", "Sodalis", "Buchnera",
+               "Serratia", "Lactobacillus", "Limosilactobacillus", "Acetilactobacillus",
+               "Ligilactobacillus", "Lactiplantibacillus", "Lacticaseibacillus",
+               "Levilactobacillus", "Companilactobacillus", "Fructobacillus",
+               "Gilliamella", "Snodgrassella", "Orbus", "Apibacter", "Bartonella")
+)
 MIN_DETECT  <- 10     # guild ASVs: detected in >= this many flowers (as in 16d)
 
 BACKGROUND_PREV <- 0.10   # background for the compositional median: the same 10%
@@ -65,11 +75,15 @@ library(phyloseq)
 library(patchwork)
 library(maaslin3)
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+GUILD_GENERA <- GUILD_GENERA_BY_VERSION[[CFM_VERSION]]
+
 source(here("scripts", "utils_tax_label.R"))
 
-ps   <- readRDS(here("results", "rds", "ps_16S_bacteria_biosamples.rds"))
-perm <- readr::read_csv(here("results", "tables",
-                             "16d_insect_symbiont_prevalence.csv"),
+ps   <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ps_16S_bacteria_biosamples", BIOSAMPLE_SUFFIX, ".rds")))
+perm <- readr::read_csv(file.path(RESULTS_DIR, "tables",
+                             paste0("16d_insect_symbiont_prevalence", SET_TAG, ".csv")),
                         show_col_types = FALSE)
 
 cat(sprintf("Loaded: %d taxa x %d samples | maaslin3 %s\n",
@@ -114,7 +128,7 @@ input_meta <- meta[flowers, c("sample_type", "farm_id", "tree_id")]
 input_meta$sample_type <- factor(input_meta$sample_type,
                                  levels = c("unbagged_flower", "bagged_flower"))
 
-out_dir <- here("results", "tables", "16e_maaslin3")
+out_dir <- file.path(RESULTS_DIR, "tables", paste0("16e_maaslin3", SET_TAG))
 
 # Sequencing depth is not added as a covariate: MaAsLin 3 normalises by total sum
 # scaling, and 16d showed the two groups do not differ in library size
@@ -249,7 +263,7 @@ fig <- (panel("prevalence", "Prevalence model",
 
 cat("\n── 6. Saving outputs ────────────────────────────────────────────────────\n")
 
-ggsave(here("results", "figures", "16e_maaslin3_vs_permutation.png"),
+ggsave(file.path(RESULTS_DIR, "figures", paste0("16e_maaslin3_vs_permutation", SET_TAG, ".png")),
        plot = fig, width = 9, height = 8, dpi = 300)
 cat("  Saved: 16e_maaslin3_vs_permutation.png\n")
 
@@ -259,8 +273,8 @@ cmp |>
                       p_maaslin, q_guild, q_background,
                       q_perm, or_bagged, agrees) |>
         dplyr::arrange(model, p_maaslin) |>
-        readr::write_csv(here("results", "tables",
-                              "16e_maaslin3_vs_permutation.csv"))
+        readr::write_csv(file.path(RESULTS_DIR, "tables",
+                              paste0("16e_maaslin3_vs_permutation", SET_TAG, ".csv")))
 cat("  Saved: 16e_maaslin3_vs_permutation.csv\n")
 
 cat("\n16e done.\n")
