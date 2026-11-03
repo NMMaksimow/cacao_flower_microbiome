@@ -11,6 +11,12 @@
 module load bioinformatics
 module load r/4.6.1    # same R minor version as the laptop; packages in ~/R/library
 
+# Without this the whole job runs on ONE core, silently. Hamilton sets
+# OMP_PROC_BIND=spread in every job; the bioinformatics R then binds its main
+# process to one core and all PSOCK workers inherit that binding (seen 2026-11-02:
+# 33 R processes on one CPU). Same fix as in 03_hpc_rfc.sh.
+export OMP_PROC_BIND=false
+
 cd ~/nobackup/cacao_flower_microbiome
 mkdir -p logs
 
