@@ -12,9 +12,12 @@ library(tibble)
 library(parallel)
 
 # ---- 2. Paths ------------------------------------------------------------
-project_dir <- "/nobackup/jcnx71/cacao_flower_microbiome"
-rds_dir     <- file.path(project_dir, "results", "rds")
-tables_dir  <- file.path(project_dir, "results", "tables")
+# The job starts in the project root (see the .sh), where here() finds the repository.
+# utils_paths.R: RESULTS_DIR from CFM_VERSION, BIOSAMPLE_SUFFIX from CFM_SAMPLE_SET
+library(here)
+source(here("scripts", "utils_paths.R"))
+rds_dir     <- file.path(RESULTS_DIR, "rds")
+tables_dir  <- file.path(RESULTS_DIR, "tables")
 dir.create(rds_dir,    showWarnings = FALSE, recursive = TRUE)
 dir.create(tables_dir, showWarnings = FALSE, recursive = TRUE)
 
@@ -23,7 +26,7 @@ dir.create(tables_dir, showWarnings = FALSE, recursive = TRUE)
 # Note: use ps_ITS1_otu97_fungi_biosamples.rds — NOT ps_ITS1_fungi_biosamples.rds
 # (the older non-otu97 file used in zeta_array.R is a pre-existing bug there).
 cat("Loading phyloseq...\n")
-ps  <- readRDS(file.path(rds_dir, "ps_ITS1_otu97_fungi_biosamples.rds"))
+ps  <- readRDS(file.path(rds_dir, paste0("ps_ITS1_otu97_fungi_biosamples", BIOSAMPLE_SUFFIX, ".rds")))
 ps  <- subset_samples(ps, sample_type %in% c("bagged_flower", "unbagged_flower"))
 
 incidence_full <- otu_table(ps) |>
@@ -88,8 +91,8 @@ for (r in results_flat) {
 }
 
 saveRDS(zeta_results,
-        file.path(rds_dir, "zeta_ITS1_by_farm.rds"),
+        file.path(rds_dir, paste0("zeta_ITS1_by_farm", BIOSAMPLE_SUFFIX, ".rds")),
         compress = "xz")
-cat("Saved: results/rds/zeta_ITS1_by_farm.rds\n")
+cat("Saved:", file.path(rds_dir, paste0("zeta_ITS1_by_farm", BIOSAMPLE_SUFFIX, ".rds")), "\n")
 
 cat("Done. Model fits are computed in 11c_16S_ITS1_zeta_by_farm.R.\n")

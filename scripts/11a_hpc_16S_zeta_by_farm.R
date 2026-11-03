@@ -15,9 +15,12 @@ library(tibble)
 library(parallel)
 
 # ---- 2. Paths ------------------------------------------------------------
-project_dir <- "/nobackup/jcnx71/cacao_flower_microbiome"
-rds_dir     <- file.path(project_dir, "results", "rds")
-tables_dir  <- file.path(project_dir, "results", "tables")
+# The job starts in the project root (see the .sh), where here() finds the repository.
+# utils_paths.R: RESULTS_DIR from CFM_VERSION, BIOSAMPLE_SUFFIX from CFM_SAMPLE_SET
+library(here)
+source(here("scripts", "utils_paths.R"))
+rds_dir     <- file.path(RESULTS_DIR, "rds")
+tables_dir  <- file.path(RESULTS_DIR, "tables")
 dir.create(rds_dir,    showWarnings = FALSE, recursive = TRUE)
 dir.create(tables_dir, showWarnings = FALSE, recursive = TRUE)
 
@@ -26,7 +29,7 @@ dir.create(tables_dir, showWarnings = FALSE, recursive = TRUE)
 # All per-farm subsetting and zero-column trimming also happens here so workers
 # receive small, pre-cut matrices — avoids shipping the full 294 × 25k matrix.
 cat("Loading phyloseq...\n")
-ps  <- readRDS(file.path(rds_dir, "ps_16S_bacteria_biosamples.rds"))
+ps  <- readRDS(file.path(rds_dir, paste0("ps_16S_bacteria_biosamples", BIOSAMPLE_SUFFIX, ".rds")))
 ps  <- subset_samples(ps, sample_type %in% c("bagged_flower", "unbagged_flower"))
 
 incidence_full <- otu_table(ps) |>
@@ -94,8 +97,8 @@ for (r in results_flat) {
 }
 
 saveRDS(zeta_results,
-        file.path(rds_dir, "zeta_16S_by_farm.rds"),
+        file.path(rds_dir, paste0("zeta_16S_by_farm", BIOSAMPLE_SUFFIX, ".rds")),
         compress = "xz")
-cat("Saved: results/rds/zeta_16S_by_farm.rds\n")
+cat("Saved:", file.path(rds_dir, paste0("zeta_16S_by_farm", BIOSAMPLE_SUFFIX, ".rds")), "\n")
 
 cat("Done. Model fits are computed in 11c_16S_ITS1_zeta_by_farm.R.\n")
