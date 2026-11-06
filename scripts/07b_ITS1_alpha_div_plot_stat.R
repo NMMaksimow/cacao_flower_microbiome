@@ -730,7 +730,9 @@ icc_df_5k <- expand.grid(
         fit <- alpha_summary_5k |>
             filter(sample_type == st) |>
             lmer(as.formula(paste0(m, " ~ 1 + (1 | tree_id)")), data = _)
-        performance::icc(fit)$ICC_adjusted
+        # Zero tree variance (singular fit): icc() returns NA, not a table; ICC is 0
+        icc_res <- performance::icc(fit)
+        if (is.list(icc_res)) icc_res$ICC_adjusted else 0
     }))
 
 print(icc_df_5k)

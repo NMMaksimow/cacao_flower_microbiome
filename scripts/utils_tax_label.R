@@ -29,8 +29,8 @@ INCERTAE_RE <- "_((gen|fam|ord|cls|phy)_)?Incertae_[Ss]edis$"
 
 # Ranks from the top down. Two top ranks, because the references disagree on the
 # word: SILVA calls it Domain (d__Bacteria), UNITE calls it Kingdom (k__Fungi).
-# No taxonomy table carries both, so their order relative to each other never
-# matters. Including them is what stops 912 16S ASVs and 350 ITS1 OTUs -- those
+# SILVA 144 (v2 16S) carries both, d__ above k__, which is the order here.
+# Including them is what stops 912 16S ASVs and 350 ITS1 OTUs -- those
 # classified no further than the top rank -- from falling back to a bare hex id.
 RANKS_TOP_DOWN <- c("Domain", "Kingdom", "Phylum", "Class", "Order",
                     "Family", "Genus")
