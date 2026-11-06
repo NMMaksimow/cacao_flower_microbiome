@@ -70,20 +70,23 @@ library(phyloseq)
 library(ggh4x)       # facet_nested(): management strip above the farm strip
 library(patchwork)   # panels A and B side by side
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
 # TAX_PLACEHOLDERS and INCERTAE_RE: names that carry no taxonomic information
 source(here("scripts", "utils_tax_label.R"))
 
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
-dir.create(here("results", "tables"),  showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "tables"),  showWarnings = FALSE, recursive = TRUE)
 
 # Zero-read taxa are dropped exactly as in 25a / 25b, so taxon order matches
-ps_16S  <- readRDS(here("results", "rds", "ps_16S_bacteria_biosamples.rds")) |>
+ps_16S  <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ps_16S_bacteria_biosamples", BIOSAMPLE_SUFFIX, ".rds"))) |>
         (\(x) prune_taxa(taxa_sums(x) > 0, x))()
-ps_ITS1 <- readRDS(here("results", "rds", "ps_ITS1_otu97_fungi_biosamples.rds")) |>
+ps_ITS1 <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ps_ITS1_otu97_fungi_biosamples", BIOSAMPLE_SUFFIX, ".rds"))) |>
         (\(x) prune_taxa(taxa_sums(x) > 0, x))()
 
-fap <- readRDS(here("results", "rds", "25a_16S_faprotax.rds"))$faprotax$bacteria
-ft  <- readRDS(here("results", "rds", "25b_ITS1_fungaltraits.rds"))
+fap <- readRDS(file.path(RESULTS_DIR, "rds", paste0("25a_16S_faprotax", BIOSAMPLE_SUFFIX, ".rds")))$faprotax$bacteria
+ft  <- readRDS(file.path(RESULTS_DIR, "rds", paste0("25b_ITS1_fungaltraits", BIOSAMPLE_SUFFIX, ".rds")))
 
 stopifnot(identical(rownames(fap$taxon_functions), taxa_names(ps_16S)),
           identical(rownames(ft$taxon_traits),    taxa_names(ps_ITS1)))
@@ -287,10 +290,10 @@ p_heat_16S <- two_panel_heatmap(
                           "so some rows overlap; grey = median 0"))
 
 # Height grows with the number of rows; width fits the long row labels
-ggsave(here("results", "figures", "25c_ITS1_guild_heatmap.png"),
+ggsave(file.path(RESULTS_DIR, "figures", paste0("25c_ITS1_guild_heatmap", SET_TAG, ".png")),
        plot = p_heat_ITS1, width = 18, height = 2.5 + 0.3 * nlevels(long_ITS1$label),
        dpi = 300)
-ggsave(here("results", "figures", "25c_16S_guild_heatmap.png"),
+ggsave(file.path(RESULTS_DIR, "figures", paste0("25c_16S_guild_heatmap", SET_TAG, ".png")),
        plot = p_heat_16S, width = 18, height = 2.5 + 0.3 * nlevels(long_16S$label),
        dpi = 300)
 
@@ -387,7 +390,7 @@ p_cov <- ((coverage_panel(filter(cov_long, marker == "ITS1"),
                 theme    = theme(plot.title = element_text(size = 13),
                                  legend.position = "bottom"))
 
-ggsave(here("results", "figures", "25c_16S_ITS1_guild_coverage.png"),
+ggsave(file.path(RESULTS_DIR, "figures", paste0("25c_16S_ITS1_guild_coverage", SET_TAG, ".png")),
        plot = p_cov, width = 18, height = 7, dpi = 300)
 
 # ── 7. ITS1 primary lifestyle stacked bars: flower, tree, farm ───────────────
@@ -497,7 +500,7 @@ p_life <- (lifestyle_panel(life_flower, "flower (3 per tree, grouped by tree 1-7
         # (2 rows, see guide_legend above) before patchwork collects them
         theme(legend.position = "bottom")
 
-ggsave(here("results", "figures", "25c_ITS1_lifestyle_barplots.png"),
+ggsave(file.path(RESULTS_DIR, "figures", paste0("25c_ITS1_lifestyle_barplots", SET_TAG, ".png")),
        plot = p_life, width = 18, height = 10, dpi = 300)
 
 # ── 8. Dominant genus table ───────────────────────────────────────────────────
@@ -506,6 +509,6 @@ bind_rows(dom_ITS1    |> mutate(marker = "ITS1", .before = 1),
           dom_16S_all |> mutate(marker = "16S",  .before = 1)) |>
         select(-label) |>
         arrange(marker, desc(pct_reads_pooled)) |>
-        write_csv(here("results", "tables", "25c_guild_dominant_genus.csv"))
+        write_csv(file.path(RESULTS_DIR, "tables", paste0("25c_guild_dominant_genus", SET_TAG, ".csv")))
 
 cat("\n25c done: 3 figures, 1 table\n")

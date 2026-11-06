@@ -33,7 +33,7 @@
 
 # ── 0. Parameters ─────────────────────────────────────────────────────────────
 
-INPUT <- "ps_ITS1_otu97_fungi_biosamples.rds"
+INPUT <- "ps_ITS1_otu97_fungi_biosamples"
 
 # Treatment groups in sample_type
 GROUPS <- c("bagged_flower", "unbagged_flower")
@@ -45,13 +45,16 @@ library(tidyverse)
 library(phyloseq)
 library(microeco)
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
 # TAX_PLACEHOLDERS and INCERTAE_RE: names that carry no taxonomic information
 source(here("scripts", "utils_tax_label.R"))
 
-dir.create(here("results", "tables"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "tables"), showWarnings = FALSE, recursive = TRUE)
 
 # Drop OTUs with zero reads in biosamples (they were seen only in controls)
-ps <- readRDS(here("results", "rds", INPUT)) |>
+ps <- readRDS(file.path(RESULTS_DIR, "rds", paste0(INPUT, BIOSAMPLE_SUFFIX, ".rds"))) |>
         (\(x) prune_taxa(taxa_sums(x) > 0, x))()
 
 cat(sprintf("Loaded: %d OTUs x %d samples\n", ntaxa(ps), nsamples(ps)))
@@ -131,7 +134,7 @@ stopifnot(all(abs(colSums(sample_lifestyle_perc) - 100) < 1e-6))
 
 taxon_traits |>
         rownames_to_column("feature_id") |>
-        write_csv(here("results", "tables", "25b_ITS1_fungaltraits_taxon_traits.csv"))
+        write_csv(file.path(RESULTS_DIR, "tables", paste0("25b_ITS1_fungaltraits_taxon_traits", SET_TAG, ".csv")))
 
 # ── 5. Coverage ───────────────────────────────────────────────────────────────
 
@@ -166,15 +169,15 @@ lifestyle_summary <- tibble(
 ) |>
         arrange(desc(pct_reads_pooled))
 
-write_csv(coverage,          here("results", "tables", "25b_ITS1_fungaltraits_coverage.csv"))
-write_csv(lifestyle_summary, here("results", "tables", "25b_ITS1_fungaltraits_lifestyle_summary.csv"))
+write_csv(coverage,          file.path(RESULTS_DIR, "tables", paste0("25b_ITS1_fungaltraits_coverage", SET_TAG, ".csv")))
+write_csv(lifestyle_summary, file.path(RESULTS_DIR, "tables", paste0("25b_ITS1_fungaltraits_lifestyle_summary", SET_TAG, ".csv")))
 
 saveRDS(list(taxon_traits          = taxon_traits,
              taxon_functions       = tf$res_func,     # microeco 0/1 trait table
              sample_lifestyle_perc = sample_lifestyle_perc,
              coverage              = coverage,
              lifestyle_summary     = lifestyle_summary),
-        here("results", "rds", "25b_ITS1_fungaltraits.rds"),
+        file.path(RESULTS_DIR, "rds", paste0("25b_ITS1_fungaltraits", BIOSAMPLE_SUFFIX, ".rds")),
         compress = "xz")
 
 # ── 6. Report ─────────────────────────────────────────────────────────────────

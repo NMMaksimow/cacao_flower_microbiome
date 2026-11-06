@@ -35,11 +35,14 @@ library(circlize)        # colorRamp2() — continuous colour mapping
 library(RColorBrewer)
 library(grid)            # gpar()
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
 # ── 2. Load data ──────────────────────────────────────────────────────────────
 # Flower-only subset mirrors 08a, so the feature space after the prevalence
 # filter is identical to the one used for PCoA and PERMANOVA.
 
-ps <- readRDS(here("results", "rds", "ps_16S_bacteria_biosamples.rds")) |>
+ps <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ps_16S_bacteria_biosamples", BIOSAMPLE_SUFFIX, ".rds"))) |>
     subset_samples(sample_type %in% c("bagged_flower", "unbagged_flower"))
 
 cat(sprintf("Loaded 16S bacteria biosamples: %d taxa x %d samples\n",
@@ -244,9 +247,9 @@ hm <- Heatmap(
 
 # ── 11. Save ──────────────────────────────────────────────────────────────────
 
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
 
-out_fp <- here("results", "figures", "26a_16S_clr_clustermap.png")
+out_fp <- file.path(RESULTS_DIR, "figures", paste0("26a_16S_clr_clustermap", SET_TAG, ".png"))
 
 # Figure size in inches; fonts are in points, so a larger canvas = smaller text
 png(out_fp, width = 16, height = 12, units = "in", res = 300)

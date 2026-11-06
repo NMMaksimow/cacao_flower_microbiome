@@ -1,5 +1,5 @@
 ## ============================================================================
-## 17 — Pollen intensity by farm and flower treatment
+## 27 — Pollen intensity by farm and flower treatment
 ##
 ## All measured flowers shown as coloured dots (by management type).
 ## Shape encodes insect / spore detection.
@@ -10,12 +10,15 @@
 ## Input:
 ##   data/sample_metadata_with_microscopy.txt
 ## Output:
-##   results/figures/17_high_pollination_by_farm.png
+##   results/figures/27_high_pollination_by_farm.png
 ## ============================================================================
 
 library(here)
 library(dplyr)
 library(ggplot2)
+
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
 
 # ── Parameters ────────────────────────────────────────────────────────────────
 PI_THRESH <- 40
@@ -121,8 +124,8 @@ p <- ggplot(meta, aes(x = farm_id, y = pi_clsm,
     )
 
 # ── Save ──────────────────────────────────────────────────────────────────────
-out_path <- here("results", "figures", "17_high_pollination_by_farm.png")
-ggsave(out_path, p, width = 11, height = 6, dpi = 200, bg = "white")
+out_path <- file.path(RESULTS_DIR, "figures", "27_high_pollination_by_farm.png")
+ggsave(out_path, plot = p, width = 11, height = 6, dpi = 300, bg = "white")
 message("Saved: ", out_path)
 
 print(p)

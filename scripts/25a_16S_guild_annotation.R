@@ -32,8 +32,8 @@
 
 # ── 0. Parameters ─────────────────────────────────────────────────────────────
 
-INPUTS <- c(bacteria    = "ps_16S_bacteria_biosamples.rds",
-            prokaryotes = "ps_16S_prokaryotes_biosamples.rds")
+INPUTS <- c(bacteria    = "ps_16S_bacteria_biosamples",
+            prokaryotes = "ps_16S_prokaryotes_biosamples")
 
 # Broad groups that almost every heterotroph matches. They inflate coverage
 # without saying anything about ecology, so coverage is also reported without
@@ -52,17 +52,20 @@ library(tidyverse)
 library(phyloseq)
 library(microeco)
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
 # Bundled FAPROTAX database; loaded here only to record its version
 data("prok_func_FAPROTAX", package = "microeco")
 
 # TAX_PLACEHOLDERS and INCERTAE_RE: names that carry no taxonomic information
 source(here("scripts", "utils_tax_label.R"))
 
-dir.create(here("results", "tables"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "tables"), showWarnings = FALSE, recursive = TRUE)
 
 # Drop taxa with zero reads in biosamples (they were seen only in controls)
 ps_list <- INPUTS |>
-        map(\(f) readRDS(here("results", "rds", f))) |>
+        map(\(f) readRDS(file.path(RESULTS_DIR, "rds", paste0(f, BIOSAMPLE_SUFFIX, ".rds")))) |>
         map(\(ps) prune_taxa(taxa_sums(ps) > 0, ps))
 
 iwalk(ps_list, \(ps, label)
@@ -160,8 +163,8 @@ taxon_functions_long <- imap(faprotax, \(res, label)
                           by = "feature_id"))
 
 iwalk(taxon_functions_long, \(df, label)
-      write_csv(df, here("results", "tables",
-                         sprintf("25a_16S_faprotax_taxon_functions_%s.csv", label))))
+      write_csv(df, file.path(RESULTS_DIR, "tables",
+                         sprintf("25a_16S_faprotax_taxon_functions_%s%s.csv", label, SET_TAG))))
 
 # ── 5. Coverage ───────────────────────────────────────────────────────────────
 
@@ -193,14 +196,14 @@ function_summary <- imap_dfr(ps_list, \(ps, label) {
         filter(n_asvs > 0) |>
         arrange(dataset, desc(pct_reads_pooled))
 
-write_csv(coverage,         here("results", "tables", "25a_16S_faprotax_coverage.csv"))
-write_csv(function_summary, here("results", "tables", "25a_16S_faprotax_function_summary.csv"))
+write_csv(coverage,         file.path(RESULTS_DIR, "tables", paste0("25a_16S_faprotax_coverage", SET_TAG, ".csv")))
+write_csv(function_summary, file.path(RESULTS_DIR, "tables", paste0("25a_16S_faprotax_function_summary", SET_TAG, ".csv")))
 
 saveRDS(list(faprotax         = faprotax,
              coverage         = coverage,
              function_summary = function_summary,
              faprotax_version = prok_func_FAPROTAX$ver),
-        here("results", "rds", "25a_16S_faprotax.rds"),
+        file.path(RESULTS_DIR, "rds", paste0("25a_16S_faprotax", BIOSAMPLE_SUFFIX, ".rds")),
         compress = "xz")
 
 # ── 6. Report ─────────────────────────────────────────────────────────────────
@@ -218,9 +221,11 @@ function_summary |>
         print(n = Inf)
 
 # Spot checks: an insect endosymbiont, and the archaeal functions
+# SILVA 144 (v2) renames Wolbachia to Candidatus_Neowolbachia
+WOLBACHIA_BY_VERSION <- c(v1 = "g__Wolbachia", v2 = "g__Candidatus_Neowolbachia")
 cat("\n==== Spot checks ====\n")
 taxon_functions_long$bacteria |>
-        filter(Genus == "g__Wolbachia") |>
+        filter(Genus == WOLBACHIA_BY_VERSION[[CFM_VERSION]]) |>
         distinct(Genus, func) |>
         print()
 taxon_functions_long$prokaryotes |>

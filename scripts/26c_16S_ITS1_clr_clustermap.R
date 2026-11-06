@@ -45,13 +45,16 @@ library(circlize)        # colorRamp2()
 library(RColorBrewer)
 library(grid)            # gpar(), viewport(), grid.layout() etc.
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
 # ── 2. Load data ──────────────────────────────────────────────────────────────
 # Flower-only subset mirrors 08a/08b, so the feature space after the prevalence
 # filter is identical to the one used for PCoA and PERMANOVA.
 
-ps_16S <- readRDS(here("results", "rds", "ps_16S_bacteria_biosamples.rds")) |>
+ps_16S <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ps_16S_bacteria_biosamples", BIOSAMPLE_SUFFIX, ".rds"))) |>
     subset_samples(sample_type %in% c("bagged_flower", "unbagged_flower"))
-ps_ITS <- readRDS(here("results", "rds", "ps_ITS1_otu97_fungi_biosamples.rds")) |>
+ps_ITS <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ps_ITS1_otu97_fungi_biosamples", BIOSAMPLE_SUFFIX, ".rds"))) |>
     subset_samples(sample_type %in% c("bagged_flower", "unbagged_flower"))
 
 cat(sprintf("Loaded  16S: %d taxa x %d samples\n", ntaxa(ps_16S), nsamples(ps_16S)))
@@ -288,8 +291,8 @@ annot_legend <- build_annot_legend(cols)
 
 # ── 12. Save — 2 x 2 heatmaps + legend column ─────────────────────────────────
 
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
-out_fp <- here("results", "figures", "26c_16S_ITS1_clr_clustermap.png")
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
+out_fp <- file.path(RESULTS_DIR, "figures", paste0("26c_16S_ITS1_clr_clustermap", SET_TAG, ".png"))
 
 # Figure size in inches; fonts are in points, so a larger canvas = smaller text
 png(out_fp, width = 26, height = 24, units = "in", res = 300)

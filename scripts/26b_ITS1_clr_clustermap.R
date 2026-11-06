@@ -41,13 +41,16 @@ library(circlize)        # colorRamp2() — continuous colour mapping for heatma
 library(RColorBrewer)
 library(grid)            # gpar(), viewport(), grid.layout()
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
 # ── 2. Load data ──────────────────────────────────────────────────────────────
 # Flower-only subset mirrors 08b, so the OTU97 feature space after the
 # prevalence filter is identical to the one used for PCoA and PERMANOVA.
 
-ps_asv   <- readRDS(here("results", "rds", "ps_ITS1_fungi_biosamples.rds")) |>
+ps_asv   <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ps_ITS1_fungi_biosamples", BIOSAMPLE_SUFFIX, ".rds"))) |>
     subset_samples(sample_type %in% c("bagged_flower", "unbagged_flower"))
-ps_otu97 <- readRDS(here("results", "rds", "ps_ITS1_otu97_fungi_biosamples.rds")) |>
+ps_otu97 <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ps_ITS1_otu97_fungi_biosamples", BIOSAMPLE_SUFFIX, ".rds"))) |>
     subset_samples(sample_type %in% c("bagged_flower", "unbagged_flower"))
 
 cat(sprintf("Loaded  ASV: %d taxa x %d samples\n", ntaxa(ps_asv),   nsamples(ps_asv)))
@@ -310,9 +313,9 @@ annot_legend <- build_annot_legend(cols)
 
 # ── 11. Save ──────────────────────────────────────────────────────────────────
 
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
 
-out_fp <- here("results", "figures", "26b_ITS1_clr_clustermap.png")
+out_fp <- file.path(RESULTS_DIR, "figures", paste0("26b_ITS1_clr_clustermap", SET_TAG, ".png"))
 
 # Figure size in inches; fonts are in points, so a larger canvas = smaller text
 png(out_fp, width = 26, height = 12, units = "in", res = 300)
