@@ -44,9 +44,12 @@ library(phyloseq)
 library(NetCoMi)
 library(igraph)
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
 "%||%" <- function(a, b) if (!is.null(a)) a else b
 
-ps_raw <- readRDS(here("results", "rds", "ps_ITS1_otu97_fungi_biosamples.rds"))
+ps_raw <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ps_ITS1_otu97_fungi_biosamples", BIOSAMPLE_SUFFIX, ".rds")))
 cat(sprintf("Loaded: %d taxa x %d samples\n", ntaxa(ps_raw), nsamples(ps_raw)))
 
 # ── 2. Helper functions ───────────────────────────────────────────────────────
@@ -360,11 +363,11 @@ for (farm in FARM_LEVELS) {
 # ── 5. Save intermediate RDS ──────────────────────────────────────────────────
 
 cat("\n── 5. Saving intermediate RDS ───────────────────────────────────────────\n")
-dir.create(here("results", "rds"),     showWarnings = FALSE, recursive = TRUE)
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
-dir.create(here("results", "tables"),  showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "rds"),     showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "tables"),  showWarnings = FALSE, recursive = TRUE)
 
-saveRDS(results, here("results", "rds", "19b_network_results.rds"))
+saveRDS(results, file.path(RESULTS_DIR, "rds", paste0("19b_network_results", BIOSAMPLE_SUFFIX, ".rds")))
 cat("  Saved: 19b_network_results.rds\n")
 
 # ── 7. Topology summary table ─────────────────────────────────────────────────
@@ -375,7 +378,7 @@ cat("\n── 7. Building topology summary table ──────────�
 # netCompare: source Section 0 (parameters, libraries, helpers), then source from
 # here. A no-op when the full script ran in the same session.
 if (!exists("results")) {
-        results <- readRDS(here("results", "rds", "19b_network_results.rds"))
+        results <- readRDS(file.path(RESULTS_DIR, "rds", paste0("19b_network_results", BIOSAMPLE_SUFFIX, ".rds")))
         cat("  Loaded: 19b_network_results.rds\n")
 }
 
@@ -388,7 +391,7 @@ topology_rows <- lapply(FARM_LEVELS, function(farm) {
 if (any(!sapply(topology_rows, is.null))) {
         dplyr::bind_rows(topology_rows) |>
                 dplyr::arrange(farm, treatment) |>
-                readr::write_csv(here("results", "tables", "19b_network_topology.csv"))
+                readr::write_csv(file.path(RESULTS_DIR, "tables", paste0("19b_network_topology", SET_TAG, ".csv")))
         cat("  Saved: 19b_network_topology.csv\n")
 } else {
         cat("  No topology data to save.\n")
@@ -408,7 +411,7 @@ hub_combined <- dplyr::bind_rows(hub_rows)
 if (nrow(hub_combined) > 0 && "treatment" %in% names(hub_combined)) {
         hub_combined |>
                 dplyr::arrange(farm, treatment, dplyr::desc(eigenvector)) |>
-                readr::write_csv(here("results", "tables", "19b_network_hubs.csv"))
+                readr::write_csv(file.path(RESULTS_DIR, "tables", paste0("19b_network_hubs", SET_TAG, ".csv")))
         cat("  Saved: 19b_network_hubs.csv\n")
 } else {
         cat("  No hub taxa found across all farms.\n")
@@ -434,7 +437,7 @@ cmp_combined <- dplyr::bind_rows(cmp_rows)
 if (nrow(cmp_combined) > 0) {
         cmp_combined |>
                 dplyr::arrange(farm, scope, property) |>
-                readr::write_csv(here("results", "tables", "19b_network_comparison.csv"))
+                readr::write_csv(file.path(RESULTS_DIR, "tables", paste0("19b_network_comparison", SET_TAG, ".csv")))
         cat("  Saved: 19b_network_comparison.csv\n")
 } else {
         cat("  No comparison data (netCompare skipped for all farms).\n")

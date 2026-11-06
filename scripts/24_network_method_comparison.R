@@ -56,13 +56,16 @@ DIR_COL_NA       <- "grey95"    # farm/property combination absent for this meth
 library(here)
 library(tidyverse)
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
 # ── 2. Load all hub and comparison tables ─────────────────────────────────────
 
 cat("\n── 2. Loading tables ─────────────────────────────────────────────────────\n")
 
 hubs_all <- PREFIX_MAP |>
         pmap(\(method, marker, prefix) {
-                readr::read_csv(here("results", "tables", paste0(prefix, "_network_hubs.csv")),
+                readr::read_csv(file.path(RESULTS_DIR, "tables", paste0(prefix, "_network_hubs", SET_TAG, ".csv")),
                                 show_col_types = FALSE) |>
                         mutate(method = method, marker = marker, .before = 1)
         }) |>
@@ -70,7 +73,7 @@ hubs_all <- PREFIX_MAP |>
 
 cmp_all <- PREFIX_MAP |>
         pmap(\(method, marker, prefix) {
-                readr::read_csv(here("results", "tables", paste0(prefix, "_network_comparison.csv")),
+                readr::read_csv(file.path(RESULTS_DIR, "tables", paste0(prefix, "_network_comparison", SET_TAG, ".csv")),
                                 show_col_types = FALSE) |>
                         mutate(method = method, marker = marker, .before = 1)
         }) |>
@@ -110,7 +113,7 @@ hub_jaccard <- method_pairs |>
         list_rbind() |>
         arrange(marker, farm, treatment, method_a, method_b)
 
-readr::write_csv(hub_jaccard, here("results", "tables", "24_method_comparison_hub_jaccard.csv"))
+readr::write_csv(hub_jaccard, file.path(RESULTS_DIR, "tables", paste0("24_method_comparison_hub_jaccard", SET_TAG, ".csv")))
 cat("  Saved: 24_method_comparison_hub_jaccard.csv\n")
 cat(sprintf("  mean Jaccard across all farm x treatment x marker x method-pair: %.3f\n",
             mean(hub_jaccard$jaccard, na.rm = TRUE)))
@@ -143,7 +146,7 @@ agreement_df <- direction_df |>
         ) |>
         arrange(marker, property, farm)
 
-readr::write_csv(agreement_df, here("results", "tables", "24_method_comparison_direction_agreement.csv"))
+readr::write_csv(agreement_df, file.path(RESULTS_DIR, "tables", paste0("24_method_comparison_direction_agreement", SET_TAG, ".csv")))
 cat("  Saved: 24_method_comparison_direction_agreement.csv\n")
 
 agree_summary <- agreement_df |>
@@ -165,7 +168,7 @@ sig_inventory <- cmp_all |>
         ) |>
         arrange(marker, method)
 
-readr::write_csv(sig_inventory, here("results", "tables", "24_method_comparison_significance_inventory.csv"))
+readr::write_csv(sig_inventory, file.path(RESULTS_DIR, "tables", paste0("24_method_comparison_significance_inventory", SET_TAG, ".csv")))
 cat("  Saved: 24_method_comparison_significance_inventory.csv\n")
 print(as.data.frame(sig_inventory), row.names = FALSE)
 
@@ -212,9 +215,9 @@ p_comparison <- ggplot(plot_df, aes(x = property, y = toupper(farm), fill = dire
                 legend.position = "bottom"
         )
 
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
 ggsave(
-        here("results", "figures", "24_method_comparison_direction.png"),
+        file.path(RESULTS_DIR, "figures", paste0("24_method_comparison_direction", SET_TAG, ".png")),
         plot   = p_comparison,
         width  = 10,
         height = 6,

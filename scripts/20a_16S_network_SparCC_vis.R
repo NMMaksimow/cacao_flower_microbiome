@@ -34,9 +34,12 @@ library(igraph)
 library(patchwork)
 library(ggsci)
 
+# Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
+source(here("scripts", "utils_paths.R"))
+
 "%||%" <- function(a, b) if (!is.null(a)) a else b
 
-ps_raw <- readRDS(here("results", "rds", "ps_16S_bacteria_biosamples.rds"))
+ps_raw <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ps_16S_bacteria_biosamples", BIOSAMPLE_SUFFIX, ".rds")))
 cat(sprintf("Loaded: %d taxa x %d samples\n", ntaxa(ps_raw), nsamples(ps_raw)))
 
 # ── 2. Visualization helpers ──────────────────────────────────────────────────
@@ -233,7 +236,7 @@ make_panel_grid <- function(layout_algo) {
 
 cat("\n── 3. Loading results and building palette ───────────────────────────────\n")
 
-results <- readRDS(here("results", "rds", "20a_network_results.rds"))
+results <- readRDS(file.path(RESULTS_DIR, "rds", paste0("20a_network_results", BIOSAMPLE_SUFFIX, ".rds")))
 cat("  Loaded: 20a_network_results.rds\n")
 
 # The palette is built from the taxa that are actually drawn as nodes, not from the
@@ -280,9 +283,9 @@ caption_str <- sprintf(
 
 fig <- make_panel_grid("fr")
 
-dir.create(here("results", "figures"), showWarnings = FALSE, recursive = TRUE)
+dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
 ggsave(
-        here("results", "figures", "20a_network_panels_sparcc.png"),
+        file.path(RESULTS_DIR, "figures", paste0("20a_network_panels_sparcc", SET_TAG, ".png")),
         plot   = fig,
         width  = 24,
         height = 14,

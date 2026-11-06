@@ -16,10 +16,18 @@
 # are about 2x SLOWER than serial, so extra cores only cost queue time.
 
 module load bioinformatics
-module load r/4.6.0
+module load r/4.6.1
 
 cd ~/nobackup/cacao_flower_microbiome
-mkdir -p logs/network results/rds results/figures results/tables
+mkdir -p logs/network
+
+# Data version (v1 | v2) and sample set (main = 288 flowers, with_deviations = 294),
+# read by scripts/utils_paths.R. Set them at submission, e.g.
+#   CFM_SAMPLE_SET=with_deviations sbatch scripts/19_hpc_network_spieceasi.sh
+export CFM_VERSION=${CFM_VERSION:-v2}
+export CFM_SAMPLE_SET=${CFM_SAMPLE_SET:-main}
+
+echo "CFM_VERSION: $CFM_VERSION, sample set: $CFM_SAMPLE_SET"
 
 Rscript scripts/19a_16S_network_by_farm_SpiecEasi.R
 Rscript scripts/19b_ITS1_network_by_farm_SpiecEasi.R
