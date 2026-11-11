@@ -20,8 +20,9 @@ reference line in the figure.
 
 Design
   Target    sample_type (bagged / unbagged), all flowers of the sample set
-  Features  ITS1 OTU97, 16S ASV, Combined; 10% prevalence on all flowers, CLR
-            with multiplicative zero replacement, exactly as in notebook 03
+  Features  ITS1 OTU97, 16S ASV, Combined; CLR matrices of 08c (10% prevalence
+            on all flowers, CZM zero replacement, as in 08a/08b), exactly as in
+            notebook 03
   Variants  raw           the features as they are
             farm-centred  each farm's mean subtracted from its own flowers before
                           the model sees them; uses features only, never labels,
@@ -61,6 +62,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import balanced_accuracy_score, matthews_corrcoef, roc_auc_score
 from sklearn.model_selection import GridSearchCV, LeaveOneGroupOut, permutation_test_score
 
+from utils_rfc import load_clr   # CLR matrices of scripts/08c_16S_ITS1_clr_export.R
+
 warnings.filterwarnings('ignore')
 
 # ── 0. Parameters ────────────────────────────────────────────────────────────
@@ -82,7 +85,7 @@ for d in (TAB_DIR, FIG_DIR):
     d.mkdir(parents=True, exist_ok=True)
 
 RANDOM_STATE = 42
-PREV_THRESH  = 0.10          # as notebook 03, 08a/08b and ANCOM-BC2
+CLR_CONFIG   = 'all10'       # 08c: 10% prevalence on all flowers, as notebook 03
 N_JOBS       = -1            # parallel loops, single-threaded forests (as notebook 03)
 FIG_DPI      = 300
 
@@ -108,32 +111,11 @@ def load_counts(stem):
                .to_dataframe(dense=True)
 
 
-def multiplicative_replacement(mat):
-    """Fixed-delta zero replacement (delta = 1 / n_features^2), as notebook 03."""
-    mat   = np.asarray(mat, dtype=float)
-    delta = 1.0 / mat.shape[1] ** 2
-    out   = mat.copy()
-    for i in range(len(out)):
-        zero = out[i] == 0
-        k = zero.sum()
-        if k:
-            out[i, zero]  = delta
-            out[i, ~zero] *= 1.0 - k * delta
-    return out
-
-
-def clr_features(counts):
-    """10% prevalence on all flowers, then CLR; returns samples x features."""
-    prev   = (counts > 0).sum(axis=1) / counts.shape[1]
-    counts = counts[prev >= PREV_THRESH]
-    ra     = counts.div(counts.sum(axis=0), axis=1)
-    logc   = np.log(multiplicative_replacement(ra.T.values))
-    return pd.DataFrame(logc - logc.mean(axis=1, keepdims=True),
-                        index=counts.columns, columns=counts.index)
-
-
-X_its1 = clr_features(load_counts('cfm_its1_otu97_fungi_biosamples'))
-X_16s  = clr_features(load_counts('cfm_16s_bacteria_biosamples'))
+# CLR features from R (08c); the biom counts only serve the consistency check
+X_its1 = load_clr('ITS1', VER_DIR, SAMPLE_SET, CLR_CONFIG,
+                  counts=load_counts('cfm_its1_otu97_fungi_biosamples'))
+X_16s  = load_clr('16S', VER_DIR, SAMPLE_SET, CLR_CONFIG,
+                  counts=load_counts('cfm_16s_bacteria_biosamples'))
 common = X_its1.index.intersection(X_16s.index)
 X_all  = {
     'ITS1':     X_its1,

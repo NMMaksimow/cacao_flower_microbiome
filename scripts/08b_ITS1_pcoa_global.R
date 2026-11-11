@@ -74,6 +74,7 @@ library(zCompositions)  # cmultRepl() for multiplicative zero replacement (CLR p
 
 # Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
 source(here("scripts", "utils_paths.R"))
+source(here("scripts", "utils_clr.R"))   # clr_czm()
 
 # ---- 2. Load & filter ----------------------------------------------------
 ps <- readRDS(file.path(RESULTS_DIR, "rds", paste0("ps_ITS1_otu97_fungi_biosamples", BIOSAMPLE_SUFFIX, ".rds"))) |>
@@ -109,12 +110,10 @@ dist_ait <- vegdist(otu_t, method = "robust.aitchison")
 # (internal rCLR C routine strips rownames). Force correct Labels.
 attr(dist_ait, "Labels") <- rownames(meta)
 
-# CLR with multiplicative replacement (Martin-Fernandez et al. 2003).
-# cmultRepl replaces zeros while preserving compositional totals (CZM method).
-# decostand(method="clr") is safe here because cmultRepl has already removed all zeros.
-otu_t_mr     <- zCompositions::cmultRepl(otu_t, label = 0, method = "CZM",
-                                          output = "p-counts", z.delete = FALSE)
-clr_mat      <- vegan::decostand(otu_t_mr, method = "clr")  # log(x) - mean(log(x)) per row
+# CLR with multiplicative replacement (Martin-Fernandez et al. 2003): cmultRepl
+# (CZM) then decostand(method = "clr"), in clr_czm() of utils_clr.R. The same
+# function produces the CLR matrices of 08c for the random forest notebooks.
+clr_mat      <- clr_czm(otu_t)
 dist_ait_clr <- dist(clr_mat)
 # dist() already sets Labels = rownames(clr_mat); no manual override needed
 

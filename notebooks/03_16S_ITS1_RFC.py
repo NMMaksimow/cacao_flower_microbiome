@@ -3,7 +3,7 @@
 
 # # 03 — Random Forest: 16S ASV & ITS1 OTU97
 # 
-# CLR-transformed amplicon abundances as features. Every target is modelled on three
+# CLR-transformed amplicon abundances as features (CLR matrices from R, script 08c). Every target is modelled on three
 # feature sets in parallel: **ITS1 OTU97**, **16S ASV**, and **Combined** (both concatenated).
 # 
 # | # | Target | Type | Samples | Question |
@@ -25,6 +25,27 @@
 # 
 # Metrics: balanced accuracy, MCC, ROC-AUC (OvR macro), permutation p-value, confusion
 # matrix, calibration; Gini / permutation / SHAP importance.
+
+# ### Pipeline at a glance
+# 
+# ```mermaid
+# flowchart TD
+#     A["biom count tables<br/>16S ASV, ITS1 OTU97, one column per flower"] --> B["08c (R): prevalence >= 10% of all flowers"]
+#     B --> C["cmultRepl CZM zero replacement, then CLR<br/>clr_czm(), the same function as 08a/08b"]
+#     C --> D["CLR matrices, results/v2/tables/clr/"]
+#     D --> E["this notebook: align with metadata<br/>feature sets ITS1, 16S, Combined"]
+#     E --> F{"target subset<br/>all flowers or unbagged only"}
+#     F --> G["nested CV: outer RepeatedStratifiedKFold 5 x 3<br/>inner GridSearchCV 5-fold<br/>(KFold for the pi_clsm regression)"]
+#     G --> S["reported scores<br/>balanced accuracy, MCC, ROC-AUC"]
+#     G --> H["modal hyperparameters"]
+#     H --> I["out-of-fold predictions<br/>confusion matrices, calibration"]
+#     H --> J["permutation test<br/>shuffled labels"]
+#     H --> K["importances on test folds<br/>Gini, permutation, SHAP"]
+# ```
+# 
+# Each target is fitted raw and, for `sample_type`, `pollination` and `fungal_colonization`,
+# also with within-farm centering inside the pipeline (farm means learned on the training
+# fold only). Quick profile: 1 outer repeat, 3 inner folds.
 
 # ## 0. Imports & parameters
 
@@ -56,6 +77,9 @@ from sklearn.metrics import (confusion_matrix, ConfusionMatrixDisplay,
 from sklearn.calibration import calibration_curve
 from sklearn.base import BaseEstimator, TransformerMixin, clone
 from sklearn.pipeline import Pipeline
+
+# CLR matrices written by scripts/08c_16S_ITS1_clr_export.R (see section 2)
+from utils_rfc import load_clr
 import shap
 
 # ── Data version and sample set ──────────────────────────────────────────────
@@ -158,10 +182,11 @@ STRONG_COMBOS = {
 N_JOBS_CV = -1
 
 # ── Feature filtering ────────────────────────────────────────────────────────
-# 10% prevalence matches 08a/08b and the ANCOMBC2 scripts (PREV_THRESH <- 0.10).
-# Keeping the same feature space is what makes RF importances comparable with
-# ANCOMBC2 / ISA results. No abundance filter is applied anywhere in this project.
-PREV_THRESH = 0.10
+# CLR matrix of 08c to use. 'all10' = features in >= 10% of all flowers, as in
+# 08a/08b and the ANCOMBC2 scripts (PREV_THRESH <- 0.10). Keeping the same feature
+# space is what makes RF importances comparable with ANCOMBC2 / ISA results. No
+# abundance filter is applied anywhere in this project.
+CLR_CONFIG = 'all10'
 
 # ── Samples ──────────────────────────────────────────────────────────────────
 # The sample set is defined upstream, as in the R scripts: the main biom holds the 288
@@ -294,7 +319,7 @@ def deepest_rank(taxon_str, feature_id=''):
     """Deepest informative rank, prefix kept: g__Fusarium -> f__Nectriaceae -> ...
 
     The single label used everywhere: as the aggregation key of the rank heatmap and,
-    with the feature hash appended by build_features, as the per-feature plot label.
+    with the feature hash appended by clr_features, as the per-feature plot label.
     One rank rather than two matches make_tax_label() in the ANCOMBC2 / ISA scripts,
     so an RF importance bar chart can sit next to an ANCOMBC2 volcano plot.
 
@@ -352,105 +377,52 @@ print()
 print(meta['sample_type'].value_counts().to_string())
 
 
-# ## 2. Feature filtering and transformation
+# ## 2. Features: CLR matrices from R
 # 
-# **Prevalence filter (10%) and the transform are computed on all flowers in the sample set, before
-# any target-specific subsetting.** That is safe for CLR: CLR is a per-sample (per-row)
-# operation, so selecting a subset of samples afterwards does not change the feature
-# values. It also keeps every target in the same feature space, and the same space that
-# 08a/08b and the ANCOMBC2 scripts use.
+# The CLR features are **not computed here**. `scripts/08c_16S_ITS1_clr_export.R` writes them
+# with `clr_czm()` of `scripts/utils_clr.R`, the same function that gives the Aitchison CLR
+# distance in 08a/08b. The PCoA, the PERMANOVA and this random forest therefore see identical
+# values (checked: the 08c matrix reproduces the 08a distance to 1e-13).
 # 
-# Four transforms are implemented. CLR is the default; the other three are used by the
-# sensitivity panel further down.
+# Steps, on every flower of the sample set, before any target-specific subsetting:
 # 
-# | Transform | What it does | Note |
-# |-----------|--------------|------|
-# | `raw` | untransformed counts | library size stays in the features |
-# | `tss` | counts / library size | removes depth, keeps the compositional constraint |
-# | `clr` | multiplicative zero replacement, then centred log-ratio | **default** |
-# | `rclr` | log of non-zero values minus the row mean of those logs; zeros stay 0 | matches `vegan::vegdist(method='robust.aitchison')` used for the PCoA in 08a/09c |
+# 1. prevalence filter: features present in >= 10% of all flowers (bagged + unbagged);
+# 2. zero replacement, `zCompositions::cmultRepl(method = "CZM")`: a zero in sample i becomes
+#    0.65 x 0.5 / N_i (N_i = reads in sample i, about a third of one read), capped at
+#    0.65 x the smallest observed proportion of that feature; non-zero values are rescaled
+#    so the sample keeps its total;
+# 3. CLR: log of each value minus the mean log of the sample.
 # 
-# Random Forest is *not* invariant to these choices. Trees are invariant to monotonic
-# transforms applied per feature, but CLR and TSS divide by a per-sample quantity, which
-# can reorder samples within a feature — and that ordering is exactly what a split uses.
+# Selecting a subset of samples afterwards does not change the features: CLR is computed per
+# sample, and the one cross-sample element of CZM (the per-feature cap) uses no labels. Every
+# target therefore works in the same feature space.
+# 
+# Before 2026-11 this notebook computed its own CLR with a fixed replacement delta = 1/D^2,
+# independent of sequencing depth (0.01-1.9 reads per zero across our samples). Other
+# transforms (raw, TSS, rCLR) and other prevalence thresholds are compared in
+# `03c_16S_ITS1_RFC_preproc.py`.
 
 # In[4]:
 
 
-def multiplicative_replacement(mat, delta=None):
-    """Replace zeros with a small constant, rescaling the rest to keep row sums.
+def clr_features(marker, counts, tax_dict, label):
+    """08c CLR matrix aligned to the metadata. Returns (X samples x features, plot labels).
 
-    mat: samples x features, rows are relative abundances.
-    Simple fixed-delta variant (skbio default). The R pipeline (08a) uses
-    zCompositions::cmultRepl(method='CZM'), which estimates the replacement per
-    feature; values therefore differ slightly between the two implementations.
+    counts (the biom table) is passed only for the consistency check in load_clr: the
+    CLR features must be biom features and the samples must be the same flowers.
     """
-    mat = np.asarray(mat, dtype=float)
-    if delta is None:
-        delta = 1.0 / mat.shape[1] ** 2
-    out = mat.copy()
-    for i in range(len(out)):
-        zm = out[i] == 0
-        k  = zm.sum()
-        if k:
-            out[i,  zm] = delta
-            out[i, ~zm] *= 1.0 - k * delta
-    return out
-
-
-def transform_counts(counts_f, how='clr'):
-    """counts_f: features x samples -> DataFrame samples x features."""
-    ra = counts_f.div(counts_f.sum(axis=0), axis=1)      # relative abundance
-    idx, cols = counts_f.columns, counts_f.index
-
-    if how == 'raw':
-        return pd.DataFrame(counts_f.T.values, index=idx, columns=cols)
-    if how == 'tss':
-        return pd.DataFrame(ra.T.values, index=idx, columns=cols)
-    if how == 'clr':
-        comp = multiplicative_replacement(ra.T.values)
-        logc = np.log(comp)
-        return pd.DataFrame(logc - logc.mean(axis=1, keepdims=True), index=idx, columns=cols)
-    if how == 'rclr':
-        # Robust CLR, as implemented by vegan: the geometric mean is taken over the
-        # non-zero entries of each sample and zeros are left at 0.
-        X    = ra.T.values
-        nz   = X > 0
-        logX = np.where(nz, np.log(np.where(nz, X, 1.0)), 0.0)
-        row_gm = logX.sum(axis=1) / np.maximum(nz.sum(axis=1), 1)
-        return pd.DataFrame(np.where(nz, logX - row_gm[:, None], 0.0), index=idx, columns=cols)
-    raise ValueError(f'unknown transform: {how}')
-
-
-def prevalence_filter(counts_raw, thresh, subset_ids=None):
-    """Keep features present in >= thresh of samples.
-
-    subset_ids: compute prevalence within this subset instead of all samples
-    (used by the sensitivity panel to test the unbagged-only variant).
-    """
-    ref = counts_raw if subset_ids is None else counts_raw[
-        [s for s in counts_raw.columns if s in set(subset_ids)]]
-    prev = (ref > 0).sum(axis=1) / ref.shape[1]
-    return counts_raw[prev >= thresh]
-
-
-def build_features(counts_raw, meta_df, tax_dict, how='clr', thresh=PREV_THRESH,
-                   subset_ids=None, label=''):
-    """Filter -> transform -> align to metadata. Returns (X, feature labels)."""
-    counts_f = prevalence_filter(counts_raw, thresh, subset_ids)
-    X = transform_counts(counts_f, how)
-    X = X.loc[X.index.intersection(meta_df.index)]
+    X = load_clr(marker, VER_DIR, SAMPLE_SET, CLR_CONFIG, counts=counts)
+    X = X.loc[X.index.intersection(meta.index)]
     feats = [f'{tax_dict.get(f, str(f)[:18])} [{str(f)[:6]}]' for f in X.columns]
-    if label:
-        print(f'{label:10s} {how:5s}: {X.shape[1]:5d} features  {X.shape[0]:3d} samples')
+    print(f'{label:10s} clr  : {X.shape[1]:5d} features  {X.shape[0]:3d} samples')
     return X, feats
 
 
 # In[5]:
 
 
-X_its1, feat_its1 = build_features(counts_its1, meta, tax_its1, 'clr', label='ITS1 OTU97')
-X_16s,  feat_16s  = build_features(counts_16s,  meta, tax_16s,  'clr', label='16S ASV')
+X_its1, feat_its1 = clr_features('ITS1', counts_its1, tax_its1, 'ITS1 OTU97')
+X_16s,  feat_16s  = clr_features('16S',  counts_16s,  tax_16s,  '16S ASV')
 
 # Combined multi-kingdom matrix: samples present in both markers, columns prefixed
 # so ITS1 and 16S feature names cannot collide.
@@ -658,8 +630,9 @@ def center_y_by_farm(y, farm, means=None):
 # ── Disk cache: a full run takes hours, a kernel restart must not cost them ──
 # CACHE_VERSION is part of the filename. Bump it whenever the procedure changes, so
 # results from an earlier definition can never be picked up silently: v1 files came
-# from 200 permutations at 500 trees and a differently defined importance step.
-CACHE_VERSION = f'v2{OUT_TAG}'
+# from 200 permutations at 500 trees and a differently defined importance step;
+# v2czm switched the features to the CLR matrices of 08c (CZM zero replacement).
+CACHE_VERSION = f'v2czm{OUT_TAG}'
 
 
 def _cache_path(key, ext='json'):
@@ -900,6 +873,26 @@ def spearman_scorer(estimator, X, y):
     pi_clsm is zero-inflated and right-skewed, so a rank measure is more honest
     than R^2 here."""
     return spearmanr(y, estimator.predict(X))[0]
+
+
+# In[ ]:
+
+
+# ── The model as a block diagram ─────────────────────────────────────────────
+# In JupyterLab this draws sklearn's interactive estimator diagram (click a block to
+# see its parameters): the inner grid search around within-farm centering + forest,
+# i.e. the farm-blocked variant; the raw variant is the same without 'center'. The
+# outer CV loop is not part of the estimator; it is in the Mermaid chart at the top.
+# In a batch run (python 03_16S_ITS1_RFC.py) the text form is printed instead.
+from sklearn import set_config
+set_config(display='diagram')
+model_diagram = GridSearchCV(make_pipeline_clf(), prefix_grid(PARAM_GRID),
+                             cv=INNER_SPLITS, scoring='balanced_accuracy')
+try:
+    from IPython.display import display
+    display(model_diagram)
+except ImportError:
+    print(model_diagram)
 
 
 # ## 5. Fit all classification targets
@@ -1347,183 +1340,15 @@ fig.savefig(FIG_DIR / f'{FIG_PREFIX}regression_pi_clsm.png', dpi=FIG_DPI,
 plt.show()
 
 
-# ## 12. Does the transformation drive the result?
+# ## Sensitivity: transforms and prevalence threshold -> notebook 03c
 # 
-# CLR is the default here, but the PCoA in 08a/09c uses rCLR, and one could argue for
-# raw counts. Random Forest is not invariant to the choice: CLR and TSS divide by a
-# per-sample quantity, which can reorder samples within a feature, and that ordering is
-# what a split threshold acts on.
-# 
-# The specific risk with raw counts is documented in 08a: unbagged flowers are
-# systematically sequenced deeper than bagged ones on every farm. On untransformed
-# counts a forest can reach high accuracy on `sample_type` by reading library size
-# rather than community composition. The diagnostic below quantifies that directly,
-# and the panel shows whether it materialises.
-# 
-# Fixed hyperparameters and a single 5-fold CV are used here — this panel compares
-# transforms against each other, not against an absolute standard.
+# The transform comparison (raw, TSS, CLR, rCLR) and the prevalence-threshold comparison,
+# formerly sections 12-13 of this notebook, moved to `03c_16S_ITS1_RFC_preproc.py` (run on
+# Hamilton by `scripts/03c_hpc_rfc_preproc.sh`). There every setting is scored by 5 x 5
+# repeated CV against a permutation null instead of one 5-fold run, so a difference between
+# settings can be told apart from fold-to-fold noise.
 
-# In[16]:
-
-
-# ── Diagnostic: how strongly is library size tied to each target? ───────────
-lib_rows = []
-for ds, counts_raw in [('ITS1', counts_its1), ('16S', counts_16s)]:
-    depth = counts_raw.sum(axis=0)                      # reads per sample
-    for target in CLF_TARGETS:
-        _, y_s = build_xy(target, ds)
-        d = depth.reindex(y_s.index)
-        # eta^2 from a one-way layout: fraction of depth variance explained by the class
-        grand = d.mean()
-        ss_between = sum(len(g) * (g.mean() - grand) ** 2 for _, g in d.groupby(y_s.values))
-        ss_total   = ((d - grand) ** 2).sum()
-        lib_rows.append(dict(dataset=ds, target=target,
-                             eta2_depth=ss_between / ss_total,
-                             median_depth=int(d.median())))
-lib_df = pd.DataFrame(lib_rows)
-print('Variance in sequencing depth explained by each target (eta^2):')
-print(lib_df.to_string(index=False))
-print('\nHigh eta^2 means raw counts give the forest a technical shortcut.')
-
-
-# In[17]:
-
-
-TRANSFORMS = ['raw', 'tss', 'clr', 'rclr']
-
-def score_fixed(X_df, y_s):
-    """Single 5-fold CV with default hyperparameters — used by the sensitivity panels."""
-    if y_s.nunique() < 2 or len(y_s) < 2 * N_SPLITS:
-        return np.nan
-    cv = StratifiedKFold(n_splits=N_SPLITS, shuffle=True, random_state=RANDOM_STATE)
-    pred = cross_val_predict(make_clf(), X_df.values, y_s.values, cv=cv)
-    return balanced_accuracy_score(y_s.values, pred)
-
-tr_rows = []
-for ds, counts_raw, tax_d in [('ITS1', counts_its1, tax_its1), ('16S', counts_16s, tax_16s)]:
-    for how in TRANSFORMS:
-        X_t, _ = build_features(counts_raw, meta, tax_d, how=how)
-        for target in CLF_TARGETS:
-            X_sub, y_sub = build_xy(target, ds, X_override=X_t)
-            tr_rows.append(dict(dataset=ds, transform=how, target=target,
-                                bal_acc=score_fixed(X_sub, y_sub)))
-        print(f'  {ds} {how} done')
-
-tr_df = pd.DataFrame(tr_rows)
-tr_df.to_csv(TAB_DIR / f'{FIG_PREFIX}transform_comparison.csv', index=False)
-
-
-# In[18]:
-
-
-fig, axes = plt.subplots(2, len(CLF_TARGETS), figsize=(4.1 * len(CLF_TARGETS), 7.4),
-                         sharey=True)
-fig.suptitle('Sensitivity to the feature transformation (fixed hyperparameters, 5-fold CV)',
-             fontsize=12, fontweight='bold')
-
-# Grey bars for the alternatives, the dataset colour for CLR (the default in use).
-for row, ds in enumerate(['ITS1', '16S']):
-    for col, target in enumerate(CLF_TARGETS):
-        ax  = axes[row, col]
-        sub = tr_df[(tr_df.dataset == ds) & (tr_df.target == target)].set_index('transform')
-        sub = sub.reindex(TRANSFORMS)
-        colours = [DS_COLOURS[ds] if t == 'clr' else '#BBBBBB' for t in TRANSFORMS]
-        ax.bar(range(len(TRANSFORMS)), sub['bal_acc'], color=colours, alpha=0.9)
-        n_cls = len(TARGETS[target]['order'] or RESULTS[(target, ds, 'raw')]['classes'])
-        ax.axhline(1 / n_cls, color='black', ls=':', lw=1)     # chance level
-        ax.set_xticks(range(len(TRANSFORMS)))
-        ax.set_xticklabels(TRANSFORMS, fontsize=9)
-        ax.set_title(f'{ds} | {target}', fontsize=9, fontweight='bold')
-        if col == 0:
-            ax.set_ylabel('Balanced accuracy')
-        ax.set_ylim(0, 1.02)
-
-plt.tight_layout()
-fig.savefig(FIG_DIR / f'{FIG_PREFIX}transform_comparison.png', dpi=FIG_DPI,
-            bbox_inches='tight', facecolor='white')
-plt.show()
-
-
-# ## 13. Effect of the prevalence threshold
-# 
-# 10% is used throughout, to match 08a/08b and the ANCOMBC2 scripts — RF importances are
-# only comparable with ANCOMBC2 and ISA results if all three see the same feature space.
-# The cost differs sharply between markers:
-# 
-# | threshold | ITS1 features | ITS1 reads kept | 16S features | 16S reads kept |
-# |---|---|---|---|---|
-# | 5 % | 554 | 96.9 % | 580 | 77.6 % |
-# | **10 %** | **303** | **94.2 %** | **231** | **65.2 %** |
-# | 20 % | 158 | 87.1 % | 87 | 46.1 % |
-# 
-# For ITS1 the step from 5% to 10% costs under 3% of reads. For 16S it discards a third
-# of them — the bacterial community is far more even. That number belongs in the Methods.
-# 
-# The last row, `10% within unbagged`, computes prevalence inside the unbagged subset
-# instead of across all flowers. Three of the targets live only on unbagged flowers,
-# and a taxon common there but rare overall is dropped by the global filter: 45 ITS1
-# features (0.6% of reads) and 37 16S features (3.8% of reads).
-
-# In[19]:
-
-
-unbagged_ids = list(meta.index[meta['sample_type'] == 'unbagged_flower'])
-PREV_CONFIGS = [('0 %', 0.00, None), ('5 %', 0.05, None), ('10 % (used)', 0.10, None),
-                ('20 %', 0.20, None), ('10 % within unbagged', 0.10, unbagged_ids)]
-
-pv_rows = []
-for ds, counts_raw, tax_d in [('ITS1', counts_its1, tax_its1), ('16S', counts_16s, tax_16s)]:
-    for label, thr, subset in PREV_CONFIGS:
-        X_t, _ = build_features(counts_raw, meta, tax_d, how='clr',
-                                thresh=thr, subset_ids=subset)
-        for target in CLF_TARGETS:
-            X_sub, y_sub = build_xy(target, ds, X_override=X_t)
-            pv_rows.append(dict(dataset=ds, filter=label, target=target,
-                                n_features=X_t.shape[1], bal_acc=score_fixed(X_sub, y_sub)))
-        print(f'  {ds} {label}: {X_t.shape[1]} features')
-
-pv_df = pd.DataFrame(pv_rows)
-pv_df.to_csv(TAB_DIR / f'{FIG_PREFIX}prevalence_comparison.csv', index=False)
-
-
-# In[20]:
-
-
-fig, axes = plt.subplots(2, len(CLF_TARGETS), figsize=(4.3 * len(CLF_TARGETS), 7.8),
-                         sharey=True)
-fig.suptitle('Effect of the prevalence threshold (fixed hyperparameters, 5-fold CV)',
-             fontsize=12, fontweight='bold')
-labels = [c[0] for c in PREV_CONFIGS]
-
-for row, ds in enumerate(['ITS1', '16S']):
-    for col, target in enumerate(CLF_TARGETS):
-        ax  = axes[row, col]
-        sub = (pv_df[(pv_df.dataset == ds) & (pv_df.target == target)]
-               .set_index('filter').reindex(labels))
-        # The threshold actually in use is highlighted; the rest are grey.
-        colours = [DS_COLOURS[ds] if l.startswith('10 % (') else '#BBBBBB' for l in labels]
-        ax.bar(range(len(labels)), sub['bal_acc'], color=colours, alpha=0.9)
-        n_cls = len(TARGETS[target]['order'] or RESULTS[(target, ds, 'raw')]['classes'])
-        ax.axhline(1 / n_cls, color='black', ls=':', lw=1)
-        ax.set_xticks(range(len(labels)))
-        ax.set_xticklabels(labels, rotation=30, ha='right', fontsize=7.5)
-        ax.set_title(f'{ds} | {target}', fontsize=9, fontweight='bold')
-        if col == 0:
-            ax.set_ylabel('Balanced accuracy')
-        ax.set_ylim(0, 1.02)
-        # Secondary axis: number of features surviving each threshold.
-        ax2 = ax.twinx()
-        ax2.plot(range(len(labels)), sub['n_features'], 'ko--', ms=4, lw=1)
-        ax2.set_ylabel('# features', fontsize=7, color='grey')
-        ax2.tick_params(axis='y', labelsize=7, colors='grey')
-
-plt.tight_layout()
-fig.savefig(FIG_DIR / f'{FIG_PREFIX}prevalence_comparison.png', dpi=FIG_DPI,
-            bbox_inches='tight', facecolor='white')
-plt.show()
-
-
-# ## 14. Permutation and SHAP importance
+# ## 12. Permutation and SHAP importance
 # 
 # Both measures are computed **fold-wise on held-out data**, not on a model refitted to
 # everything. That matters: with `min_samples_leaf=1` a forest fitted on all samples
@@ -1592,7 +1417,7 @@ imp_long.to_csv(TAB_DIR / f'{FIG_PREFIX}importances.csv', index=False)
 print('Saved importances table.')
 
 
-# ## 15. Importance aggregated by taxonomic rank
+# ## 13. Importance aggregated by taxonomic rank
 # 
 # Gini importance summed per taxon, using the deepest rank each feature was classified
 # to: `g__Fusarium` when the genus is known, otherwise `f__Nectriaceae`, `o__Hypocreales`
