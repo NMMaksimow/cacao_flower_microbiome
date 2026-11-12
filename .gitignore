@@ -89,5 +89,6 @@ image_analysis/
 
 # v2 pipeline outputs (fetched from Hamilton as needed)
 qiime2_v2/
-# ZymoBIOMICS mock reference archives (expected sequences are in workflow/resources/mock/)
-data/ZymoBIOMICS*.zip
+# ZymoBIOMICS mock reference archive and manual: vendor files, not for the public repo
+# (expected sequences are in workflow/resources/mock/)
+data/ZymoBIOMICS*
