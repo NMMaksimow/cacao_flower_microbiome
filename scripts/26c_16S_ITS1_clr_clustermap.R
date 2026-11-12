@@ -1,5 +1,5 @@
 ## ============================================================================
-## 26c — 16S bacteria + ITS1 OTU97 CLR clustermaps: Ward.D2 vs UPGMA linkage
+## 26c — 16S bacteria + ITS1 OTU97 CLR clustermaps (Ward.D2)
 ##
 ## Pipeline (applied independently to each marker):
 ##   1. Keep flower biosamples; prevalence filter >= 10% of samples
@@ -9,20 +9,22 @@
 ##        used is printed to the console and in the heatmap subtitle
 ##   3. CLR transformation: log(x_i) - mean(log(x)) per sample
 ##      → Euclidean distance on CLR = Aitchison distance (aitchison_CLR in 08a/08b)
-##   4. Hierarchical clustering of samples and taxa with two linkages:
-##      top row = Ward.D2, bottom row = average (UPGMA)
+##   4. Ward.D2 hierarchical clustering of samples and taxa. UPGMA was dropped
+##      (2026-11-12): it chains (samples join one by one); whether the flowers form
+##      discrete clusters at all is tested in notebooks/exploratory/02_clustering.ipynb
+##      (they do not), so this figure is descriptive only.
 ##   5. ComplexHeatmap with a sequencing-depth bar track and 5 metadata strips
 ##
-## Layout: 2 x 2 heatmaps (columns = 16S | ITS1; rows = Ward.D2 | UPGMA) plus a
-## shared annotation legend column on the right. The two markers have different
+## Layout: 2 heatmaps side by side (16S | ITS1) plus a shared annotation legend
+## column on the right. The two markers have different
 ## feature sets, so heatmaps cannot be concatenated with + (requires identical
 ## row counts); each is drawn into its own grid viewport instead.
 ##
 ## Input:
-##   results/rds/ps_16S_bacteria_biosamples.rds
-##   results/rds/ps_ITS1_otu97_fungi_biosamples.rds
+##   results/<version>/rds/ps_16S_bacteria_biosamples<suffix>.rds
+##   results/<version>/rds/ps_ITS1_otu97_fungi_biosamples<suffix>.rds
 ## Output:
-##   results/figures/26c_16S_ITS1_clr_clustermap.png
+##   results/<version>/figures/26c_16S_ITS1_clr_clustermap<SET_TAG>.png
 ## ============================================================================
 
 # ── 0. Parameters ─────────────────────────────────────────────────────────────
@@ -31,9 +33,9 @@ PREV_THRESH <- 0.10        # taxon present in >= 10% of samples (as in 08a/08b)
 ZERO_METHOD <- "CZM"       # cmultRepl: count-zero multiplicative replacement
 DIST_METHOD <- "euclidean" # Euclidean on CLR = Aitchison distance
 
-# Linkage per figure row (top -> bottom)
-LINK_METHODS <- c(ward = "ward.D2",   # minimises within-cluster variance; compact, balanced clusters
-                  upgma = "average")  # mean pairwise distance; usually preserves distances best
+# Linkage: Ward.D2 minimises within-cluster variance (compact, balanced groups).
+# Kept as a named vector so another linkage can be added as a second figure row.
+LINK_METHODS <- c(ward = "ward.D2")
 
 # ── 1. Libraries ──────────────────────────────────────────────────────────────
 
@@ -294,23 +296,24 @@ annot_legend <- build_annot_legend(cols)
 dir.create(file.path(RESULTS_DIR, "figures"), showWarnings = FALSE, recursive = TRUE)
 out_fp <- file.path(RESULTS_DIR, "figures", paste0("26c_16S_ITS1_clr_clustermap", SET_TAG, ".png"))
 
-# Figure size in inches; fonts are in points, so a larger canvas = smaller text
-png(out_fp, width = 26, height = 24, units = "in", res = 300)
+# Figure size in inches; fonts are in points, so a larger canvas = smaller text.
+# Height scales with the number of linkage rows (12 in per row).
+png(out_fp, width = 26, height = 12 * length(LINK_METHODS), units = "in", res = 300)
 
 grid.newpage()
 
 # Main title
 grid.text(
-    "16S bacteria vs ITS1 fungi — CLR clustermap (top: Ward.D2, bottom: UPGMA)",
+    "16S bacteria vs ITS1 fungi — CLR clustermap (Ward.D2)",
     x  = 0.5, y = 0.985,
     gp = gpar(fontsize = 14, fontface = "bold")
 )
 
-# Grid layout: 2 rows (linkages) x 3 columns (16S, ITS1, legend).
+# Grid layout: one row per linkage x 3 columns (16S, ITS1, legend).
 # widths controls the relative width of each column; the last one is the legend.
 pushViewport(viewport(
     y = 0.48, height = 0.96,
-    layout = grid.layout(nrow = 2, ncol = 3,
+    layout = grid.layout(nrow = length(LINK_METHODS), ncol = 3,
                          widths = unit(c(1, 1, 0.12), "null"))
 ))
 
@@ -323,8 +326,8 @@ for (i in seq_along(hm_list)) {
     }
 }
 
-# Shared annotation legend, spanning both rows of the third column
-pushViewport(viewport(layout.pos.row = 1:2, layout.pos.col = 3))
+# Shared annotation legend, spanning all rows of the third column
+pushViewport(viewport(layout.pos.row = seq_along(LINK_METHODS), layout.pos.col = 3))
 draw(annot_legend, x = unit(2, "mm"), y = unit(0.5, "npc"), just = "left")
 popViewport()
 
