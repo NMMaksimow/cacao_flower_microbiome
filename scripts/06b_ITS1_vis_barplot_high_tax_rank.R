@@ -21,6 +21,7 @@ library(ggh4x)       # facet_nested()
 
 # Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
 source(here("scripts", "utils_paths.R"))
+source(here("scripts", "utils_barplot.R"))   # mark_deviations(): deviation flowers on the 294 set
 
 # ── 0. Parameters ─────────────────────────────────────────────────────────────
 
@@ -91,6 +92,12 @@ phylum_colors <- c(
         "p__Unassigned" = "#E68FAC",   # same soft pink as in 07aa_ (kelly palette)
         "Other"         = "grey80"
 )
+
+# Stacking order (top to bottom): the most abundant phylum anchored to the top of
+# the box, the second most abundant to the bottom, so both sit on a common
+# baseline (100% or 0%) and compare across bars; Unassigned and Other in the
+# middle (anchor_levels() in utils_barplot.R). Colours stay attached to names.
+phylum_factor_levels <- anchor_levels(phylum_factor_levels, ranking = setdiff(top_phyla, "p__Unassigned"))
 
 # ── 5. Shared theme helper ────────────────────────────────────────────────────
 
@@ -282,6 +289,16 @@ figC <- ggplot(figC_tbl, aes(x = flower_id, y = Abundance, fill = Phylum_plot)) 
                         100 * RA_THRESHOLD_PHYLUM
                 )
         )
+
+# 294 set: sampling deviations marked by label colour and a triangle above the bar
+if (CFM_SAMPLE_SET == "with_deviations") {
+        deviations <- fig_long |>
+                distinct(Sample, sample_type, management_type, farm_id, tree_id, sampling_deviation) |>
+                filter(sampling_deviation != "none") |>
+                mutate(flower_id = factor(str_sub(as.character(Sample), 2), levels = flower_order),
+                       sampling_deviation = as.character(sampling_deviation))   # factor in sample_data
+        figC <- mark_deviations(figC, deviations, label_size = 4)
+}
 
 print(figC)
 
