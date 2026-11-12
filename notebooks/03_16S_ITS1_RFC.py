@@ -15,7 +15,7 @@
 # | 5 | `pi_clsm` | **regression** | unbagged only | pollen load as a continuous response |
 # 
 # `management_type` is deliberately **not** a target: each farm has exactly one management
-# type (7 farms x 42 flowers, no overlap), so a model separating management levels is
+# type (7 farms, 40-42 flowers each, no overlap), so a model separating management levels is
 # separating farms. It would duplicate target 1 under a different name.
 # 
 # **Evaluation.** Hyperparameters are tuned by nested cross-validation: an inner
@@ -904,8 +904,8 @@ except ImportError:
 # a permutation test, and fold-wise importances.
 # 
 # **Three targets are additionally fitted `within-farm`.** The farm signal dominates this
-# dataset — ITS1 identifies the farm with ROC-AUC 0.965 — and farm is associated with both
-# weak biological targets (Cramér V = 0.485 for `fungal_colonization`, 0.326 for
+# dataset — ITS1 identifies the farm with ROC-AUC 0.93 — and farm is associated with both
+# weak biological targets (Cramér V = 0.485 for `fungal_colonization`, 0.317 for
 # `pollination`). A model could therefore "predict" colonisation by recognising the farm.
 # Subtracting each farm's mean from every feature leaves only within-farm variation, so
 # the pair of results answers how much of the signal was farm-mediated.
@@ -967,10 +967,10 @@ print('\nDone.')
 # 
 # Thresholding a continuous measurement into classes throws information away and makes
 # the result depend on where the threshold sits. Regressing `pi_clsm` directly avoids
-# both, and uses all 102 measured unbagged flowers.
+# both, and uses all 100 measured unbagged flowers.
 # 
 # Primary metric is **Spearman rho** between out-of-fold predictions and observations:
-# `pi_clsm` is zero-inflated (38 of 102 are exactly 0) and right-skewed, so a rank
+# `pi_clsm` is zero-inflated (36 of 100 are exactly 0) and right-skewed, so a rank
 # correlation describes the fit more honestly than R². R² and MAE are reported alongside.
 # 
 # This is not an independent confirmation of the 3-class model in section 5 — it is the
