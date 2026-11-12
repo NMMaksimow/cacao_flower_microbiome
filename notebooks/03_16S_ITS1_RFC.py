@@ -158,6 +158,8 @@ N_PERM_IMP = 5 if QUICK else 10
 # after the first full run: they carry the paper's main result, and at 200 shuffles
 # their p sat on the 1/(n+1) floor of 0.005, which does not clear the Bonferroni
 # threshold of 0.05/27 = 0.00185. At 1000 the floor drops to 0.001 and it does.
+# The last two rows were added after the CZM rerun (2026-11-12): their p sat on the
+# 200-shuffle floor of 0.005, so whether they clear Bonferroni was undecided.
 STRONG_COMBOS = {
     ('farm_id', 'ITS1', 'raw'), ('farm_id', '16S', 'raw'),
     ('farm_id', 'Combined', 'raw'),
@@ -166,6 +168,7 @@ STRONG_COMBOS = {
     ('fungal_colonization', 'Combined', 'raw'),
     ('sample_type', 'ITS1', 'within-farm'), ('sample_type', '16S', 'within-farm'),
     ('sample_type', 'Combined', 'within-farm'),
+    ('pollination', 'ITS1', 'within-farm'), ('fungal_colonization', 'ITS1', 'raw'),
 }
 
 # Parallelism goes on the CV loops, not on tree building.
