@@ -23,6 +23,8 @@
 ##   results/rds/ps_ITS1_otu97_fungi_biosamples.rds      (_with_deviations for 294)
 ## Output:
 ##   results/figures/05_rarefaction_curves_288.png      (_294 for the 294 set)
+##   results/figures/05_rarefaction_by_farm_288.png     (_294; section 6: the v1 05c
+##     figure restored: 16S row / ITS1 row x 7 farms, curves bagged / unbagged)
 ## ============================================================================
 
 # ---- 0. Parameters -------------------------------------------------------
@@ -222,4 +224,98 @@ curves |>
   distinct(marker, sample_id, .keep_all = TRUE) |>
   summarise(across(all_of(names(ROW_VARIABLES)), \(x) sum(!is.na(x))), .by = marker) |>
   print()
+
+# ---- 6. Figure by farm (v1 05c restored) ---------------------------------
+# Code of the v1 script 05c_rarefaction_by_farm.R (git show cded4c2^:scripts/...),
+# base R graphics. v2 changes: ITS1 on OTU97 (v1 read the ASV object), objects and
+# palette from this script, axis limits from AXIS_LIMITS (same maxima as v1's loops).
+#
+# Figure: 2 rows x 7 farms
+#   Row 1 (top):    16S ASV bacteria
+#   Row 2 (bottom): ITS1 OTU97 fungi
+#
+# Layout parameters:
+#   oma[2] = 5 lines: left outer margin for vertical row labels ("16S", "ITS1")
+#   oma[1] = 3 lines: bottom margin for shared legend strip
+#   oma[3] = 2 lines: top margin for overall title
+#   mar = per-panel margins; mar[3] tightened for row 2 (no panel title row)
+
+# Count matrix of one farm (flowers x taxa)
+farm_matrix <- function(ps, farm) {
+  m    <- count_matrix(ps)
+  meta <- data.frame(sample_data(ps))[rownames(m), , drop = FALSE]
+  m[meta$farm_id == farm, , drop = FALSE]
+}
+
+# Shared limits per marker row: x = max reads, y = max richness + 10% padding
+FARM_XLIM <- setNames(lapply(names(ps_list), \(mk) c(0, AXIS_LIMITS$x_max[AXIS_LIMITS$marker == mk])),
+                      names(ps_list))
+FARM_YLIM <- setNames(lapply(names(ps_list), \(mk) c(0, AXIS_LIMITS$y_max[AXIS_LIMITS$marker == mk] * 1.10)),
+                      names(ps_list))
+FARM_YLAB <- c("16S" = "Observed ASVs", "ITS1" = "Observed OTUs")
+
+png(file.path(RESULTS_DIR, "figures", paste0("05_rarefaction_by_farm", SET_TAG, ".png")),
+    width = 21, height = 10, units = "in", res = 300)
+
+par(mfrow = c(2, length(FARM_LEVELS)),
+    oma   = c(3, 5, 2, 0))
+
+for (marker in names(ps_list)) {
+  for (farm in FARM_LEVELS) {
+    mat    <- farm_matrix(ps_list[[marker]], farm)
+    meta_f <- data.frame(sample_data(ps_list[[marker]]))[rownames(mat), , drop = FALSE]
+    cols   <- TREATMENT_COLS[as.character(meta_f$sample_type)]
+    is_16S <- marker == "16S"
+
+    # mar[3] (top): 2.5 lines for panel title only on top row; 0.4 on bottom row
+    par(mar = c(2.5, 2.5, if (is_16S) 2.5 else 0.4, 0.4), mgp = c(1.5, 0.5, 0))
+
+    vegan::rarecurve(
+      mat,
+      step  = STEP,
+      col   = cols,
+      label = FALSE,
+      # x-label on the middle column of the bottom row only
+      xlab  = if (!is_16S && farm == FARM_LEVELS[4]) "Sequencing depth" else "",
+      ylab  = if (farm == FARM_LEVELS[1]) FARM_YLAB[[marker]] else "",   # leftmost panel only
+      xlim  = FARM_XLIM[[marker]],   # shared x-limit across the panels of this marker
+      ylim  = FARM_YLIM[[marker]],   # shared y-limit across the panels of this marker
+      main  = if (is_16S) paste0(farm, " | ", MGMT[farm]) else ""
+    )
+    # vertical lines at the two rarefaction depths used in 07a / 07b alpha diversity
+    abline(v = ALPHA_DEPTHS[[marker]], lty = 2, col = "grey40", lwd = 0.8)
+  }
+}
+
+# ---- Row labels in outer left margin ----
+# NDC positioning: centre of each row in the inner region
+omi_h   <- par("omi")
+din_h   <- par("din")[2]
+inner_h <- din_h - omi_h[1] - omi_h[3]
+row_labels <- c("16S — Bacteria", "ITS1 — Fungi")
+for (i in seq_along(row_labels)) {
+  # Centre of row i (1 = topmost)
+  y_ndc <- (omi_h[1] + inner_h * (1 - (i - 0.5) / 2)) / din_h
+  mtext(row_labels[i], side = 2, outer = TRUE,
+        at = y_ndc, las = 0, cex = 0.80, line = 2)
+}
+
+mtext("Rarefaction curves by farm — 16S (top) and ITS1 (bottom)",
+      outer = TRUE, cex = 1.0, line = 0.5, side = 3)
+
+# ---- Shared legend in bottom outer margin ----
+# fig = c(x1, x2, y1, y2) in normalised device coords.
+# Increase 4th value (e.g. 0.06 -> 0.09) if legend appears cramped vertically.
+par(fig = c(0, 1, 0, 0.06), oma = c(0, 0, 0, 0), mar = c(0, 0, 0, 0), new = TRUE)
+plot.new()
+legend("bottom",
+       legend = c("Bagged", "Unbagged"),
+       col    = TREATMENT_COLS,
+       lwd    = 2,
+       horiz  = TRUE,
+       cex    = 0.95,
+       bty    = "n")
+
+dev.off()
+
 cat("05 done.\n")
