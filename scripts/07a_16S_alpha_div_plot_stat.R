@@ -6,13 +6,15 @@ library(lmerTest)    # p-values for lmer()
 library(glmmTMB)
 library(DHARMa)
 library(performance)
-library(ggeffects)
 library(ggh4x)
 library(patchwork)
 library(cowplot)
 
 # Data version and sample set: RESULTS_DIR, BIOSAMPLE_SUFFIX, SET_TAG
 source(here("scripts", "utils_paths.R"))
+# Model helpers shared with 07b: fit_alpha_model(), alpha_treatment_farm(),
+# alpha_per_farm(), alpha_microscopy()
+source(here("scripts", "utils_alpha.R"))
 
 # ---- Parameters ----
 # N_ITER and RAREFY_DEPTH* must match values used in 07a_16S_alpha_div_rarefaction.R
@@ -35,90 +37,20 @@ alpha_iters_10k   <- readRDS(file.path(RESULTS_DIR, "rds", paste0("alpha_16S_10k
 alpha_summary_10k <- readRDS(file.path(RESULTS_DIR, "rds", paste0("alpha_16S_10k_999iters_summary", BIOSAMPLE_SUFFIX, ".rds")))
 
 ################################################################################
-#### Shared helpers ############################################################
-################################################################################
-
-# Farm × management nested boxplot for one metric.
-# metric_col: column name from alpha_sum (e.g. "Shannon_median")
-# y_label:    y-axis label string
-# alpha_sum:  summary tibble — either alpha_summary_2k or alpha_summary_10k
-# ylim:       optional c(lo, hi) — applied via coord_cartesian for shared depth comparison
-plot_alpha_farm_management <- function(metric_col, y_label, alpha_sum, ylim = NULL) {
-
-    p <- alpha_sum |>
-        ggplot(aes(x = farm_id, y = .data[[metric_col]], fill = sample_type)) +
-        geom_boxplot(
-            outlier.shape = NA,
-            alpha         = 0.7,
-            position      = position_dodge(width = 0.75)
-        ) +
-        geom_jitter(
-            position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.75),
-            aes(colour = sample_type),
-            alpha    = 0.4,
-            size     = 0.8,
-            stroke   = 0.2
-        ) +
-        ggh4x::facet_nested(
-            ~ management_type,
-            scales   = "free_x",
-            space    = "free_x",
-            switch   = "x",
-            labeller = as_labeller(c(
-                inside_forest = "inside\nforest",  # 1 farm — farm-level variance unidentifiable
-                near_forest   = "near\nforest",
-                agroforest    = "agroforest",
-                full_sun      = "full\nsun"
-            ))
-        ) +
-        scale_fill_manual(values   = SAMPLE_TYPE_COLOURS, labels = SAMPLE_TYPE_LABELS) +
-        scale_colour_manual(values = SAMPLE_TYPE_COLOURS, labels = SAMPLE_TYPE_LABELS) +
-        theme_bw() +
-        theme(
-            strip.placement  = "outside",
-            panel.border     = element_blank(),
-            panel.spacing.x  = unit(0.2, "lines"),
-            strip.background = element_blank(),
-            strip.text.x     = element_text(size = 9, margin = margin(t = 5, b = 5))
-        ) +
-        labs(x = "", y = y_label, fill = NULL)
-    if (!is.null(ylim)) p <- p + coord_cartesian(ylim = ylim)
-    p
-}
-
-# Marginal means plot from ggpredict (one model × one term)
-plot_marginal <- function(model, term, y_label) {
-    ggeffects::ggpredict(model, terms = term) |>
-        ggplot(aes(x = x, y = predicted)) +
-        geom_point(size = 3) +
-        geom_errorbar(
-            aes(ymin = conf.low, ymax = conf.high),
-            width = 0.25
-        ) +
-        theme_bw() +
-        labs(x = "", y = y_label)
-}
-
-# x-axis positions for Hill profile
-# Inf plotted at position 6 to avoid breaking the continuous scale
-HILL_Q_POSITIONS <- c(`0` = 0, `0.5` = 0.5, `1` = 1, `1.5` = 1.5,
-                      `2` = 2, `3` = 3, `5` = 5, `Inf` = 6)
-
-################################################################################
 #### 5. Convergence diagnostic — 2k ############################################
 #### Per-iteration group median + cumulative running mean ######################
 ################################################################################
 
 conv_long_2k <- alpha_iters_2k |>
     pivot_longer(
-        cols      = c(Observed, Shannon, InvSimpson, BergerParker),
+        cols      = c(Observed, Shannon, BergerParker),
         names_to  = "metric",
         values_to = "value"
     ) |>
     # canonical left-to-right order: least sensitive → most sensitive to rarefaction depth
     mutate(metric = factor(metric,
-        levels = c("Observed", "Shannon", "InvSimpson", "BergerParker"),
-        labels = c("Observed", "Shannon", "InvSimpson", "Berger-Parker"))) |>
+        levels = c("Observed", "Shannon", "BergerParker"),
+        labels = c("Observed", "Shannon", "Berger-Parker"))) |>
     group_by(iteration, sample_type, metric) |>
     summarise(iter_median = median(value, na.rm = TRUE), .groups = "drop") |>
     group_by(sample_type, metric) |>
@@ -130,7 +62,7 @@ conv_long_2k <- alpha_iters_2k |>
 p_conv_raw_2k <- conv_long_2k |>
     ggplot(aes(x = iteration, y = iter_median, colour = sample_type)) +
     geom_line(alpha = 0.8, linewidth = 0.5) +
-    facet_wrap(~ metric, scales = "free_y", ncol = 4) +
+    facet_wrap(~ metric, scales = "free_y", ncol = 3) +
     scale_colour_manual(values = SAMPLE_TYPE_COLOURS, labels = SAMPLE_TYPE_LABELS) +
     theme_bw() +
     labs(
@@ -144,7 +76,7 @@ p_conv_raw_2k <- conv_long_2k |>
 p_conv_cum_2k <- conv_long_2k |>
     ggplot(aes(x = iteration, y = running_mean, colour = sample_type)) +
     geom_line(linewidth = 0.7) +
-    facet_wrap(~ metric, scales = "free_y", ncol = 4) +
+    facet_wrap(~ metric, scales = "free_y", ncol = 3) +
     scale_colour_manual(values = SAMPLE_TYPE_COLOURS, labels = SAMPLE_TYPE_LABELS) +
     theme_bw() +
     labs(
@@ -164,13 +96,13 @@ p_conv_2k <- p_conv_raw_2k / p_conv_cum_2k +
 
 conv_long_10k <- alpha_iters_10k |>
     pivot_longer(
-        cols      = c(Observed, Shannon, InvSimpson, BergerParker),
+        cols      = c(Observed, Shannon, BergerParker),
         names_to  = "metric",
         values_to = "value"
     ) |>
     mutate(metric = factor(metric,
-        levels = c("Observed", "Shannon", "InvSimpson", "BergerParker"),
-        labels = c("Observed", "Shannon", "InvSimpson", "Berger-Parker"))) |>
+        levels = c("Observed", "Shannon", "BergerParker"),
+        labels = c("Observed", "Shannon", "Berger-Parker"))) |>
     group_by(iteration, sample_type, metric) |>
     summarise(iter_median = median(value, na.rm = TRUE), .groups = "drop") |>
     group_by(sample_type, metric) |>
@@ -181,7 +113,7 @@ conv_long_10k <- alpha_iters_10k |>
 p_conv_raw_10k <- conv_long_10k |>
     ggplot(aes(x = iteration, y = iter_median, colour = sample_type)) +
     geom_line(alpha = 0.8, linewidth = 0.5) +
-    facet_wrap(~ metric, scales = "free_y", ncol = 4) +
+    facet_wrap(~ metric, scales = "free_y", ncol = 3) +
     scale_colour_manual(values = SAMPLE_TYPE_COLOURS, labels = SAMPLE_TYPE_LABELS) +
     theme_bw() +
     labs(
@@ -194,7 +126,7 @@ p_conv_raw_10k <- conv_long_10k |>
 p_conv_cum_10k <- conv_long_10k |>
     ggplot(aes(x = iteration, y = running_mean, colour = sample_type)) +
     geom_line(linewidth = 0.7) +
-    facet_wrap(~ metric, scales = "free_y", ncol = 4) +
+    facet_wrap(~ metric, scales = "free_y", ncol = 3) +
     scale_colour_manual(values = SAMPLE_TYPE_COLOURS, labels = SAMPLE_TYPE_LABELS) +
     theme_bw() +
     labs(
@@ -215,21 +147,21 @@ p_conv_10k <- p_conv_raw_10k / p_conv_cum_10k +
 p_sample_type_2k <- alpha_summary_2k |>
     pivot_longer(
         cols      = c(Observed_median, Shannon_median,
-                      InvSimpson_median, BergerParker_median, FaithPD_median),
+                      BergerParker_median, FaithPD_median),
         names_to  = "metric",
         values_to = "value"
     ) |>
     mutate(metric = factor(
         metric,
         levels = c("Observed_median", "Shannon_median",
-                   "InvSimpson_median", "BergerParker_median", "FaithPD_median"),
-        labels = c("Observed", "Shannon H", "InvSimpson", "Berger-Parker", "Faith's PD")
+                   "BergerParker_median", "FaithPD_median"),
+        labels = c("Observed", "Shannon H", "Berger-Parker", "Faith's PD")
     )) |>
     ggplot(aes(x = sample_type, y = value, fill = sample_type)) +
     geom_boxplot(outlier.shape = NA, alpha = 0.7, width = 0.5) +
     geom_jitter(width = 0.15, alpha = 0.3, size = 0.8) +
-    # ncol = 5: Observed, Shannon H, InvSimpson, Berger-Parker, Faith's PD
-    facet_wrap(~ metric, scales = "free_y", ncol = 5) +
+    # ncol = 4: Observed, Shannon H, Berger-Parker, Faith's PD
+    facet_wrap(~ metric, scales = "free_y", ncol = 4) +
     scale_fill_manual(values = SAMPLE_TYPE_COLOURS) +
     scale_x_discrete(labels = SAMPLE_TYPE_LABELS) +
     theme_bw() +
@@ -252,20 +184,20 @@ p_sample_type_2k <- alpha_summary_2k |>
 p_sample_type_10k <- alpha_summary_10k |>
     pivot_longer(
         cols      = c(Observed_median, Shannon_median,
-                      InvSimpson_median, BergerParker_median, FaithPD_median),
+                      BergerParker_median, FaithPD_median),
         names_to  = "metric",
         values_to = "value"
     ) |>
     mutate(metric = factor(
         metric,
         levels = c("Observed_median", "Shannon_median",
-                   "InvSimpson_median", "BergerParker_median", "FaithPD_median"),
-        labels = c("Observed", "Shannon H", "InvSimpson", "Berger-Parker", "Faith's PD")
+                   "BergerParker_median", "FaithPD_median"),
+        labels = c("Observed", "Shannon H", "Berger-Parker", "Faith's PD")
     )) |>
     ggplot(aes(x = sample_type, y = value, fill = sample_type)) +
     geom_boxplot(outlier.shape = NA, alpha = 0.7, width = 0.5) +
     geom_jitter(width = 0.15, alpha = 0.3, size = 0.8) +
-    facet_wrap(~ metric, scales = "free_y", ncol = 5) +
+    facet_wrap(~ metric, scales = "free_y", ncol = 4) +
     scale_fill_manual(values = SAMPLE_TYPE_COLOURS) +
     scale_x_discrete(labels = SAMPLE_TYPE_LABELS) +
     theme_bw() +
@@ -282,488 +214,82 @@ p_sample_type_10k <- alpha_summary_10k |>
     )
 
 ################################################################################
-#### 6b. Farm × management nested boxplot — 2k #################################
+#### 7a. Treatment and farm effects (global models) ###########################
+#### metric ~ sample_type + farm_id + (1 | tree_id); Observed as NB GLMM. ######
+#### Farm: likelihood ratio test (ML) against the model without farm_id. ######
+#### BH within depth over the main-text metrics. ###############################
+#### 2k = primary depth; 10k = depth sensitivity check. ########################
 ################################################################################
 
-p_farm_mgmt_2k <- (
-    plot_alpha_farm_management("Observed_median",     "Observed",      alpha_summary_2k) |
-    plot_alpha_farm_management("Shannon_median",      "Shannon H",     alpha_summary_2k) |
-    plot_alpha_farm_management("InvSimpson_median",   "InvSimpson",    alpha_summary_2k) |
-    plot_alpha_farm_management("BergerParker_median", "Berger-Parker", alpha_summary_2k) |
-    plot_alpha_farm_management("FaithPD_median",      "Faith's PD",    alpha_summary_2k)
-) +
-    plot_layout(guides = "collect") &
-    theme(legend.position = "bottom")
+# Main-text metrics for 16S (InvSimpson dropped; it stays only as Hill q = 2)
+METRICS_16S <- c("Observed_median", "Shannon_median", "BergerParker_median", "FaithPD_median")
 
-################################################################################
-#### 6b. Farm × management nested boxplot — 10k ################################
-################################################################################
-
-p_farm_mgmt_10k <- (
-    plot_alpha_farm_management("Observed_median",     "Observed",      alpha_summary_10k) |
-    plot_alpha_farm_management("Shannon_median",      "Shannon H",     alpha_summary_10k) |
-    plot_alpha_farm_management("InvSimpson_median",   "InvSimpson",    alpha_summary_10k) |
-    plot_alpha_farm_management("BergerParker_median", "Berger-Parker", alpha_summary_10k) |
-    plot_alpha_farm_management("FaithPD_median",      "Faith's PD",    alpha_summary_10k)
-) +
-    plot_layout(guides = "collect") &
-    theme(legend.position = "bottom")
-
-################################################################################
-#### 6c. Hill diversity profile (q = 0 to ∞) — 2k #############################
-#### Each curve = one sample; thick line = group mean; ribbon = ±1 SD ##########
-################################################################################
-
-hill_long_2k <- alpha_summary_2k |>
-    mutate(Hill_qInf_median = 1 / BergerParker_median) |>
-    select(
-        sample_id, sample_type,
-        `0`   = Observed_median,
-        `0.5` = Hill_q0_5_median,
-        `1`   = Hill_q1_median,
-        `1.5` = Hill_q1_5_median,
-        `2`   = InvSimpson_median,
-        `3`   = Hill_q3_median,
-        `5`   = Hill_q5_median,
-        `Inf` = Hill_qInf_median
-    ) |>
-    pivot_longer(
-        cols      = -c(sample_id, sample_type),
-        names_to  = "q",
-        values_to = "diversity"
-    ) |>
-    mutate(
-        q      = as.numeric(q),
-        # Replace Inf with plot position 6 so continuous x-axis works
-        q_plot = HILL_Q_POSITIONS[as.character(q)]
-    )
-
-hill_group_stats_2k <- hill_long_2k |>
-    group_by(sample_type, q, q_plot) |>
-    summarise(
-        mean_div = mean(diversity, na.rm = TRUE),
-        sd_div   = sd(diversity, na.rm = TRUE),
-        .groups  = "drop"
-    )
-
-p_hill_2k <- ggplot() +
-    # individual sample traces (one connected line per sample across all q values)
-    geom_line(
-        data      = hill_long_2k,
-        aes(x = q_plot, y = diversity, group = sample_id, colour = sample_type),
-        alpha     = 0.10,
-        linewidth = 0.3
-    ) +
-    # ±1 SD ribbon around group mean
-    geom_ribbon(
-        data  = hill_group_stats_2k,
-        aes(x    = q_plot,
-            ymin = mean_div - sd_div,
-            ymax = mean_div + sd_div,
-            fill = sample_type),
-        alpha  = 0.25,
-        colour = NA
-    ) +
-    # straight segments connecting group mean points — honest representation, no smoothing
-    geom_line(
-        data      = hill_group_stats_2k,
-        aes(x = q_plot, y = mean_div, colour = sample_type),
-        linewidth = 1.2
-    ) +
-    # group mean dots — one per q value per group
-    geom_point(
-        data = hill_group_stats_2k,
-        aes(x = q_plot, y = mean_div, colour = sample_type),
-        size = 3.5
-    ) +
-    scale_x_continuous(
-        # 8 breaks at actual plot positions; label position 6 as ∞
-        breaks = c(0, 0.5, 1, 1.5, 2, 3, 5, 6),
-        labels = c("0", "0.5", "1", "1.5", "2", "3", "5", "∞")
-    ) +
-    scale_colour_manual(values = SAMPLE_TYPE_COLOURS, labels = SAMPLE_TYPE_LABELS) +
-    scale_fill_manual(values   = SAMPLE_TYPE_COLOURS, labels = SAMPLE_TYPE_LABELS) +
-    theme_bw() +
-    theme(legend.position = "bottom") +
-    labs(
-        title    = "Hill diversity profile (q = 0 to ∞) — 2k rarefaction",
-        subtitle = "Thick line = group mean; ribbon = ±1 SD; thin lines = individual samples",
-        x        = "Hill order (q)",
-        y        = "Effective number of ASVs",
-        colour   = NULL,
-        fill     = NULL
-    )
-
-################################################################################
-#### 6c. Hill diversity profile (q = 0 to ∞) — 10k ############################
-################################################################################
-
-hill_long_10k <- alpha_summary_10k |>
-    mutate(Hill_qInf_median = 1 / BergerParker_median) |>
-    select(
-        sample_id, sample_type,
-        `0`   = Observed_median,
-        `0.5` = Hill_q0_5_median,
-        `1`   = Hill_q1_median,
-        `1.5` = Hill_q1_5_median,
-        `2`   = InvSimpson_median,
-        `3`   = Hill_q3_median,
-        `5`   = Hill_q5_median,
-        `Inf` = Hill_qInf_median
-    ) |>
-    pivot_longer(
-        cols      = -c(sample_id, sample_type),
-        names_to  = "q",
-        values_to = "diversity"
-    ) |>
-    mutate(
-        q      = as.numeric(q),
-        q_plot = HILL_Q_POSITIONS[as.character(q)]
-    )
-
-hill_group_stats_10k <- hill_long_10k |>
-    group_by(sample_type, q, q_plot) |>
-    summarise(
-        mean_div = mean(diversity, na.rm = TRUE),
-        sd_div   = sd(diversity, na.rm = TRUE),
-        .groups  = "drop"
-    )
-
-p_hill_10k <- ggplot() +
-    geom_line(
-        data      = hill_long_10k,
-        aes(x = q_plot, y = diversity, group = sample_id, colour = sample_type),
-        alpha     = 0.10,
-        linewidth = 0.3
-    ) +
-    geom_ribbon(
-        data  = hill_group_stats_10k,
-        aes(x    = q_plot,
-            ymin = mean_div - sd_div,
-            ymax = mean_div + sd_div,
-            fill = sample_type),
-        alpha  = 0.25,
-        colour = NA
-    ) +
-    geom_line(
-        data      = hill_group_stats_10k,
-        aes(x = q_plot, y = mean_div, colour = sample_type),
-        linewidth = 1.2
-    ) +
-    geom_point(
-        data = hill_group_stats_10k,
-        aes(x = q_plot, y = mean_div, colour = sample_type),
-        size = 3.5
-    ) +
-    scale_x_continuous(
-        breaks = c(0, 0.5, 1, 1.5, 2, 3, 5, 6),
-        labels = c("0", "0.5", "1", "1.5", "2", "3", "5", "∞")
-    ) +
-    scale_colour_manual(values = SAMPLE_TYPE_COLOURS, labels = SAMPLE_TYPE_LABELS) +
-    scale_fill_manual(values   = SAMPLE_TYPE_COLOURS, labels = SAMPLE_TYPE_LABELS) +
-    theme_bw() +
-    theme(legend.position = "bottom") +
-    labs(
-        title    = "Hill diversity profile (q = 0 to ∞) — 10k rarefaction",
-        subtitle = "Thick line = group mean; ribbon = ±1 SD; thin lines = individual samples",
-        x        = "Hill order (q)",
-        y        = "Effective number of ASVs",
-        colour   = NULL,
-        fill     = NULL
-    )
-
-################################################################################
-#### 7a. Statistical models: sample_type (main treatment effect) — 2k ##########
-################################################################################
-
-# Full nested random structure (1 | farm_id / tree_id).
-# If farm_id variance = 0 (singular fit), fall back to (1 | tree_id).
-lmm_shannon_treatment_2k <- lmer(
-    Shannon_median ~ sample_type + (1 | farm_id / tree_id),
-    data = alpha_summary_2k
+treat_farm_16S <- alpha_treatment_farm(
+    alpha_by_depth = list(`2k` = alpha_summary_2k, `10k` = alpha_summary_10k),
+    metrics        = METRICS_16S,
+    marker         = "16S"
 )
-summary(lmm_shannon_treatment_2k)
-performance::check_singularity(lmm_shannon_treatment_2k)
-performance::check_normality(lmm_shannon_treatment_2k)
 
-# Simplified model used for marginal means if full model is singular
-lmm_shannon_treatment_tree_2k <- lmer(
-    Shannon_median ~ sample_type + (1 | tree_id),
-    data = alpha_summary_2k
-)
-summary(lmm_shannon_treatment_tree_2k)
+print(treat_farm_16S$table, width = Inf)
+write_csv(treat_farm_16S$table,
+          file.path(RESULTS_DIR, "tables", paste0("07a_treatment_farm_effects", SET_TAG, ".csv")))
 
-lmm_invsimpson_treatment_2k <- lmer(
-    InvSimpson_median ~ sample_type + (1 | farm_id / tree_id),
-    data = alpha_summary_2k
-)
-summary(lmm_invsimpson_treatment_2k)
-performance::check_singularity(lmm_invsimpson_treatment_2k)
-
-lmm_bergerparker_treatment_2k <- lmer(
-    BergerParker_median ~ sample_type + (1 | farm_id / tree_id),
-    data = alpha_summary_2k
-)
-summary(lmm_bergerparker_treatment_2k)
-performance::check_singularity(lmm_bergerparker_treatment_2k)
-
-# Observed ASVs: negative binomial GLMM (overdispersed integer counts)
-glmm_observed_treatment_2k <- glmmTMB::glmmTMB(
-    round(Observed_median) ~ sample_type + (1 | tree_id),
-    family = nbinom2,
-    data   = alpha_summary_2k
-)
-summary(glmm_observed_treatment_2k)
-
-glmm_observed_treatment_2k |>
-    DHARMa::simulateResiduals(n = 1000) |>
-    (\(sim) {
-        plot(sim)
-        DHARMa::testUniformity(sim)
-        DHARMa::testDispersion(sim)
-    })()
-
-# Faith's PD: continuous positive metric → LMM
-lmm_faithpd_treatment_2k <- lmer(
-    FaithPD_median ~ sample_type + (1 | farm_id / tree_id),
-    data = alpha_summary_2k
-)
-summary(lmm_faithpd_treatment_2k)
-performance::check_singularity(lmm_faithpd_treatment_2k)
+# Diagnostics: singular fits (zero tree variance) and residuals.
+# LMM: normality of residuals; NB GLMM: DHARMa simulated residuals (uniformity, dispersion).
+walk2(treat_farm_16S$models$fit, paste(treat_farm_16S$models$depth, treat_farm_16S$models$metric),
+      \(fit, label) {
+          cat("\n----", label, "----\n")
+          if (inherits(fit, "glmmTMB")) {
+              sim <- DHARMa::simulateResiduals(fit, n = 1000)
+              print(DHARMa::testUniformity(sim, plot = FALSE))
+              print(DHARMa::testDispersion(sim, plot = FALSE))
+          } else {
+              print(performance::check_singularity(fit))
+              print(performance::check_normality(fit))
+          }
+      })
 
 ################################################################################
-#### 7a. Statistical models: sample_type (main treatment effect) — 10k #########
+#### 7b. Sensitivity of the treatment effect to the model form (primary 2k) ####
+#### Residuals of the Berger-Parker and Faith's PD LMMs are not normal: #######
+####   Berger-Parker is a proportion -> beta GLMM (logit link); ################
+####   Faith's PD is positive and right-skewed -> LMM on log(Faith's PD). ######
 ################################################################################
 
-lmm_shannon_treatment_10k <- lmer(
-    Shannon_median ~ sample_type + (1 | farm_id / tree_id),
-    data = alpha_summary_10k
-)
-summary(lmm_shannon_treatment_10k)
-performance::check_singularity(lmm_shannon_treatment_10k)
-performance::check_normality(lmm_shannon_treatment_10k)
+sens_data_2k <- alpha_summary_2k |>
+    mutate(sample_type = factor(sample_type, levels = SAMPLE_TYPE_LEVELS))
 
-lmm_shannon_treatment_tree_10k <- lmer(
-    Shannon_median ~ sample_type + (1 | tree_id),
-    data = alpha_summary_10k
-)
-summary(lmm_shannon_treatment_tree_10k)
+sensitivity_16S <- bind_rows(
+    primary_rows(treat_farm_16S$table, "2k", c("BergerParker_median", "FaithPD_median")),
+    sensitivity_effect(BergerParker_median ~ sample_type + farm_id + (1 | tree_id),
+                       sens_data_2k, family = glmmTMB::beta_family()) |>
+        mutate(metric = "BergerParker_median", analysis = "beta GLMM (logit link)",
+               scale = "log odds ratio"),
+    sensitivity_effect(log(FaithPD_median) ~ sample_type + farm_id + (1 | tree_id),
+                       sens_data_2k) |>
+        mutate(metric = "FaithPD_median", analysis = "LMM on log(Faith's PD)",
+               scale = "log ratio")
+) |>
+    mutate(marker = "16S", depth = "2k", .before = 1) |>
+    arrange(metric)
 
-lmm_invsimpson_treatment_10k <- lmer(
-    InvSimpson_median ~ sample_type + (1 | farm_id / tree_id),
-    data = alpha_summary_10k
-)
-summary(lmm_invsimpson_treatment_10k)
-performance::check_singularity(lmm_invsimpson_treatment_10k)
-
-lmm_bergerparker_treatment_10k <- lmer(
-    BergerParker_median ~ sample_type + (1 | farm_id / tree_id),
-    data = alpha_summary_10k
-)
-summary(lmm_bergerparker_treatment_10k)
-performance::check_singularity(lmm_bergerparker_treatment_10k)
-
-glmm_observed_treatment_10k <- glmmTMB::glmmTMB(
-    round(Observed_median) ~ sample_type + (1 | tree_id),
-    family = nbinom2,
-    data   = alpha_summary_10k
-)
-summary(glmm_observed_treatment_10k)
-
-glmm_observed_treatment_10k |>
-    DHARMa::simulateResiduals(n = 1000) |>
-    (\(sim) {
-        plot(sim)
-        DHARMa::testUniformity(sim)
-        DHARMa::testDispersion(sim)
-    })()
-
-lmm_faithpd_treatment_10k <- lmer(
-    FaithPD_median ~ sample_type + (1 | farm_id / tree_id),
-    data = alpha_summary_10k
-)
-summary(lmm_faithpd_treatment_10k)
-performance::check_singularity(lmm_faithpd_treatment_10k)
+print(sensitivity_16S, width = Inf)
+write_csv(sensitivity_16S,
+          file.path(RESULTS_DIR, "tables", paste0("07a_treatment_sensitivity", SET_TAG, ".csv")))
 
 ################################################################################
-#### 7c. Statistical models: CLSM subsets — 2k #################################
+#### 7c. Microscopy features (primary depth 2k) ################################
+#### Same tests as 10g: unbagged flowers (fungal colonization score, pollen, ##
+#### callose plug, germination) and bagged flowers (pollen). ##################
+#### metric ~ feature + farm_id + (1 | tree_id); BH over all tests. ###########
 ################################################################################
 
-# pi_clsm 3-class: none (0), weak (1-39), strong (>= 40)
-# Threshold >= 40 is the nearest integer to 43 pollen grains/stigma,
-# the level corresponding to 50% of maximum fruit set (Falque et al. 1995).
-# Binary is_pollination_clsm was removed: any detectable pollen conflates
-# accidental/wind/self-deposition with insect-mediated pollination.
-# NB: strong class n ~15 after 2k rarefaction — CIs are wide.
-alpha_summary_2k |>
-    filter(sample_type == "unbagged_flower", !is.na(pi_clsm)) |>
-    mutate(pi_class = factor(
-        case_when(
-            pi_clsm == 0                ~ "none",
-            pi_clsm > 0 & pi_clsm < 40 ~ "weak",
-            pi_clsm >= 40               ~ "strong"
-        ),
-        levels = c("none", "weak", "strong")
-    )) |>
-    lmer(Shannon_median ~ pi_class + (1 | farm_id / tree_id), data = _) |>
-    summary()
+microscopy_16S <- alpha_microscopy(alpha_summary_2k, METRICS_16S) |>
+    mutate(marker = "16S", depth = "2k", .before = 1)
 
-alpha_summary_2k |>
-    filter(sample_type == "unbagged_flower", !is.na(pi_clsm)) |>
-    mutate(pi_class = factor(
-        case_when(
-            pi_clsm == 0                ~ "none",
-            pi_clsm > 0 & pi_clsm < 40 ~ "weak",
-            pi_clsm >= 40               ~ "strong"
-        ),
-        levels = c("none", "weak", "strong")
-    )) |>
-    lmer(BergerParker_median ~ pi_class + (1 | farm_id / tree_id), data = _) |>
-    summary()
-
-alpha_summary_2k |>
-    filter(sample_type == "unbagged_flower", !is.na(pi_clsm)) |>
-    mutate(pi_class = factor(
-        case_when(
-            pi_clsm == 0                ~ "none",
-            pi_clsm > 0 & pi_clsm < 40 ~ "weak",
-            pi_clsm >= 40               ~ "strong"
-        ),
-        levels = c("none", "weak", "strong")
-    )) |>
-    lmer(FaithPD_median ~ pi_class + (1 | farm_id / tree_id), data = _) |>
-    summary()
-
-# is_hyphae_present: all flowers with CLSM data; sample_type as covariate
-alpha_summary_2k |>
-    filter(!is.na(is_hyphae_present)) |>
-    lmer(Shannon_median ~ is_hyphae_present + sample_type + (1 | farm_id / tree_id),
-         data = _) |>
-    summary()
-
-alpha_summary_2k |>
-    filter(!is.na(is_hyphae_present)) |>
-    lmer(InvSimpson_median ~ is_hyphae_present + sample_type + (1 | farm_id / tree_id),
-         data = _) |>
-    summary()
-
-alpha_summary_2k |>
-    filter(!is.na(is_hyphae_present)) |>
-    lmer(BergerParker_median ~ is_hyphae_present + sample_type + (1 | farm_id / tree_id),
-         data = _) |>
-    summary()
-
-alpha_summary_2k |>
-    filter(!is.na(is_hyphae_present)) |>
-    lmer(FaithPD_median ~ is_hyphae_present + sample_type + (1 | farm_id / tree_id),
-         data = _) |>
-    summary()
-
-################################################################################
-#### 7c. Statistical models: CLSM subsets — 10k ################################
-################################################################################
-
-# pi_clsm 3-class: none (0), weak (1-39), strong (>= 40)
-# Threshold >= 40 is the nearest integer to 43 pollen grains/stigma,
-# the level corresponding to 50% of maximum fruit set (Falque et al. 1995).
-# Binary is_pollination_clsm was removed: any detectable pollen conflates
-# accidental/wind/self-deposition with insect-mediated pollination.
-# NB: strong class n ~15 after 10k rarefaction — CIs are wide.
-alpha_summary_10k |>
-    filter(sample_type == "unbagged_flower", !is.na(pi_clsm)) |>
-    mutate(pi_class = factor(
-        case_when(
-            pi_clsm == 0                ~ "none",
-            pi_clsm > 0 & pi_clsm < 40 ~ "weak",
-            pi_clsm >= 40               ~ "strong"
-        ),
-        levels = c("none", "weak", "strong")
-    )) |>
-    lmer(Shannon_median ~ pi_class + (1 | farm_id / tree_id), data = _) |>
-    summary()
-
-alpha_summary_10k |>
-    filter(sample_type == "unbagged_flower", !is.na(pi_clsm)) |>
-    mutate(pi_class = factor(
-        case_when(
-            pi_clsm == 0                ~ "none",
-            pi_clsm > 0 & pi_clsm < 40 ~ "weak",
-            pi_clsm >= 40               ~ "strong"
-        ),
-        levels = c("none", "weak", "strong")
-    )) |>
-    lmer(BergerParker_median ~ pi_class + (1 | farm_id / tree_id), data = _) |>
-    summary()
-
-alpha_summary_10k |>
-    filter(sample_type == "unbagged_flower", !is.na(pi_clsm)) |>
-    mutate(pi_class = factor(
-        case_when(
-            pi_clsm == 0                ~ "none",
-            pi_clsm > 0 & pi_clsm < 40 ~ "weak",
-            pi_clsm >= 40               ~ "strong"
-        ),
-        levels = c("none", "weak", "strong")
-    )) |>
-    lmer(FaithPD_median ~ pi_class + (1 | farm_id / tree_id), data = _) |>
-    summary()
-
-alpha_summary_10k |>
-    filter(!is.na(is_hyphae_present)) |>
-    lmer(Shannon_median ~ is_hyphae_present + sample_type + (1 | farm_id / tree_id),
-         data = _) |>
-    summary()
-
-alpha_summary_10k |>
-    filter(!is.na(is_hyphae_present)) |>
-    lmer(InvSimpson_median ~ is_hyphae_present + sample_type + (1 | farm_id / tree_id),
-         data = _) |>
-    summary()
-
-alpha_summary_10k |>
-    filter(!is.na(is_hyphae_present)) |>
-    lmer(BergerParker_median ~ is_hyphae_present + sample_type + (1 | farm_id / tree_id),
-         data = _) |>
-    summary()
-
-alpha_summary_10k |>
-    filter(!is.na(is_hyphae_present)) |>
-    lmer(FaithPD_median ~ is_hyphae_present + sample_type + (1 | farm_id / tree_id),
-         data = _) |>
-    summary()
-
-################################################################################
-#### 8a. Marginal means: sample_type (bagged vs unbagged) — 2k #################
-#### Model-predicted means ± 95% CI, marginalised over tree and farm effects ####
-################################################################################
-
-p_obs_treat_2k <- plot_marginal(glmm_observed_treatment_2k,    "sample_type", "Observed ASVs")
-p_sha_treat_2k <- plot_marginal(lmm_shannon_treatment_tree_2k, "sample_type", "Shannon H")
-p_inv_treat_2k <- plot_marginal(lmm_invsimpson_treatment_2k,   "sample_type", "InvSimpson")
-p_bp_treat_2k  <- plot_marginal(lmm_bergerparker_treatment_2k, "sample_type", "Berger-Parker")
-p_fpd_treat_2k <- plot_marginal(lmm_faithpd_treatment_2k,      "sample_type", "Faith's PD")
-
-p_treat_2k <- (p_obs_treat_2k | p_sha_treat_2k | p_inv_treat_2k | p_bp_treat_2k | p_fpd_treat_2k) +
-    plot_annotation(
-        title    = "Marginal means ± 95% CI: sample_type (bagged vs unbagged) — 2k rarefaction",
-        subtitle = "Model-predicted means marginalised over tree and farm random effects"
-    )
-
-################################################################################
-#### 8a. Marginal means: sample_type — 10k #####################################
-################################################################################
-
-p_obs_treat_10k <- plot_marginal(glmm_observed_treatment_10k,    "sample_type", "Observed ASVs")
-p_sha_treat_10k <- plot_marginal(lmm_shannon_treatment_tree_10k, "sample_type", "Shannon H")
-p_inv_treat_10k <- plot_marginal(lmm_invsimpson_treatment_10k,   "sample_type", "InvSimpson")
-p_bp_treat_10k  <- plot_marginal(lmm_bergerparker_treatment_10k, "sample_type", "Berger-Parker")
-p_fpd_treat_10k <- plot_marginal(lmm_faithpd_treatment_10k,      "sample_type", "Faith's PD")
-
-p_treat_10k <- (p_obs_treat_10k | p_sha_treat_10k | p_inv_treat_10k | p_bp_treat_10k | p_fpd_treat_10k) +
-    plot_annotation(
-        title    = "Marginal means ± 95% CI: sample_type (bagged vs unbagged) — 10k rarefaction",
-        subtitle = "Model-predicted means marginalised over tree and farm random effects"
-    )
+print(microscopy_16S, width = Inf)
+write_csv(microscopy_16S,
+          file.path(RESULTS_DIR, "tables", paste0("07a_microscopy_effects", SET_TAG, ".csv")))
 
 ################################################################################
 #### 9_icc. Within-tree ICC — are flowers from the same tree more similar? #####
@@ -774,8 +300,7 @@ p_treat_10k <- (p_obs_treat_10k | p_sha_treat_10k | p_inv_treat_10k | p_bp_treat
 #### loses information without protecting against pseudoreplication. ############
 ################################################################################
 
-METRICS_ICC_16S <- c("Observed_median", "Shannon_median", "InvSimpson_median",
-                     "BergerParker_median", "FaithPD_median")
+METRICS_ICC_16S <- METRICS_16S
 
 # Run at 2k depth (primary depth); ICC is a structural property of the sampling design
 icc_df_2k <- expand.grid(
@@ -804,62 +329,23 @@ write_csv(icc_df_2k, file.path(RESULTS_DIR, "tables", paste0("07a_2k_icc_within_
 #### within-tree correlation without discarding observations.                  ##
 ################################################################################
 
-# 5 metrics for 16S (includes Faith's PD)
-METRICS_LMM_FARM <- c("Observed_median", "Shannon_median", "InvSimpson_median",
-                      "BergerParker_median", "FaithPD_median")
+# 4 main-text metrics for 16S (includes Faith's PD)
+METRICS_LMM_FARM <- METRICS_16S
 METRIC_LABELS_LMM <- c(
     Observed_median     = "Observed",
     Shannon_median      = "Shannon H",
-    InvSimpson_median   = "InvSimpson",
     BergerParker_median = "Berger-Parker",
     FaithPD_median      = "Faith's PD"
 )
 
-# 7 farms × 5 metrics = 35 tests for BH correction
+# 7 farms × 4 metrics = 28 tests for BH correction
 n_tests_lmm_2k <- length(FARM_LEVELS) * length(METRICS_LMM_FARM)
 
-# Per-farm LMM: sample_type fixed effect, tree_id random intercept.
+# Per-farm model (alpha_per_farm() in utils_alpha.R): metric ~ sample_type + (1 | tree_id)
+# within each farm; Observed as NB GLMM (log scale), the others as LMM.
 # Reference level: bagged_flower; positive estimate = higher in unbagged_flower.
-# lmerTest loaded at top → summary()$coefficients includes Pr(>|t|) (Satterthwaite).
-# tryCatch handles degenerate farms (singular fit, missing data) → NA rows.
-lmm_farm_df_2k <- expand.grid(
-    farm   = FARM_LEVELS,
-    metric = METRICS_LMM_FARM,
-    stringsAsFactors = FALSE
-) |>
-    as_tibble() |>
-    mutate(fit_result = map2(farm, metric, \(f, m) {
-        dat <- alpha_summary_2k |>
-            filter(farm_id == f) |>
-            mutate(sample_type = factor(sample_type,
-                                        levels = c("bagged_flower", "unbagged_flower")))
-        fit <- tryCatch(
-            lmer(as.formula(paste0(m, " ~ sample_type + (1 | tree_id)")), data = dat),
-            error = \(e) NULL
-        )
-        if (is.null(fit))
-            return(tibble(estimate = NA_real_, se = NA_real_, t_value = NA_real_, p_raw = NA_real_))
-        coef_tbl <- summary(fit)$coefficients
-        row_name <- "sample_typeunbagged_flower"
-        if (!row_name %in% rownames(coef_tbl))
-            return(tibble(estimate = NA_real_, se = NA_real_, t_value = NA_real_, p_raw = NA_real_))
-        tibble(
-            estimate = coef_tbl[row_name, "Estimate"],
-            se       = coef_tbl[row_name, "Std. Error"],
-            t_value  = coef_tbl[row_name, "t value"],
-            p_raw    = coef_tbl[row_name, "Pr(>|t|)"]
-        )
-    })) |>
-    unnest(fit_result) |>
-    mutate(
-        p_adj = p.adjust(p_raw, method = "BH"),
-        stars = case_when(
-            p_adj < 0.001 ~ "***",
-            p_adj < 0.01  ~ "**",
-            p_adj < 0.05  ~ "*",
-            TRUE          ~ ""
-        )
-    )
+# Degenerate farms (fit error) -> NA rows. Columns: estimate, se, conf_low, conf_high, p, q, stars.
+lmm_farm_df_2k <- alpha_per_farm(alpha_summary_2k, METRICS_LMM_FARM, FARM_LEVELS)
 
 write_csv(lmm_farm_df_2k, file.path(RESULTS_DIR, "tables", paste0("07a_2k_lmm_per_farm", SET_TAG, ".csv")))
 
@@ -891,7 +377,7 @@ p_lmm_farm_2k <- alpha_summary_2k |>
         size     = 0.9,
         stroke   = 0
     ) +
-    # significance stars above each farm pair where p_adj < 0.05 after BH
+    # significance stars above each farm pair where q < 0.05 after BH
     # guard: empty lmm_stars_2k skips layer to avoid NULL PANEL in ggh4x::FacetWrap2
     (if (nrow(lmm_stars_2k) > 0)
         geom_text(
@@ -907,9 +393,9 @@ p_lmm_farm_2k <- alpha_summary_2k |>
             vjust       = 0
         )
     else NULL) +
-    # ncol = 5: Observed, Shannon H, InvSimpson, Berger-Parker, Faith's PD
+    # ncol = 4: Observed, Shannon H, Berger-Parker, Faith's PD
     # facet_wrap2 (ggh4x) required for facetted_pos_scales compatibility
-    facet_wrap2(~ metric, scales = "free_y", ncol = 5) +
+    facet_wrap2(~ metric, scales = "free_y", ncol = 4) +
     scale_fill_manual(values = SAMPLE_TYPE_COLOURS, labels = SAMPLE_TYPE_LABELS) +
     scale_colour_manual(values = SAMPLE_TYPE_COLOURS, labels = SAMPLE_TYPE_LABELS) +
     scale_x_discrete() +
@@ -923,7 +409,7 @@ p_lmm_farm_2k <- alpha_summary_2k |>
     labs(
         title    = "Bacterial alpha diversity — per-farm LMM (bagged vs unbagged) — 2k rarefaction",
         subtitle = sprintf(
-            "Flower-level data; lmer(metric ~ sample_type + (1|tree_id)) per farm; BH correction (%d tests); * p_adj < 0.05",
+            "Flower-level data; metric ~ sample_type + (1|tree_id) per farm (Observed NB GLMM, others LMM); BH (%d tests); * q < 0.05",
             n_tests_lmm_2k
         ),
         x = "", y = "", fill = NULL, colour = NULL
@@ -933,44 +419,7 @@ p_lmm_farm_2k <- alpha_summary_2k |>
 
 n_tests_lmm_10k <- length(FARM_LEVELS) * length(METRICS_LMM_FARM)
 
-lmm_farm_df_10k <- expand.grid(
-    farm   = FARM_LEVELS,
-    metric = METRICS_LMM_FARM,
-    stringsAsFactors = FALSE
-) |>
-    as_tibble() |>
-    mutate(fit_result = map2(farm, metric, \(f, m) {
-        dat <- alpha_summary_10k |>
-            filter(farm_id == f) |>
-            mutate(sample_type = factor(sample_type,
-                                        levels = c("bagged_flower", "unbagged_flower")))
-        fit <- tryCatch(
-            lmer(as.formula(paste0(m, " ~ sample_type + (1 | tree_id)")), data = dat),
-            error = \(e) NULL
-        )
-        if (is.null(fit))
-            return(tibble(estimate = NA_real_, se = NA_real_, t_value = NA_real_, p_raw = NA_real_))
-        coef_tbl <- summary(fit)$coefficients
-        row_name <- "sample_typeunbagged_flower"
-        if (!row_name %in% rownames(coef_tbl))
-            return(tibble(estimate = NA_real_, se = NA_real_, t_value = NA_real_, p_raw = NA_real_))
-        tibble(
-            estimate = coef_tbl[row_name, "Estimate"],
-            se       = coef_tbl[row_name, "Std. Error"],
-            t_value  = coef_tbl[row_name, "t value"],
-            p_raw    = coef_tbl[row_name, "Pr(>|t|)"]
-        )
-    })) |>
-    unnest(fit_result) |>
-    mutate(
-        p_adj = p.adjust(p_raw, method = "BH"),
-        stars = case_when(
-            p_adj < 0.001 ~ "***",
-            p_adj < 0.01  ~ "**",
-            p_adj < 0.05  ~ "*",
-            TRUE          ~ ""
-        )
-    )
+lmm_farm_df_10k <- alpha_per_farm(alpha_summary_10k, METRICS_LMM_FARM, FARM_LEVELS)
 
 write_csv(lmm_farm_df_10k, file.path(RESULTS_DIR, "tables", paste0("07a_10k_lmm_per_farm", SET_TAG, ".csv")))
 
@@ -1005,7 +454,7 @@ p_lmm_farm_10k <- alpha_summary_10k |>
         )
     else NULL) +
     # facet_wrap2 (ggh4x) required for facetted_pos_scales compatibility
-    facet_wrap2(~ metric, scales = "free_y", ncol = 5) +
+    facet_wrap2(~ metric, scales = "free_y", ncol = 4) +
     scale_fill_manual(values = SAMPLE_TYPE_COLOURS, labels = SAMPLE_TYPE_LABELS) +
     scale_colour_manual(values = SAMPLE_TYPE_COLOURS, labels = SAMPLE_TYPE_LABELS) +
     scale_x_discrete() +
@@ -1017,7 +466,7 @@ p_lmm_farm_10k <- alpha_summary_10k |>
     labs(
         title    = "Bacterial alpha diversity — per-farm LMM (bagged vs unbagged) — 10k rarefaction",
         subtitle = sprintf(
-            "Flower-level data; lmer(metric ~ sample_type + (1|tree_id)) per farm; BH correction (%d tests); * p_adj < 0.05",
+            "Flower-level data; metric ~ sample_type + (1|tree_id) per farm (Observed NB GLMM, others LMM); BH (%d tests); * q < 0.05",
             n_tests_lmm_10k
         ),
         x = "", y = "", fill = NULL, colour = NULL
@@ -1034,14 +483,9 @@ p_lmm_farm_10k <- alpha_summary_10k |>
 #### Compute per-metric global range from both depths; apply before ggsave. ####
 ################################################################################
 
-# ---- Hill profile (single Y axis, no facets) --------------------------------
-ylim_hill_16S <- range(c(hill_long_2k$diversity, hill_long_10k$diversity), na.rm = TRUE)
-p_hill_2k  <- p_hill_2k  + coord_cartesian(ylim = ylim_hill_16S)
-p_hill_10k <- p_hill_10k + coord_cartesian(ylim = ylim_hill_16S)
-
 # ---- Convergence diagnostic -------------------------------------------------
 # Separate limits for iter_median (raw) and running_mean (cumulative rows)
-CONV_METRIC_ORDER_16S <- c("Observed", "Shannon", "InvSimpson", "Berger-Parker")
+CONV_METRIC_ORDER_16S <- c("Observed", "Shannon", "Berger-Parker")
 
 conv_iter_lims_16S <- bind_rows(
     conv_long_2k  |> select(metric, value = iter_median),
@@ -1080,46 +524,9 @@ p_conv_10k <- (
     (p_conv_cum_10k + ggh4x::facetted_pos_scales(y = y_scales_conv_cum_16S))
 ) + plot_layout(guides = "collect") & theme(legend.position = "bottom")
 
-# ---- Farm management boxplots -----------------------------------------------
-FARM_METRICS_16S <- c("Observed_median", "Shannon_median", "InvSimpson_median",
-                      "BergerParker_median", "FaithPD_median")
-
-farm_lims_16S <- bind_rows(alpha_summary_2k, alpha_summary_10k) |>
-    pivot_longer(cols = all_of(FARM_METRICS_16S), names_to = "metric", values_to = "value") |>
-    group_by(metric) |>
-    summarise(lo = min(value, na.rm = TRUE), hi = max(value, na.rm = TRUE), .groups = "drop") |>
-    arrange(match(metric, FARM_METRICS_16S))
-
-p_farm_mgmt_2k <- (
-    plot_alpha_farm_management("Observed_median",     "Observed",      alpha_summary_2k,
-                               ylim = c(farm_lims_16S$lo[1], farm_lims_16S$hi[1])) |
-    plot_alpha_farm_management("Shannon_median",      "Shannon H",     alpha_summary_2k,
-                               ylim = c(farm_lims_16S$lo[2], farm_lims_16S$hi[2])) |
-    plot_alpha_farm_management("InvSimpson_median",   "InvSimpson",    alpha_summary_2k,
-                               ylim = c(farm_lims_16S$lo[3], farm_lims_16S$hi[3])) |
-    plot_alpha_farm_management("BergerParker_median", "Berger-Parker", alpha_summary_2k,
-                               ylim = c(farm_lims_16S$lo[4], farm_lims_16S$hi[4])) |
-    plot_alpha_farm_management("FaithPD_median",      "Faith's PD",    alpha_summary_2k,
-                               ylim = c(farm_lims_16S$lo[5], farm_lims_16S$hi[5]))
-) + plot_layout(guides = "collect") & theme(legend.position = "bottom")
-
-p_farm_mgmt_10k <- (
-    plot_alpha_farm_management("Observed_median",     "Observed",      alpha_summary_10k,
-                               ylim = c(farm_lims_16S$lo[1], farm_lims_16S$hi[1])) |
-    plot_alpha_farm_management("Shannon_median",      "Shannon H",     alpha_summary_10k,
-                               ylim = c(farm_lims_16S$lo[2], farm_lims_16S$hi[2])) |
-    plot_alpha_farm_management("InvSimpson_median",   "InvSimpson",    alpha_summary_10k,
-                               ylim = c(farm_lims_16S$lo[3], farm_lims_16S$hi[3])) |
-    plot_alpha_farm_management("BergerParker_median", "Berger-Parker", alpha_summary_10k,
-                               ylim = c(farm_lims_16S$lo[4], farm_lims_16S$hi[4])) |
-    plot_alpha_farm_management("FaithPD_median",      "Faith's PD",    alpha_summary_10k,
-                               ylim = c(farm_lims_16S$lo[5], farm_lims_16S$hi[5]))
-) + plot_layout(guides = "collect") & theme(legend.position = "bottom")
-
 # ---- Sample type boxplots ---------------------------------------------------
-STYPE_METRICS_16S <- c("Observed_median", "Shannon_median", "InvSimpson_median",
-                       "BergerParker_median", "FaithPD_median")
-STYPE_LABELS_16S  <- c("Observed", "Shannon H", "InvSimpson", "Berger-Parker", "Faith's PD")
+STYPE_METRICS_16S <- METRICS_16S
+STYPE_LABELS_16S  <- c("Observed", "Shannon H", "Berger-Parker", "Faith's PD")
 
 stype_lims_16S <- bind_rows(alpha_summary_2k, alpha_summary_10k) |>
     pivot_longer(cols = all_of(STYPE_METRICS_16S), names_to = "metric", values_to = "value") |>
@@ -1163,39 +570,22 @@ p_conv_comb_16S <- (p_conv_2k | p_conv_10k) +
     plot_annotation(title = "Rarefaction convergence diagnostic: 2k (left) vs 10k (right) — 16S")
 
 ggsave(file.path(RESULTS_DIR, "figures", paste0("07a_conv_depth_comparison", SET_TAG, ".png")),
-       plot = p_conv_comb_16S, width = 20, height = 8, dpi = 300)
+       plot = p_conv_comb_16S, width = 16, height = 8, dpi = 300)
 
-# Hill diversity profile: side by side
-p_hill_comb_16S <- (p_hill_2k | p_hill_10k) +
-    plot_annotation(title = "Hill diversity profile: 2k (left) vs 10k (right) — 16S")
+# Hill diversity profile: moved to 07c (16S | ITS1, both depths)
 
-ggsave(file.path(RESULTS_DIR, "figures", paste0("07a_hill_depth_comparison", SET_TAG, ".png")),
-       plot = p_hill_comb_16S, width = 18, height = 5, dpi = 300)
-
-# Farm management boxplots: stacked
-p_farm_comb_16S <- (p_farm_mgmt_2k / p_farm_mgmt_10k) +
-    plot_annotation(title = "Alpha diversity by farm — 2k (top) vs 10k (bottom) — 16S")
-
-ggsave(file.path(RESULTS_DIR, "figures", paste0("07a_farm_mgmt_depth_comparison", SET_TAG, ".png")),
-       plot = p_farm_comb_16S, width = 17.5, height = 12, dpi = 300)
-
-# Marginal means — sample_type: stacked
-p_treat_comb_16S <- (p_treat_2k / p_treat_10k) +
-    plot_annotation(title = "Marginal means (sample_type): 2k (top) vs 10k (bottom) — 16S")
-
-ggsave(file.path(RESULTS_DIR, "figures", paste0("07a_marginal_treatment_depth_comparison", SET_TAG, ".png")),
-       plot = p_treat_comb_16S, width = 18, height = 10, dpi = 300)
+# Treatment effects: forest plot in 07c (from 07a_treatment_farm_effects and the per-farm tables)
 
 # Overall sample_type boxplots (all farms pooled): stacked
 p_sample_type_comb_16S <- (p_sample_type_2k / p_sample_type_10k) +
     plot_annotation(title = "Alpha diversity (all farms): 2k (top) vs 10k (bottom) — 16S")
 
 ggsave(file.path(RESULTS_DIR, "figures", paste0("07a_sample_type_depth_comparison", SET_TAG, ".png")),
-       plot = p_sample_type_comb_16S, width = 16, height = 10, dpi = 300)
+       plot = p_sample_type_comb_16S, width = 13, height = 10, dpi = 300)
 
 # LMM per-farm (bagged vs unbagged): stacked
 p_lmm_farm_comb_16S <- (p_lmm_farm_2k / p_lmm_farm_10k) +
     plot_annotation(title = "Per-farm LMM alpha diversity (bagged vs unbagged): 2k (top) vs 10k (bottom) — 16S")
 
 ggsave(file.path(RESULTS_DIR, "figures", paste0("07a_lmm_farm_depth_comparison", SET_TAG, ".png")),
-       plot = p_lmm_farm_comb_16S, width = 18, height = 10, dpi = 300)
+       plot = p_lmm_farm_comb_16S, width = 15, height = 10, dpi = 300)
